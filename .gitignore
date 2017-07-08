@@ -1,2 +1,6 @@
 build
 dist
+*.pyc
+*.swp
+*/__pycache__
+

@@ -70,7 +70,7 @@ class _Step(object):
         return pipeline.make_pipeline(*others, self)
 
     def __add__(self, other):
-        return FeatureUnion([self, other])
+        return FeatureUnion([('0', self), ('1', other)])
         ff
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
@@ -277,9 +277,11 @@ class _FunctionTransformer(_Step):
         return self
 
     def transform(self, x, y=None):
-        # Tmp AmiAdd here call to fit
+        # Tmp Ami Add here call to fit
         if self._columns is not None:
-            x = x[self._columns]
+# Tmp AMi - refactor next to utility in top of file
+            columns = [self._columns] if _is_str(self._columns) else self._columns
+            x = x[columns]
 
         if self._func is None:
             return x
@@ -295,14 +297,7 @@ class _FunctionTransformer(_Step):
 
         return self._func(x)
 
-    def predict(self, x):
-        uni_x = x[self._wh]
-        return self._st.predict(uni_x)
-
-    def predict_proba(self, x):
-        uni_x = x[self._wh]
-        self.classes_ = self._st._stage.classes_
-        return self._st.predict_proba(uni_x)
+    # Tmp Ami - add fit_transform
 
 
 def apply(func=None, pass_y=False, kw_args=None, columns=None):
