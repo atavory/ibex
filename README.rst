@@ -8,4 +8,4 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
 `scikit-learn <http://scikit-learn.org/stable/>`_
 
-`pandas <http://pandas.pydata.org/> `_
+`pandas <http://pandas.pydata.org/>`_
