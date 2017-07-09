@@ -2,7 +2,7 @@ import unittest
 
 from sklearn import linear_model
 from sklearn import preprocessing
-from sklearn import pipeline
+from sklearn import pipeline, base
 import pandas as pd
 import numpy as np
 
@@ -10,7 +10,7 @@ import numpy as np
 from frame_learn import *
 
 
-class _PDframeTest(unittest.TestCase):
+class _BaseTest(unittest.TestCase):
     def test_is_subclass(self):
         self.assertFalse(
             _Step.is_subclass(
@@ -19,6 +19,26 @@ class _PDframeTest(unittest.TestCase):
             _Step.is_subclass(
                 frame(linear_model.LinearRegression())))
 
+    def test_bases(self):
+        prd = frame(linear_model.LinearRegression())
+        clf = frame(linear_model.LogisticRegression())
+
+        self.assertTrue(
+            isinstance(prd, base.BaseEstimator))
+        self.assertTrue(
+            isinstance(clf, base.BaseEstimator))
+
+        self.assertTrue(
+            isinstance(prd, base.RegressorMixin))
+        self.assertFalse(
+            isinstance(prd, base.ClassifierMixin))
+        self.assertTrue(
+            isinstance(clf, base.ClassifierMixin))
+        self.assertFalse(
+            isinstance(clf, base.RegressorMixin))
+
+
+class _PDframeTest(unittest.TestCase):
     def test_transform_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
