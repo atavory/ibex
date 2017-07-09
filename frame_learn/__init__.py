@@ -68,8 +68,9 @@ class _Step(object):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
+        others += [self]
 
-        return pipeline.make_pipeline(*others, self)
+        return pipeline.make_pipeline(*others)
 
     def __add__(self, other):
         return FeatureUnion([('0', self), ('1', other)])
@@ -95,12 +96,7 @@ class _Adapter(_Step):
         a step or pipeline.
     """
     def __init__(self, step):
-        bases = set()
-        for b in inspect.getmro(type(step)):
-
-            if b.__module__ == 'sklearn.base':
-                bases.add(b)
-        class BaseAdded(_Adapter, *bases):
+        class BaseAdded(_Adapter, type(step)):
             pass
         self.__class__ = BaseAdded
         self.__name__ = '_Adapter'
@@ -198,7 +194,7 @@ def frame(step):
 __all__ += ['frame']
 
 
-class FeatureUnion(object):
+class FeatureUnion(_Step):
     """
     - Pandas version -
     Concatenates results of multiple transformer objects.
