@@ -1,7 +1,15 @@
-`frame_learn` - `scikit-learn` adapters for `pandas`
+`frame_learn` - `pandas` adapters for `scikit-learn`
 ===================================================
 
 Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
+
+`scikit-learn <http://scikit-learn.org/stable/>`_
+
+`pandas <http://pandas.pydata.org/>`_
+
+
+TL;DR
+-----
 
 	>>> x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})                       
 	>>> y = pd.Series([1, 2, 3])                                                                                                                                       
@@ -12,6 +20,3 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 			
 	>>> y_hat = prd.fit(x, y).predict(x)   
 
-`scikit-learn <http://scikit-learn.org/stable/>`_
-
-`pandas <http://pandas.pydata.org/>`_
