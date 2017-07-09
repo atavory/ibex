@@ -1,9 +1,11 @@
 import operator
+import sys
+import inspect
+
 import numpy as np
 import pandas as pd
 import sklearn
 from sklearn import pipeline
-import sys
 
 
 _py3 = sys.version_info[0] == 3
@@ -20,10 +22,10 @@ __all__ = []
 
 class _Step(object):
     """
-    A base class for stages taking pandas entities, not
+    A base class for steps taking pandas entities, not
         numpy entities.
 
-    Subclass this stage to indicate that a stage takes pandas
+    Subclass this step to indicate that a step takes pandas
         entities.
     """
 
@@ -39,19 +41,19 @@ class _Step(object):
         return x[self._cols]
 
     @classmethod
-    def is_subclass(cls, stage):
+    def is_subclass(cls, step):
         """
         Returns:
-            Whether a stage is a subclass of Stage.
+            Whether a step is a subclass of Stage.
 
         Arguments:
-            stage: A Stage or a pipeline.
+            step: A Stage or a pipeline.
         """
-        if issubclass(type(stage), pipeline.Pipeline):
-            if not stage.steps:
+        if issubclass(type(step), pipeline.Pipeline):
+            if not step.steps:
                 raise ValueError('Cannot use 0-length pipeline')
-            return cls.is_subclass(stage.steps[0][1])
-        return issubclass(type(stage), _Step)
+            return cls.is_subclass(step.steps[0][1])
+        return issubclass(type(step), _Step)
 
     def __or__(self, other):
         if issubclass(type(other), pipeline.Pipeline):
@@ -84,100 +86,114 @@ __all__ += ['_Step']
 
 class _Adapter(_Step):
     """
-    Adapts a stage to a pandas based stage.
+    Adapts a step to a pandas based step.
 
-    The resulting stage takes pd entities; if needed, it strips
-        them and passes them to the adapted stage as numpy entities.
+    The resulting step takes pd entities; if needed, it strips
+        them and passes them to the adapted step as numpy entities.
 
     Arguments:
-        a stage or pipeline.
+        a step or pipeline.
     """
-    def __init__(self, stage):
+    def __init__(self, step):
+        bases = set()
+        for b in inspect.getmro(type(step)):
+
+            if b.__module__ == 'sklearn.base':
+                bases.add(b)
+        class BaseAdded(_Adapter, *bases):
+            pass
+        self.__class__ = BaseAdded
+        self.__name__ = '_Adapter'
+
         _Step.__init__(self)
 
-        self._stage = stage
+        self._step = step
+
+    @property
+    def step(self):
+        return self._step
 
     def fit(self, x, y=None, **fit_params):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         self._set_x(x)
-        self._stage.fit(self._x(x), self._y(y), **fit_params)
+        self._step.fit(self._x(x), self._y(y), **fit_params)
 
         return self
 
     def fit_transform(self, x, y=None, **fit_params):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         self._set_x(x)
-        xt = self._stage.fit_transform(self._x(x), self._y(y), **fit_params)
+        xt = self._step.fit_transform(self._x(x), self._y(y), **fit_params)
         return self._from_x(x.columns, x.index, xt)
 
     def predict(self, x):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         x = self._tr_x(x)
-        y_hat = self._stage.predict(self._x(x))
+        y_hat = self._step.predict(self._x(x))
         return self._from_y(x.index, y_hat)
 
     def predict_proba(self, x):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         x = self._tr_x(x)
-        probs = self._stage.predict_proba(self._x(x))
-        classes = self._stage.classes_
+        probs = self._step.predict_proba(self._x(x))
+        classes = self._step.classes_
         return self._from_p(x.index, classes, probs)
 
     def transform(self, x):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         x = self._tr_x(x)
-        xt = self._stage.transform(self._x(x))
+        xt = self._step.transform(self._x(x))
         return self._from_x(x.columns, x.index, xt)
 
     def score(self, x, y):
         x = self._tr_x(x)
-        return self._stage.score(self._x(x), self._y(y))
+        return self._step.score(self._x(x), self._y(y))
 
     def _x(self, x):
-        return x if _Step.is_subclass(self._stage) else x.as_matrix()
+        return x if _Step.is_subclass(self._step) else x.as_matrix()
 
     def _y(self, y):
         if y is None:
             return None
-        return y if _Step.is_subclass(self._stage) else y.values
+        return y if _Step.is_subclass(self._step) else y.values
 
     def _from_x(self, columns, index, xt):
-        return xt if _Step.is_subclass(self._stage) \
+        return xt if _Step.is_subclass(self._step) \
             else pd.DataFrame(xt, columns=columns, index=index)
 
     def _from_y(self, index, y_hat):
-        return y_hat if _Step.is_subclass(self._stage)\
+        return y_hat if _Step.is_subclass(self._step)\
             else pd.Series(y_hat, index=index)
 
     def _from_p(self, index, classes, probs):
-        return probs if _Step.is_subclass(self._stage)\
+        return probs if _Step.is_subclass(self._step)\
             else pd.DataFrame(probs, columns=classes, index=index)
 
     def get_params(self, deep=True):
         """
         See sklearn.base.BaseEstimator.get_params
         """
-        return self._stage.get_params(deep)
+        return self._step.get_params(deep)
 
     def set_params(self, *params):
         """
         See sklearn.base.BaseEstimator.set_params
         """
-        return self._stage.set_params(*params)
+        return self._step.set_params(*params)
 
 
-def frame(stage):
-    return _Adapter(stage)
+def frame(step):
+    return _Adapter(step)
 
 __all__ += ['frame']
 
@@ -213,7 +229,7 @@ class FeatureUnion(object):
 
     def fit_transform(self, x, y):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         xt = self._feature_union.fit_transform(
             x,
@@ -223,7 +239,7 @@ class FeatureUnion(object):
 
     def fit(self, x, y):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         self._feature_union.fit(
             x,
@@ -233,7 +249,7 @@ class FeatureUnion(object):
 
     def transform(self, x):
         """
-        Same signature as any sklearn stage.
+        Same signature as any sklearn step.
         """
         xt = self._feature_union.transform(x)
 
@@ -244,12 +260,12 @@ __all__ += ['FeatureUnion']
 
 class _FunctionTransformer(_Step):
     """
-    Applies some stage to only some (or one) columns - Pandas version.
+    Applies some step to only some (or one) columns - Pandas version.
 
     Arguments:
         wh: Something for which df[:, wh]
             is defined, where df is a pandas DataFrame.
-        st: A stage.
+        st: A step.
 
     Example:
 
@@ -257,7 +273,7 @@ class _FunctionTransformer(_Step):
 
         x = np.linspace(-3, 3, 50)
         y = x
-        # Apply the stage only to the first column of h.
+        # Apply the step only to the first column of h.
         sm = day_two.sklearn_.preprocessing\
             .FunctionTransformer(
                 'moshe',
