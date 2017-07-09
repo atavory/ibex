@@ -85,6 +85,14 @@ class _Step(object):
 __all__ += ['_Step']
 
 
+
+def _to_step(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return _Adapter(result)
+    return wrapper
+
+
 class _Adapter(_Step):
     """
     Adapts a step to a pandas based step.
@@ -105,9 +113,11 @@ class _Adapter(_Step):
 
         self._step = step
 
-    @property
-    def step(self):
-        return self._step
+    def __getattr__(self, item):
+        result = getattr(self._step, item)
+        if callable(result):
+            result = _to_step(result)
+        return result
 
     def fit(self, x, y=None, **fit_params):
         """

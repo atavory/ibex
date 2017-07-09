@@ -30,13 +30,20 @@ class _BaseTest(unittest.TestCase):
 
         self.assertTrue(
             isinstance(prd, base.RegressorMixin))
-        self.assertFalse(
-            isinstance(prd, base.ClassifierMixin))
         self.assertTrue(
             isinstance(clf, base.ClassifierMixin))
+
+        self.assertFalse(
+            isinstance(prd, base.ClassifierMixin))
         self.assertFalse(
             isinstance(clf, base.RegressorMixin))
 
+    def test_attr(self):
+        x = pd.DataFrame({'a': [1, 2, 3]})
+        y = pd.Series([1, 2, 3])
+
+        prd = frame(linear_model.LinearRegression())
+        prd.fit(x, y).coef_
 
 class _PDframeTest(unittest.TestCase):
     def test_transform_y(self):
