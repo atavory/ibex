@@ -266,6 +266,7 @@ class _VerifyDocumentTest(unittest.TestCase):
         lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
         for l in lines:
             print l
+        exec('\n'.join(lines))
 
 
 if __name__ == '__main__':

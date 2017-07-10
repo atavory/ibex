@@ -16,7 +16,7 @@ TL;DR
 -----
 
     >>> import pandas as pd
-    >>> from sklearn import linear model
+    >>> from sklearn import linear_model
     >>> from frame_learn import *
 
 A `pd.DataFrame` and 
