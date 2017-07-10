@@ -11,40 +11,39 @@ import numpy as np
 from frame_learn import *
 
 
+class _ConceptsTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls._prd = frame(linear_model.LinearRegression())
+        cls._clf = frame(linear_model.LogisticRegression())
+
+    def test_base_estimator(self):
+        self.assertTrue(
+            isinstance(self._prd, base.BaseEstimator))
+        self.assertTrue(
+            isinstance(self._clf, base.BaseEstimator))
+
+    def test_regressor_mixin(self):
+        self.assertTrue(
+            isinstance(self._prd, base.RegressorMixin))
+        self.assertTrue(
+            isinstance(self._clf, base.ClassifierMixin))
+
+    def test_classifier_mixin(self):
+        self.assertFalse(
+            isinstance(self._prd, base.ClassifierMixin))
+        self.assertFalse(
+            isinstance(self._clf, base.RegressorMixin))
+
+
 class _BaseTest(unittest.TestCase):
-    def test_is_subclass(self):
-        self.assertFalse(
-            FrameMixin.is_subclass(
-                linear_model.LinearRegression()))
-        self.assertTrue(
-            FrameMixin.is_subclass(
-                frame(linear_model.LinearRegression())))
-
-    def test_bases(self):
-        prd = frame(linear_model.LinearRegression())
-        clf = frame(linear_model.LogisticRegression())
-
-        self.assertTrue(
-            isinstance(prd, base.BaseEstimator))
-        self.assertTrue(
-            isinstance(clf, base.BaseEstimator))
-
-        self.assertTrue(
-            isinstance(prd, base.RegressorMixin))
-        self.assertTrue(
-            isinstance(clf, base.ClassifierMixin))
-
-        self.assertFalse(
-            isinstance(prd, base.ClassifierMixin))
-        self.assertFalse(
-            isinstance(clf, base.RegressorMixin))
-
     def test_attr(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         prd = frame(linear_model.LinearRegression())
         prd.fit(x, y).coef_
+
 
 class _PDframeTest(unittest.TestCase):
     def test_transform_y(self):
