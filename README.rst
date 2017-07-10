@@ -21,16 +21,15 @@ TL;DR
 
 A `pd.DataFrame` and 
 
-	>>> x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})                       
+    >>> x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})                       
     >>> y = pd.Series([1, 2, 3])                                                                                                                                       
 
 sdf
 																					
     >>> prd = frame(preprocessing.StandardScaler()) | \                          
     ...     apply() + apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
-	...     frame(linear_model.LinearRegression())                                  
-			
-	>>> y_hat = prd.fit(x, y).predict(x)   
+    ...     frame(linear_model.LinearRegression())                                  
+    >>> y_hat = prd.fit(x, y).predict(x)   
 
 API
 ---
