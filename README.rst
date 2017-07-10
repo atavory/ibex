@@ -8,8 +8,16 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 `pandas <http://pandas.pydata.org/>`_
 
 
+* TL;DR
+* API
+
+
 TL;DR
 -----
+
+    >>> import pandas as pd
+    >>> from sklearn import linear model
+    >>> from frame_learn import *
 
 	>>> x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})                       
 	>>> y = pd.Series([1, 2, 3])                                                                                                                                       
@@ -19,4 +27,11 @@ TL;DR
 	... 	frame(linear_model.LinearRegression())                                  
 			
 	>>> y_hat = prd.fit(x, y).predict(x)   
+
+API
+---
+
+    >>> from frame_learn import *
+
+`FrameMixin`
 

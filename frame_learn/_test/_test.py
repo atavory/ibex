@@ -13,10 +13,10 @@ from frame_learn import *
 class _BaseTest(unittest.TestCase):
     def test_is_subclass(self):
         self.assertFalse(
-            _Step.is_subclass(
+            FrameMixin.is_subclass(
                 linear_model.LinearRegression()))
         self.assertTrue(
-            _Step.is_subclass(
+            FrameMixin.is_subclass(
                 frame(linear_model.LinearRegression())))
 
     def test_bases(self):

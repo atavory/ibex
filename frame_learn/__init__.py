@@ -20,7 +20,7 @@ def _is_str(s):
 __all__ = []
 
 
-class _Step(object):
+class FrameMixin(object):
     """
     A base class for steps taking pandas entities, not
         numpy entities.
@@ -53,7 +53,7 @@ class _Step(object):
             if not step.steps:
                 raise ValueError('Cannot use 0-length pipeline')
             return cls.is_subclass(step.steps[0][1])
-        return issubclass(type(step), _Step)
+        return issubclass(type(step), FrameMixin)
 
     def __or__(self, other):
         if issubclass(type(other), pipeline.Pipeline):
@@ -82,8 +82,7 @@ class _Step(object):
 
         return pipeline.make_pipeline(self, *others)
 
-__all__ += ['_Step']
-
+__all__ += ['FrameMixin']
 
 
 def _to_step(func):
@@ -93,7 +92,7 @@ def _to_step(func):
     return wrapper
 
 
-class _Adapter(_Step):
+class _Adapter(FrameMixin):
     """
     Adapts a step to a pandas based step.
 
@@ -109,7 +108,7 @@ class _Adapter(_Step):
         self.__class__ = BaseAdded
         self.__name__ = '_Adapter'
 
-        _Step.__init__(self)
+        FrameMixin.__init__(self)
 
         self._step = step
 
@@ -166,23 +165,23 @@ class _Adapter(_Step):
         return self._step.score(self._x(x), self._y(y))
 
     def _x(self, x):
-        return x if _Step.is_subclass(self._step) else x.as_matrix()
+        return x if FrameMixin.is_subclass(self._step) else x.as_matrix()
 
     def _y(self, y):
         if y is None:
             return None
-        return y if _Step.is_subclass(self._step) else y.values
+        return y if FrameMixin.is_subclass(self._step) else y.values
 
     def _from_x(self, columns, index, xt):
-        return xt if _Step.is_subclass(self._step) \
+        return xt if FrameMixin.is_subclass(self._step) \
             else pd.DataFrame(xt, columns=columns, index=index)
 
     def _from_y(self, index, y_hat):
-        return y_hat if _Step.is_subclass(self._step)\
+        return y_hat if FrameMixin.is_subclass(self._step)\
             else pd.Series(y_hat, index=index)
 
     def _from_p(self, index, classes, probs):
-        return probs if _Step.is_subclass(self._step)\
+        return probs if FrameMixin.is_subclass(self._step)\
             else pd.DataFrame(probs, columns=classes, index=index)
 
     def get_params(self, deep=True):
@@ -204,7 +203,7 @@ def frame(step):
 __all__ += ['frame']
 
 
-class FeatureUnion(_Step):
+class FeatureUnion(FrameMixin):
     """
     - Pandas version -
     Concatenates results of multiple transformer objects.
@@ -226,7 +225,7 @@ class FeatureUnion(_Step):
         Keys are transformer names, values the weights.
     """
     def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
-        _Step.__init__(self)
+        FrameMixin.__init__(self)
 
         self._feature_union = pipeline.FeatureUnion(
             transformer_list,
@@ -264,7 +263,7 @@ class FeatureUnion(_Step):
 __all__ += ['FeatureUnion']
 
 
-class _FunctionTransformer(_Step):
+class _FunctionTransformer(FrameMixin):
     """
     Applies some step to only some (or one) columns - Pandas version.
 
@@ -289,7 +288,7 @@ class _FunctionTransformer(_Step):
             pd.Series(y))
     """
     def __init__(self, func, pass_y, kw_args, columns):
-        _Step.__init__(self)
+        FrameMixin.__init__(self)
 
         self._func, self._pass_y, self._kw_args, self._columns = \
             func, pass_y, kw_args, columns

@@ -37,8 +37,8 @@ setup(
     include_package_data=True,
     license='bsd',
     description='Tmp Ami',
-    long_description='Tmp Ami',
-    requires=['numpy', 'pandas', 'matplotlib', 'ipython', 'pysam'],
+    long_description=open('README.rst').read(),
+    requires=['sklearn', 'pandas'],
     zip_safe=False,
     data_files=[
     ],
