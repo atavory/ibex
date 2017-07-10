@@ -19,8 +19,12 @@ TL;DR
     >>> from sklearn import linear model
     >>> from frame_learn import *
 
+A `pd.DataFrame` and 
+
 	>>> x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})                       
 	>>> y = pd.Series([1, 2, 3])                                                                                                                                       
+
+sdf
 																					
 	>>> prd = frame(preprocessing.StandardScaler()) | \                          
 	...		apply() + apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
