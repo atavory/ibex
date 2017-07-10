@@ -1,11 +1,12 @@
 import unittest
+import os
+import re
 
 from sklearn import linear_model
 from sklearn import preprocessing
 from sklearn import pipeline, base
 import pandas as pd
 import numpy as np
-
 
 from frame_learn import *
 
@@ -253,6 +254,18 @@ class _FeatureUnionTest(unittest.TestCase):
         xt3 = feat_un.transform(x)
         self.assertEqual(xt3.shape, (len(x), 2))
         self.assertListEqual(list(xt3.index), list(x.index))
+
+
+class _VerifyDocumentTest(unittest.TestCase):
+    def test(self):
+        f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
+        print f_name
+        lines = [l.rstrip() for l in open(f_name)]
+
+        python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')
+        lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
+        for l in lines:
+            print l
 
 
 if __name__ == '__main__':

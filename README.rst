@@ -27,8 +27,8 @@ A `pd.DataFrame` and
 sdf
 																					
 	>>> prd = frame(preprocessing.StandardScaler()) | \                          
-	...		apply() + apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
-	... 	frame(linear_model.LinearRegression())                                  
+    ...     apply() + apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
+	...     frame(linear_model.LinearRegression())                                  
 			
 	>>> y_hat = prd.fit(x, y).predict(x)   
 
