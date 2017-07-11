@@ -85,10 +85,11 @@ class _Adapter(_frame_mixin.FrameMixin):
         _frame_mixin.FrameMixin.__init__(self)
 
         self._step = step
+        internal_step = step.steps[-1] if isinstance(step, sklearn.pipeline.Pipeline) else step
 
         print 'init', id(self)
 
-        for method_name in dir(step):
+        for method_name in dir(internal_step):
             try:
                 method = getattr(step, method_name)
             except AttributeError:
