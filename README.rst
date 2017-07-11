@@ -3,6 +3,10 @@
 
 Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
+.. image:: https://travis-ci.org/atavory/frame_learn.svg?branch=master  
+    :target: https://travis-ci.org/atavory/frame_learn.svg
+
+
 `scikit-learn <http://scikit-learn.org/stable/>`_
 
 `pandas <http://pandas.pydata.org/>`_
