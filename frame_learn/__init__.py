@@ -161,7 +161,7 @@ class _Adapter(FrameMixin):
     def __init__(self, step):
         class BaseAdded(_Adapter, type(step)):
             pass
-        # self.__class__ = BaseAdded
+        self.__class__ = BaseAdded
         self.__name__ = '_Adapter'
 
         FrameMixin.__init__(self)
@@ -201,57 +201,10 @@ class _Adapter(FrameMixin):
 
     def __getattr__(self, name):
         print('getattr', name)
-        print(object.__getattribute__(self, name))
         result = getattr(self._step, name)
         if callable(result):
             result = _to_step(result)
         return result
-
-    def _fit(self, x, y=None, **fit_params):
-        """
-        Same signature as any sklearn step.
-        """
-        self._set_x(x)
-        self._step.fit(self._x(x), self._y(y), **fit_params)
-
-        return self
-
-    def fit_transform(self, x, y=None, **fit_params):
-        """
-        Same signature as any sklearn step.
-        """
-        self._set_x(x)
-        xt = self._step.fit_transform(self._x(x), self._y(y), **fit_params)
-        return self._from_x(x.columns, x.index, xt)
-
-    def predict(self, x):
-        """
-        Same signature as any sklearn step.
-        """
-        x = self._tr_x(x)
-        y_hat = self._step.predict(self._x(x))
-        return self._from_y(x.index, y_hat)
-
-    def predict_proba(self, x):
-        """
-        Same signature as any sklearn step.
-        """
-        x = self._tr_x(x)
-        probs = self._step.predict_proba(self._x(x))
-        classes = self._step.classes_
-        return self._from_p(x.index, classes, probs)
-
-    def _transform(self, x):
-        """
-        Same signature as any sklearn step.
-        """
-        x = self._tr_x(x)
-        xt = self._step.transform(self._x(x))
-        return self._from_x(x.columns, x.index, xt)
-
-    def score(self, x, y):
-        x = self._tr_x(x)
-        return self._step.score(self._x(x), self._y(y))
 
     def _x(self, x):
         return x if FrameMixin.is_subclass(self._step) else x.as_matrix()
