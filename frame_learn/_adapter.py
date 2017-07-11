@@ -37,43 +37,55 @@ class _Adapter(_frame_mixin.FrameMixin):
         _frame_mixin.FrameMixin.__init__(self)
 
         self._step = step
-        internal_step = step.steps[-1] if isinstance(step, sklearn.pipeline.Pipeline) else step
 
-        print 'init', id(self)
 
-        for method_name in dir(internal_step):
+        xy, x, neut = self._get_wrapped_method_names(step)
+        print xy, x, neut
+
+        added = []
+        for method_name in dir(step):
+            if self._try_wrap_method(step, method_name):
+                added.append(method_name)
+
+        if isinstance(step, sklearn.pipeline.Pipeline):
+            # Tmp Ami - should be recursive
+            internal_step = step.steps[-1][1]
+            for method_name in dir(internal_step):
+                if method_name not in added:
+                    continue
+
+    def _get_wrapped_method_names(self, step):
+        xy, x, neut = [], [], []
+        for method_name in dir(step):
+            if self._is_no_wrap_method_name(method_name):
+                continue
+
             try:
                 method = getattr(step, method_name)
             except AttributeError:
                 continue
 
-            # Tmp Ami
             if not callable(method):
                 continue
-
-            print 'wrapping', method_name
 
             try:
                 args = inspect.getargspec(method).args
             except TypeError:
-                print 'failed to inspect'
                 continue
 
             if args[: 3] == ['self', 'X', 'y']:
-                print 'xxxxxyyyy', method_name
-                self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
-                continue
-            elif args[: 2] == ['self', 'X']:
-                print 'xxxxx', method_name
-                self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
-                continue
-            else:
-                print 'nothing?'
-                # Tmp Ami - add here
+                xy.append(method_name)
                 continue
 
+            if args[: 2] == ['self', 'X']:
+                x.append(method_name)
+                continue
+
+            neut.append(method_name)
+
+        return set(xy), set(x), set(neut)
+
     def __getattr__(self, name):
-        print('getattr', name)
         result = getattr(self._step, name)
         if callable(result):
             result = _delegate_getattr_to_step(result)
@@ -100,6 +112,37 @@ class _Adapter(_frame_mixin.FrameMixin):
         """
         return self._step.set_params(*params)
 
+    def _try_wrap_method(self, step, method_name):
+        if self._is_no_wrap_method_name(method_name):
+            return False
+
+        try:
+            method = getattr(step, method_name)
+        except AttributeError:
+            return False
+
+        if not callable(method):
+            return False
+
+        try:
+            args = inspect.getargspec(method).args
+        except TypeError:
+            return False
+
+        if args[: 3] == ['self', 'X', 'y']:
+            self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
+            return True
+
+        if args[: 2] == ['self', 'X']:
+            self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
+            return True
+
+        # Tmp Ami - add here
+        return True
+
+    def _is_no_wrap_method_name(self, method_name):
+        return method_name.startswith('_')
+
     def _xy_wrapper(self, method):
         @functools.wraps(method)
         def xy_wrapped(step, X, *args, **kwargs):
@@ -123,24 +166,17 @@ class _Adapter(_frame_mixin.FrameMixin):
             self._set_x(X)
             ret = method(self._x(X), *args, **kwargs)
 
-            for _ in range(20):
-                print 'x', ret
-
             return self._process_wrapped_call_res(step, X, ret)
         return x_wrapped
 
     def _process_wrapped_call_res(self, step, X, ret):
         if isinstance(ret, np.ndarray):
-            print ret.shape
             if len(ret.shape) == 1:
                 return pd.Series(ret, index=X.index)
             if len(ret.shape) == 2:
-                print X, X.index, X.columns
-                print pd.DataFrame(ret, index=X.index, columns=X.columns)
                 return pd.DataFrame(ret, index=X.index, columns=X.columns)
 
         if ret == step:
-            print 'returning self', self, id(self), dir(self)
             return self
 
         return ret

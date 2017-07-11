@@ -98,7 +98,7 @@ class _FrameTest(unittest.TestCase):
         print 'prd', prd, id(prd)
         print prd.predict(x)
         y_hat = frame(p).fit(x, y).predict(x)
-        print y_hat
+        print 'y_hat', y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
@@ -108,6 +108,7 @@ class _FrameTest(unittest.TestCase):
 
         p = pipeline.make_pipeline(frame(linear_model.LinearRegression()))
         y_hat = frame(p).fit(x, y).predict(x)
+        print 'y_hat', y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
 
 
