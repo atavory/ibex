@@ -45,12 +45,13 @@ class _BaseTest(unittest.TestCase):
         prd.fit(x, y).coef_
 
 
-class _PDframeTest(unittest.TestCase):
+class _PDFrameTest(unittest.TestCase):
     def test_transform_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         xt = frame(preprocessing.StandardScaler()).fit(x, y).transform(x)
+        print frame(preprocessing.StandardScaler()).fit.__name__, frame(preprocessing.StandardScaler()).fit.__doc__
         self.assertTrue(isinstance(xt, pd.DataFrame))
         xt = frame(preprocessing.StandardScaler()).fit_transform(x, y)
         self.assertTrue(isinstance(xt, pd.DataFrame))
@@ -258,13 +259,14 @@ class _FeatureUnionTest(unittest.TestCase):
 class _VerifyDocumentTest(unittest.TestCase):
     def test(self):
         f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
-        print f_name
+        print(f_name)
         lines = [l.rstrip() for l in open(f_name)]
 
         python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')
         lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
         for l in lines:
-            print l
+            print(l)
+        exec('\n'.join(lines))
 
 
 if __name__ == '__main__':
