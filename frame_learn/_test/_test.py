@@ -45,7 +45,7 @@ class _BaseTest(unittest.TestCase):
         prd.fit(x, y).coef_
 
 
-class _PDFrameTest(unittest.TestCase):
+class _FrameTest(unittest.TestCase):
     def test_transform_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
@@ -97,7 +97,6 @@ class _PDFrameTest(unittest.TestCase):
         prd = prd.fit(x, y)
         print 'prd', prd, id(prd)
         print prd.predict(x)
-        ff
         y_hat = frame(p).fit(x, y).predict(x)
         print y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
