@@ -92,6 +92,12 @@ class _PDFrameTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         p = pipeline.make_pipeline(linear_model.LinearRegression())
+        prd = frame(p)
+        print 'prd', prd, id(prd)
+        prd = prd.fit(x, y)
+        print 'prd', prd, id(prd)
+        print prd.predict(x)
+        ff
         y_hat = frame(p).fit(x, y).predict(x)
         print y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))

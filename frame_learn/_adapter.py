@@ -11,17 +11,34 @@ import _feature_union
 import _frame_mixin
 
 
-def _to_step(func):
+def _delegate_getattr_to_step(func):
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         return _Adapter(result)
     return wrapper
 
 
+def _process_wrapped_call_res(self, step, X, ret):
+    if isinstance(ret, np.ndarray):
+        print ret.shape
+        if len(ret.shape) == 1:
+            return pd.Series(ret, index=X.index)
+        if len(ret.shape) == 2:
+            print X, X.index, X.columns
+            print pd.DataFrame(ret, index=X.index, columns=X.columns)
+            return pd.DataFrame(ret, index=X.index, columns=X.columns)
+
+    if ret == step:
+        print 'returning self', self, id(self), dir(self)
+        return self
+
+    return ret
+
+
 def _xy_wrapper(method, self):
     @functools.wraps(method)
     def xy_wrapped(step, X, *args, **kwargs):
-        print 'xy_wrapped'
+        print 'xy_wrapped', method
         self._set_x(X)
         param_X = self._x(X)
         if len(args) > 0:
@@ -31,22 +48,7 @@ def _xy_wrapper(method, self):
         else:
             ret = method(param_X, *args, **kwargs)
 
-        print ret, ret == step
-
-        if isinstance(ret, np.ndarray):
-            print ret.shape
-            if len(ret.shape) == 1:
-                return pd.Series(ret, index=X.index)
-            if len(ret.shape) == 2:
-                print X, X.index, X.columns
-                print pd.DataFrame(ret, index=X.index, columns=X.columns)
-                return pd.DataFrame(ret, index=X.index, columns=X.columns)
-
-        if ret == step:
-            print 'returning self', self, id(self)
-            return self
-
-        return ret
+        return _process_wrapped_call_res(self, step, X, ret)
     return xy_wrapped
 
 
@@ -60,19 +62,7 @@ def _x_wrapper(method, self):
         for _ in range(20):
             print 'x', ret
 
-        if isinstance(ret, np.ndarray):
-            print ret.shape
-            if len(ret.shape) == 1:
-                return pd.Series(ret, index=X.index)
-            if len(ret.shape) == 2:
-                print X, X.index, X.columns
-                print pd.DataFrame(ret, index=X.index, columns=X.columns)
-                return pd.DataFrame(ret, index=X.index, columns=X.columns)
-
-        if ret == step:
-            return self
-
-        return ret
+        return _process_wrapped_call_res(self, step, X, ret)
     return x_wrapped
 
 
@@ -113,15 +103,19 @@ class _Adapter(_frame_mixin.FrameMixin):
             try:
                 args = inspect.getargspec(method).args
             except TypeError:
+                print 'failed to inspect'
                 continue
 
             if args[: 3] == ['self', 'X', 'y']:
+                print 'xxxxxyyyy', method_name
                 self.__setattr__(method_name, types.MethodType(_xy_wrapper(method, self), step))
                 continue
             elif args[: 2] == ['self', 'X']:
+                print 'xxxxx', method_name
                 self.__setattr__(method_name, types.MethodType(_x_wrapper(method, self), step))
                 continue
             else:
+                print 'nothing?'
                 # Tmp Ami - add here
                 continue
 
@@ -129,7 +123,7 @@ class _Adapter(_frame_mixin.FrameMixin):
         print('getattr', name)
         result = getattr(self._step, name)
         if callable(result):
-            result = _to_step(result)
+            result = _delegate_getattr_to_step(result)
         return result
 
     def _x(self, x):
