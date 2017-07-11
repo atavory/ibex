@@ -21,6 +21,7 @@ def _to_step(func):
 def _xy_wrapper(method, self):
     @functools.wraps(method)
     def xy_wrapped(step, X, *args, **kwargs):
+        print 'xy_wrapped'
         self._set_x(X)
         param_X = self._x(X)
         if len(args) > 0:
@@ -29,6 +30,8 @@ def _xy_wrapper(method, self):
             ret = method(param_X, y, *args, **kwargs)
         else:
             ret = method(param_X, *args, **kwargs)
+
+        print ret, ret == step
 
         if isinstance(ret, np.ndarray):
             print ret.shape
@@ -40,6 +43,7 @@ def _xy_wrapper(method, self):
                 return pd.DataFrame(ret, index=X.index, columns=X.columns)
 
         if ret == step:
+            print 'returning self', self, id(self)
             return self
 
         return ret
@@ -49,7 +53,7 @@ def _xy_wrapper(method, self):
 def _x_wrapper(method, self):
     @functools.wraps(method)
     def x_wrapped(step, X, *args, **kwargs):
-        print X, args, kwargs
+        print 'x_wrapped'
         self._set_x(X)
         ret = method(self._x(X), *args, **kwargs)
 
@@ -92,17 +96,19 @@ class _Adapter(_frame_mixin.FrameMixin):
 
         self._step = step
 
+        print 'init', id(self)
+
         for method_name in dir(step):
             try:
                 method = getattr(step, method_name)
             except AttributeError:
                 continue
 
-            print 'here', method_name
-
             # Tmp Ami
             if not callable(method):
                 continue
+
+            print 'wrapping', method_name
 
             try:
                 args = inspect.getargspec(method).args
@@ -110,14 +116,10 @@ class _Adapter(_frame_mixin.FrameMixin):
                 continue
 
             if args[: 3] == ['self', 'X', 'y']:
-                print('setting', method_name)
                 self.__setattr__(method_name, types.MethodType(_xy_wrapper(method, self), step))
-                print self.__dict__
                 continue
             elif args[: 2] == ['self', 'X']:
-                print('setting', method_name)
                 self.__setattr__(method_name, types.MethodType(_x_wrapper(method, self), step))
-                print self.__dict__
                 continue
             else:
                 # Tmp Ami - add here

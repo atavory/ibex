@@ -93,6 +93,7 @@ class _PDFrameTest(unittest.TestCase):
 
         p = pipeline.make_pipeline(linear_model.LinearRegression())
         y_hat = frame(p).fit(x, y).predict(x)
+        print y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
