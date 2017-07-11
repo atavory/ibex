@@ -18,54 +18,6 @@ def _delegate_getattr_to_step(func):
     return wrapper
 
 
-def _process_wrapped_call_res(self, step, X, ret):
-    if isinstance(ret, np.ndarray):
-        print ret.shape
-        if len(ret.shape) == 1:
-            return pd.Series(ret, index=X.index)
-        if len(ret.shape) == 2:
-            print X, X.index, X.columns
-            print pd.DataFrame(ret, index=X.index, columns=X.columns)
-            return pd.DataFrame(ret, index=X.index, columns=X.columns)
-
-    if ret == step:
-        print 'returning self', self, id(self), dir(self)
-        return self
-
-    return ret
-
-
-def _xy_wrapper(method, self):
-    @functools.wraps(method)
-    def xy_wrapped(step, X, *args, **kwargs):
-        print 'xy_wrapped', method
-        self._set_x(X)
-        param_X = self._x(X)
-        if len(args) > 0:
-            y = self._y(args[0])
-            args = args[1: ]
-            ret = method(param_X, y, *args, **kwargs)
-        else:
-            ret = method(param_X, *args, **kwargs)
-
-        return _process_wrapped_call_res(self, step, X, ret)
-    return xy_wrapped
-
-
-def _x_wrapper(method, self):
-    @functools.wraps(method)
-    def x_wrapped(step, X, *args, **kwargs):
-        print 'x_wrapped'
-        self._set_x(X)
-        ret = method(self._x(X), *args, **kwargs)
-
-        for _ in range(20):
-            print 'x', ret
-
-        return _process_wrapped_call_res(self, step, X, ret)
-    return x_wrapped
-
-
 class _Adapter(_frame_mixin.FrameMixin):
     """
     Adapts a step to a pandas based step.
@@ -109,11 +61,11 @@ class _Adapter(_frame_mixin.FrameMixin):
 
             if args[: 3] == ['self', 'X', 'y']:
                 print 'xxxxxyyyy', method_name
-                self.__setattr__(method_name, types.MethodType(_xy_wrapper(method, self), step))
+                self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
                 continue
             elif args[: 2] == ['self', 'X']:
                 print 'xxxxx', method_name
-                self.__setattr__(method_name, types.MethodType(_x_wrapper(method, self), step))
+                self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
                 continue
             else:
                 print 'nothing?'
@@ -147,6 +99,51 @@ class _Adapter(_frame_mixin.FrameMixin):
         See sklearn.base.BaseEstimator.set_params
         """
         return self._step.set_params(*params)
+
+    def _xy_wrapper(self, method):
+        @functools.wraps(method)
+        def xy_wrapped(step, X, *args, **kwargs):
+            print 'xy_wrapped', method
+            self._set_x(X)
+            param_X = self._x(X)
+            if len(args) > 0:
+                y = self._y(args[0])
+                args = args[1: ]
+                ret = method(param_X, y, *args, **kwargs)
+            else:
+                ret = method(param_X, *args, **kwargs)
+
+            return self._process_wrapped_call_res(step, X, ret)
+        return xy_wrapped
+
+    def _x_wrapper(self, method):
+        @functools.wraps(method)
+        def x_wrapped(step, X, *args, **kwargs):
+            print 'x_wrapped'
+            self._set_x(X)
+            ret = method(self._x(X), *args, **kwargs)
+
+            for _ in range(20):
+                print 'x', ret
+
+            return self._process_wrapped_call_res(step, X, ret)
+        return x_wrapped
+
+    def _process_wrapped_call_res(self, step, X, ret):
+        if isinstance(ret, np.ndarray):
+            print ret.shape
+            if len(ret.shape) == 1:
+                return pd.Series(ret, index=X.index)
+            if len(ret.shape) == 2:
+                print X, X.index, X.columns
+                print pd.DataFrame(ret, index=X.index, columns=X.columns)
+                return pd.DataFrame(ret, index=X.index, columns=X.columns)
+
+        if ret == step:
+            print 'returning self', self, id(self), dir(self)
+            return self
+
+        return ret
 
 
 def frame(step):
