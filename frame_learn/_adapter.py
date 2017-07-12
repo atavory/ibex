@@ -36,11 +36,11 @@ class _Adapter(FrameMixin):
 
         self._step = step
 
-
         xy, x, neut = self._get_wrapped_method_names(step)
 
         if isinstance(step, sklearn.pipeline.Pipeline):
-            step_xy, step_x, _ = self._get_wrapped_method_names(step.steps[-1][1])
+            step_xy, step_x, _ = \
+                self._get_wrapped_method_names(step.steps[-1][1])
 
             xy |= step_xy.intersection(neut)
             neut -= step_xy.intersection(neut)
@@ -50,11 +50,15 @@ class _Adapter(FrameMixin):
 
         for method_name in xy:
             method = getattr(step, method_name)
-            self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
+            self.__setattr__(
+                method_name,
+                types.MethodType(self._xy_wrapper(method), step))
 
         for method_name in x:
             method = getattr(step, method_name)
-            self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
+            self.__setattr__(
+                method_name,
+                types.MethodType(self._x_wrapper(method), step))
 
     def _get_wrapped_method_names(self, step):
         xy, x, neut = [], [], []
@@ -124,7 +128,7 @@ class _Adapter(FrameMixin):
             param_X = self._x(X)
             if len(args) > 0:
                 y = self._y(args[0])
-                args = args[1: ]
+                args = args[1:]
                 ret = method(param_X, y, *args, **kwargs)
             else:
                 ret = method(param_X, *args, **kwargs)

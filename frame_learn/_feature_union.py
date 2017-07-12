@@ -1,5 +1,4 @@
 import pandas as pd
-import sklearn
 from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin
