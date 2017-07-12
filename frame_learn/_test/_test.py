@@ -59,6 +59,7 @@ class _BaseTest(unittest.TestCase):
         prd.fit(x, y)
         prd.coef_
 
+
 class _FrameTest(unittest.TestCase):
     def test_transform_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
@@ -87,7 +88,21 @@ class _FrameTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_fit_permute_cols(self):
-        s = frame(linear_model.LinearRegression())
+        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        y = pd.Series([1, 2, 3])
+        z = pd.DataFrame({'b': [1, 2, 3], 'a': [30, 23, 2]})
+
+        pred = frame(linear_model.LinearRegression()).fit(x, y)
+
+        y_hat = pred.predict(z)
+        self.assertTrue(isinstance(y_hat, pd.Series))
+
+        y_hat = pred.predict(x[list(reversed(list(x.columns)))])
+        self.assertTrue(isinstance(y_hat, pd.Series))
+
+        # Tmp Ami - compare
+
+    def test_fit_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
 
@@ -96,8 +111,10 @@ class _FrameTest(unittest.TestCase):
         y_hat = pred.predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-        y_hat = pred.predict(x[list(reversed(list(x.columns)))])
-        self.assertTrue(isinstance(y_hat, pd.Series))
+        x.rename(columns={'a': 'c'}, inplace=True)
+
+        with self.assertRaises(KeyError):
+            pred.predict(x)
 
     def test_pipeline_fit(self):
         s = frame(linear_model.LinearRegression())
