@@ -42,17 +42,25 @@ class _Adapter(_frame_mixin.FrameMixin):
         xy, x, neut = self._get_wrapped_method_names(step)
         print xy, x, neut
 
-        added = []
-        for method_name in dir(step):
-            if self._try_wrap_method(step, method_name):
-                added.append(method_name)
-
         if isinstance(step, sklearn.pipeline.Pipeline):
-            # Tmp Ami - should be recursive
-            internal_step = step.steps[-1][1]
-            for method_name in dir(internal_step):
-                if method_name not in added:
-                    continue
+            step_xy, step_x, _ = self._get_wrapped_method_names(step.steps[-1][1])
+            print step_xy, step_x
+
+            xy |= step_xy.intersection(neut)
+            neut -= step_xy.intersection(neut)
+
+            x |= step_x.intersection(neut)
+            neut -= step_x.intersection(neut)
+
+        print xy, x, neut
+
+        for method_name in xy:
+            method = getattr(step, method_name)
+            self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
+
+        for method_name in x:
+            method = getattr(step, method_name)
+            self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
 
     def _get_wrapped_method_names(self, step):
         xy, x, neut = [], [], []
@@ -111,34 +119,6 @@ class _Adapter(_frame_mixin.FrameMixin):
         See sklearn.base.BaseEstimator.set_params
         """
         return self._step.set_params(*params)
-
-    def _try_wrap_method(self, step, method_name):
-        if self._is_no_wrap_method_name(method_name):
-            return False
-
-        try:
-            method = getattr(step, method_name)
-        except AttributeError:
-            return False
-
-        if not callable(method):
-            return False
-
-        try:
-            args = inspect.getargspec(method).args
-        except TypeError:
-            return False
-
-        if args[: 3] == ['self', 'X', 'y']:
-            self.__setattr__(method_name, types.MethodType(self._xy_wrapper(method), step))
-            return True
-
-        if args[: 2] == ['self', 'X']:
-            self.__setattr__(method_name, types.MethodType(self._x_wrapper(method), step))
-            return True
-
-        # Tmp Ami - add here
-        return True
 
     def _is_no_wrap_method_name(self, method_name):
         return method_name.startswith('_')

@@ -263,17 +263,18 @@ class _FeatureUnionTest(unittest.TestCase):
         self.assertListEqual(list(xt3.index), list(x.index))
 
 
-class _VerifyDocumentTest(unittest.TestCase):
-    def test(self):
-        f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
-        print(f_name)
-        lines = [l.rstrip() for l in open(f_name)]
+if False:
+    class _VerifyDocumentTest(unittest.TestCase):
+        def test(self):
+            f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
+            print(f_name)
+            lines = [l.rstrip() for l in open(f_name)]
 
-        python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')
-        lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
-        for l in lines:
-            print(l)
-        exec('\n'.join(lines))
+            python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')
+            lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
+            for l in lines:
+                print(l)
+            exec('\n'.join(lines))
 
 
 if __name__ == '__main__':
