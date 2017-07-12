@@ -60,6 +60,12 @@ class _Adapter(FrameMixin):
                 method_name,
                 types.MethodType(self._x_wrapper(method), step))
 
+        for method_name in neut:
+            method = getattr(step, method_name)
+            self.__setattr__(
+                method_name,
+                types.MethodType(self._neut_wrapper(method), step))
+
     def _get_wrapped_method_names(self, step):
         xy, x, neut = [], [], []
         for method_name in dir(step):
@@ -105,19 +111,6 @@ class _Adapter(FrameMixin):
             return None
         return y if FrameMixin.is_subclass(self._step) else y.values
 
-    # Tmp Ami - check if next two are needed
-    def get_params(self, deep=True):
-        """
-        See sklearn.base.BaseEstimator.get_params
-        """
-        return self._step.get_params(deep)
-
-    def set_params(self, *params):
-        """
-        See sklearn.base.BaseEstimator.set_params
-        """
-        return self._step.set_params(*params)
-
     def _is_no_wrap_method_name(self, method_name):
         return method_name.startswith('_')
 
@@ -144,6 +137,12 @@ class _Adapter(FrameMixin):
 
             return self._process_wrapped_call_res(step, X, ret)
         return x_wrapped
+
+    def _neut_wrapper(self, method):
+        @functools.wraps(method)
+        def neut_wrapped(step, *args, **kwargs):
+            return method(*args, **kwargs)
+        return neut_wrapped
 
     def _process_wrapped_call_res(self, step, X, ret):
         if isinstance(ret, np.ndarray):

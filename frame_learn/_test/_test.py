@@ -37,13 +37,27 @@ class _ConceptsTest(unittest.TestCase):
 
 
 class _BaseTest(unittest.TestCase):
-    def test_attr(self):
+    def test_neut(self):
+        x = pd.DataFrame({'a': [1, 2, 3]})
+        y = pd.Series([1, 2, 3])
+
+        prd = linear_model.LinearRegression(fit_intercept=False)
+        self.assertIn('get_params', dir(prd))
+        self.assertEquals(prd.get_params()['fit_intercept'], False)
+
+        prd = frame(linear_model.LinearRegression(fit_intercept=False))
+        self.assertIn('get_params', dir(prd))
+        self.assertEquals(prd.get_params()['fit_intercept'], False)
+
+    def test_get_attr(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         prd = frame(linear_model.LinearRegression())
-        prd.fit(x, y).coef_
-
+        with self.assertRaises(AttributeError):
+            prd.coef_
+        prd.fit(x, y)
+        prd.coef_
 
 class _FrameTest(unittest.TestCase):
     def test_transform_y(self):
