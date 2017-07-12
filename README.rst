@@ -12,10 +12,6 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 `pandas <http://pandas.pydata.org/>`_
 
 
-* TL;DR
-* API
-
-
 TL;DR
 -----
 
