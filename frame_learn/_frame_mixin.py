@@ -18,13 +18,12 @@ class FrameMixin(object):
     def __init__(self):
         self._cols = None
 
-    def _set_x(self, x):
-        self._cols = x.columns
+    def set_x(self, x):
+        if self._cols is None:
+            self._cols = x.columns
 
-    def _tr_x(self, x):
         if set(x.columns) != set(self._cols):
             raise KeyError()
-        return x[self._cols]
 
     @classmethod
     def is_subclass(cls, step):

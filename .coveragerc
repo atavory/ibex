@@ -1,3 +1,6 @@
 [report]
 include = 
     */frame_learn/*
+
+omit =
+    */*test.py

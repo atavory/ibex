@@ -121,7 +121,7 @@ class _Adapter(FrameMixin):
     def _xy_wrapper(self, method):
         @functools.wraps(method)
         def xy_wrapped(step, X, *args, **kwargs):
-            self._set_x(X)
+            self.set_x(X)
             param_X = self._x(X)
             if len(args) > 0:
                 y = self._y(args[0])
@@ -136,7 +136,7 @@ class _Adapter(FrameMixin):
     def _x_wrapper(self, method):
         @functools.wraps(method)
         def x_wrapped(step, X, *args, **kwargs):
-            self._set_x(X)
+            self.set_x(X)
             ret = method(self._x(X), *args, **kwargs)
 
             return self._process_wrapped_call_res(step, X, ret)
