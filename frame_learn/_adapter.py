@@ -140,7 +140,7 @@ class _Adapter(FrameMixin):
 
     def _neut_wrapper(self, method):
         @functools.wraps(method)
-        def neut_wrapped(step, *args, **kwargs):
+        def neut_wrapped(_, *args, **kwargs):
             return method(*args, **kwargs)
         return neut_wrapped
 
