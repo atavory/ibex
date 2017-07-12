@@ -4,7 +4,8 @@ python:
     - "3.3"
 
 before_install: 
-    - sudo apt-get install -qq python-numpy python-scipy
+    - sudo apt-get install -qq python-numpy python-scipy python-sklearn python-pandas
+    - sudo apt-get install -qq python3-numpy python3-scipy python3-sklearn python3-pandas
 
 install: sudo python setup.py install
 
