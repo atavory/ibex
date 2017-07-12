@@ -7,4 +7,4 @@ python:
 install: "python setup.py install"
 
 # command to run tests
-script: python setup.py test
+script: frame_learn/_test/_test.py
