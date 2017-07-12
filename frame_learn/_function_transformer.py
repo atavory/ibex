@@ -1,7 +1,7 @@
 import pandas as pd
+from six import string_types
 
 from ._frame_mixin import FrameMixin
-from ._py3 import _is_str
 
 
 class _FunctionTransformer(FrameMixin):
@@ -43,7 +43,7 @@ class _FunctionTransformer(FrameMixin):
         if self._columns is not None:
             # Tmp AMi - refactor next to utility in top of file
             columns = \
-                [self._columns] if _is_str(self._columns) else self._columns
+                [self._columns] if isinstance(self._columns, string_types) else self._columns
             x = x[columns]
 
         if self._func is None:
@@ -53,7 +53,7 @@ class _FunctionTransformer(FrameMixin):
             dfs = []
             for k, v in self._func.items():
                 res = pd.DataFrame(v(x))
-                columns = [k] if _is_str(k) else k
+                columns = [k] if isinstance(k, string_types) else k
                 res.columns = columns
                 dfs.append(res)
             return pd.concat(dfs, axis=1)

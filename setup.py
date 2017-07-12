@@ -38,7 +38,7 @@ setup(
     license='bsd',
     description='Tmp Ami',
     long_description=open('README.rst').read(),
-    install_requires=['sklearn', 'pandas'],
+    install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,
     data_files=[
     ],
