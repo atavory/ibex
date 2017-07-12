@@ -1,13 +1,12 @@
 language: python
 python:
     - "2.7"
-    - "3.3"
 
 before_install: 
     - sudo apt-get update
     - sudo apt-get install -qq build-essential python-dev python-setuptools python-numpy python-scipy libatlas-dev libatlas3gf-base
     - sudo apt-get install -qq python-numpy python-scipy python-sklearn python-pandas
-    - yes | sudo pip install numpy scipy scikit-learn pandas
+    - yes | sudo pip2.7 install numpy scipy scikit-learn pandas
 
 install: sudo python setup.py install
 
