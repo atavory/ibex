@@ -3,13 +3,13 @@
 
 Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
-.. image:: https://travis-ci.org/atavory/frame_learn.svg?branch=master  
+.. image:: https://travis-ci.org/atavory/frame_learn.png?branch=master  
     :target: https://travis-ci.org/atavory/frame_learn
 
 .. image:: https://coveralls.io/repos/github/atavory/frame_learn/badge.png?branch=master
 	:target: https://coveralls.io/github/atavory/frame_learn?branch=master
 
-.. image:: https://landscape.io/github/atavory/frame_learn/master/landscape.svg?style=flat
+.. image:: https://landscape.io/github/atavory/frame_learn/master/landscape.png?style=flat
    :target: https://landscape.io/github/atavory/frame_learn/master
 
 
