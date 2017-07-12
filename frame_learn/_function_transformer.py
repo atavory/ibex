@@ -1,7 +1,4 @@
-import numpy as np
 import pandas as pd
-import sklearn
-from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin
 from ._py3 import _is_str
@@ -44,8 +41,9 @@ class _FunctionTransformer(FrameMixin):
     def transform(self, x, y=None):
         # Tmp Ami Add here call to fit
         if self._columns is not None:
-# Tmp AMi - refactor next to utility in top of file
-            columns = [self._columns] if _is_str(self._columns) else self._columns
+            # Tmp AMi - refactor next to utility in top of file
+            columns = \
+                [self._columns] if _is_str(self._columns) else self._columns
             x = x[columns]
 
         if self._func is None:
