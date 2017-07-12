@@ -65,5 +65,5 @@ class _FunctionTransformer(FrameMixin):
     # Tmp Ami - add fit_transform
 
 
-def apply(func=None, pass_y=False, kw_args=None, columns=None):
+def trans(func=None, pass_y=False, kw_args=None, columns=None):
     return _FunctionTransformer(func, pass_y, kw_args, columns)

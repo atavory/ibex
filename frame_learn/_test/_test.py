@@ -107,33 +107,33 @@ class _FrameTest(unittest.TestCase):
 
 
 class _ApplyTest(unittest.TestCase):
-    def test_apply_none(self):
+    def test_trans_none(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        apply().transform(x)
+        trans().transform(x)
 
-    def test_apply_none_cols(self):
+    def test_trans_none_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        apply(columns=['a']).transform(x)
+        trans(columns=['a']).transform(x)
 
-    def test_apply_none_bad_cols(self):
+    def test_trans_none_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
         with self.assertRaises(KeyError):
-            apply(columns=['c']).transform(x)
+            trans(columns=['c']).transform(x)
 
-    def test_apply_pd(self):
+    def test_trans_pd(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        apply(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).transform(x)
+        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).transform(x)
 
-    def test_apply_no_pd_single(self):
+    def test_trans_no_pd_single(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        apply({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
 
-    def test_apply_no_pd_multiple(self):
+    def test_trans_no_pd_multiple(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
 
@@ -191,24 +191,24 @@ class _OperatorsTest(unittest.TestCase):
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-    def test_pipe_apply_fit(self):
+    def test_pipe_trans_fit(self):
         s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
         prd = frame(preprocessing.MinMaxScaler()) | \
-            apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
+            trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
             frame(linear_model.LinearRegression())
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-    def test_pipe_add_apply_fit(self):
+    def test_pipe_add_trans_fit(self):
         s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
         prd = frame(preprocessing.MinMaxScaler()) | \
-            apply() + apply({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
+            trans() + trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
             frame(linear_model.LinearRegression())
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))

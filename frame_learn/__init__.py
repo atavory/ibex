@@ -16,9 +16,9 @@ from ._feature_union import FeatureUnion
 __all__ += ['FeatureUnion']
 
 
-from ._function_transformer import apply
+from ._function_transformer import trans
 
-__all__ += ['apply']
+__all__ += ['trans']
 
 
 
