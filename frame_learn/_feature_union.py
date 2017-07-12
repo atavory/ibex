@@ -3,10 +3,10 @@ import pandas as pd
 import sklearn
 from sklearn import pipeline
 
-import _frame_mixin
+from ._frame_mixin import FrameMixin
 
 
-class FeatureUnion(_frame_mixin.FrameMixin):
+class FeatureUnion(FrameMixin):
     """
     - Pandas version -
     Concatenates results of multiple transformer objects.
@@ -28,7 +28,7 @@ class FeatureUnion(_frame_mixin.FrameMixin):
         Keys are transformer names, values the weights.
     """
     def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
-        _frame_mixin.FrameMixin.__init__(self)
+        FrameMixin.__init__(self)
 
         self._feature_union = pipeline.FeatureUnion(
             transformer_list,

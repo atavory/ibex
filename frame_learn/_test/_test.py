@@ -51,7 +51,6 @@ class _FrameTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         xt = frame(preprocessing.StandardScaler()).fit(x, y).transform(x)
-        print frame(preprocessing.StandardScaler()).fit.__name__, frame(preprocessing.StandardScaler()).fit.__doc__
         self.assertTrue(isinstance(xt, pd.DataFrame))
         xt = frame(preprocessing.StandardScaler()).fit_transform(x, y)
         self.assertTrue(isinstance(xt, pd.DataFrame))
@@ -93,12 +92,8 @@ class _FrameTest(unittest.TestCase):
 
         p = pipeline.make_pipeline(linear_model.LinearRegression())
         prd = frame(p)
-        print 'prd', prd, id(prd)
         prd = prd.fit(x, y)
-        print 'prd', prd, id(prd)
-        print prd.predict(x)
         y_hat = frame(p).fit(x, y).predict(x)
-        print 'y_hat', y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
@@ -108,7 +103,6 @@ class _FrameTest(unittest.TestCase):
 
         p = pipeline.make_pipeline(frame(linear_model.LinearRegression()))
         y_hat = frame(p).fit(x, y).predict(x)
-        print 'y_hat', y_hat
         self.assertTrue(isinstance(y_hat, pd.Series))
 
 
@@ -141,8 +135,6 @@ class _ApplyTest(unittest.TestCase):
 
     def test_apply_no_pd_multiple(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
-
-        print(apply({('sqrt_a', 'sqrt_b'): lambda x: np.sqrt(x)}, columns=['a', 'b']).transform(x))
 
 
 class _UnionTest(unittest.TestCase):
@@ -267,7 +259,6 @@ if False:
     class _VerifyDocumentTest(unittest.TestCase):
         def test(self):
             f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
-            print(f_name)
             lines = [l.rstrip() for l in open(f_name)]
 
             python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')

@@ -7,8 +7,7 @@ import pandas as pd
 import sklearn
 from sklearn import pipeline
 
-import _feature_union
-import _frame_mixin
+from ._frame_mixin import FrameMixin
 
 
 def _delegate_getattr_to_step(func):
@@ -18,7 +17,7 @@ def _delegate_getattr_to_step(func):
     return wrapper
 
 
-class _Adapter(_frame_mixin.FrameMixin):
+class _Adapter(FrameMixin):
     """
     Adapts a step to a pandas based step.
 
@@ -34,25 +33,21 @@ class _Adapter(_frame_mixin.FrameMixin):
         self.__class__ = BaseAdded
         self.__name__ = '_Adapter'
 
-        _frame_mixin.FrameMixin.__init__(self)
+        FrameMixin.__init__(self)
 
         self._step = step
 
 
         xy, x, neut = self._get_wrapped_method_names(step)
-        print xy, x, neut
 
         if isinstance(step, sklearn.pipeline.Pipeline):
             step_xy, step_x, _ = self._get_wrapped_method_names(step.steps[-1][1])
-            print step_xy, step_x
 
             xy |= step_xy.intersection(neut)
             neut -= step_xy.intersection(neut)
 
             x |= step_x.intersection(neut)
             neut -= step_x.intersection(neut)
-
-        print xy, x, neut
 
         for method_name in xy:
             method = getattr(step, method_name)
@@ -100,12 +95,12 @@ class _Adapter(_frame_mixin.FrameMixin):
         return result
 
     def _x(self, x):
-        return x if _frame_mixin.FrameMixin.is_subclass(self._step) else x.as_matrix()
+        return x if FrameMixin.is_subclass(self._step) else x.as_matrix()
 
     def _y(self, y):
         if y is None:
             return None
-        return y if _frame_mixin.FrameMixin.is_subclass(self._step) else y.values
+        return y if FrameMixin.is_subclass(self._step) else y.values
 
     # Tmp Ami - check if next two are needed
     def get_params(self, deep=True):
@@ -126,7 +121,6 @@ class _Adapter(_frame_mixin.FrameMixin):
     def _xy_wrapper(self, method):
         @functools.wraps(method)
         def xy_wrapped(step, X, *args, **kwargs):
-            print 'xy_wrapped', method
             self._set_x(X)
             param_X = self._x(X)
             if len(args) > 0:
@@ -142,7 +136,6 @@ class _Adapter(_frame_mixin.FrameMixin):
     def _x_wrapper(self, method):
         @functools.wraps(method)
         def x_wrapped(step, X, *args, **kwargs):
-            print 'x_wrapped'
             self._set_x(X)
             ret = method(self._x(X), *args, **kwargs)
 

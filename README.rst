@@ -4,7 +4,7 @@
 Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
 .. image:: https://travis-ci.org/atavory/frame_learn.svg?branch=master  
-    :target: https://travis-ci.org/atavory/frame_learn.svg
+    :target: https://travis-ci.org/atavory/frame_learn
 
 
 `scikit-learn <http://scikit-learn.org/stable/>`_

@@ -3,11 +3,11 @@ import pandas as pd
 import sklearn
 from sklearn import pipeline
 
-import _frame_mixin
-import _py3
+from ._frame_mixin import FrameMixin
+from ._py3 import _is_str
 
 
-class _FunctionTransformer(_frame_mixin.FrameMixin):
+class _FunctionTransformer(FrameMixin):
     """
     Applies some step to only some (or one) columns - Pandas version.
 
@@ -32,7 +32,7 @@ class _FunctionTransformer(_frame_mixin.FrameMixin):
             pd.Series(y))
     """
     def __init__(self, func, pass_y, kw_args, columns):
-        _frame_mixin.FrameMixin.__init__(self)
+        FrameMixin.__init__(self)
 
         self._func, self._pass_y, self._kw_args, self._columns = \
             func, pass_y, kw_args, columns
@@ -45,7 +45,7 @@ class _FunctionTransformer(_frame_mixin.FrameMixin):
         # Tmp Ami Add here call to fit
         if self._columns is not None:
 # Tmp AMi - refactor next to utility in top of file
-            columns = [self._columns] if _py3._is_str(self._columns) else self._columns
+            columns = [self._columns] if _is_str(self._columns) else self._columns
             x = x[columns]
 
         if self._func is None:
@@ -55,7 +55,7 @@ class _FunctionTransformer(_frame_mixin.FrameMixin):
             dfs = []
             for k, v in self._func.items():
                 res = pd.DataFrame(v(x))
-                columns = [k] if _py3._is_str(k) else k
+                columns = [k] if _is_str(k) else k
                 res.columns = columns
                 dfs.append(res)
             return pd.concat(dfs, axis=1)
