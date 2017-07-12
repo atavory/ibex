@@ -30,4 +30,7 @@ install:
 script: 
   - python frame_learn/_test/_test.py
   - coverage run frame_learn/_test/_test.py
+
+after_success:
+  - coveralls
   
