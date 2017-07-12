@@ -265,6 +265,12 @@ class _OperatorsTest(unittest.TestCase):
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
+        prd = frame(preprocessing.StandardScaler()) | \
+            (frame(preprocessing.StandardScaler()) | \
+            frame(linear_model.LinearRegression()))
+        y_hat = prd.fit(x, y).predict(x)
+        self.assertTrue(isinstance(y_hat, pd.Series))
+
     def test_pipe_trans_fit(self):
         s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
@@ -294,6 +300,12 @@ class _OperatorsTest(unittest.TestCase):
 
         prd = frame(preprocessing.MinMaxScaler()) | \
             trans() + trans() + trans() | \
+            frame(linear_model.LinearRegression())
+        y_hat = prd.fit(x, y).predict(x)
+        self.assertTrue(isinstance(y_hat, pd.Series))
+
+        prd = frame(preprocessing.MinMaxScaler()) | \
+            trans() + (trans() + trans()) | \
             frame(linear_model.LinearRegression())
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
