@@ -5,7 +5,6 @@ import functools
 import numpy as np
 import pandas as pd
 import sklearn
-from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin
 
