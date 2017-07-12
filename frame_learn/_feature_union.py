@@ -4,6 +4,7 @@ from sklearn import pipeline
 from ._frame_mixin import FrameMixin
 
 
+# Tmp Ami - take care of weights
 class FeatureUnion(FrameMixin):
     """
     - Pandas version -
@@ -60,3 +61,7 @@ class FeatureUnion(FrameMixin):
         xt = self._feature_union.transform(x)
 
         return pd.DataFrame(xt, index=x.index)
+
+    @property
+    def transformer_list(self):
+        return self._feature_union.transformer_list

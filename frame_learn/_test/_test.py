@@ -43,11 +43,11 @@ class _BaseTest(unittest.TestCase):
 
         prd = linear_model.LinearRegression(fit_intercept=False)
         self.assertIn('get_params', dir(prd))
-        self.assertEquals(prd.get_params()['fit_intercept'], False)
+        self.assertEqual(prd.get_params()['fit_intercept'], False)
 
         prd = frame(linear_model.LinearRegression(fit_intercept=False))
         self.assertIn('get_params', dir(prd))
-        self.assertEquals(prd.get_params()['fit_intercept'], False)
+        self.assertEqual(prd.get_params()['fit_intercept'], False)
 
     def test_get_attr(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
@@ -116,6 +116,8 @@ class _FrameTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             pred.predict(x)
 
+
+class _FramePipelineTest(unittest.TestCase):
     def test_pipeline_fit(self):
         s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3]})
@@ -137,7 +139,7 @@ class _FrameTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
 
-class _ApplyTest(unittest.TestCase):
+class _TransTest(unittest.TestCase):
     def test_trans_none(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
@@ -169,6 +171,47 @@ class _ApplyTest(unittest.TestCase):
 
 
 class _UnionTest(unittest.TestCase):
+
+    class simple_transformer(object):
+        def __init__(self, col=0):
+            self.col = col
+
+        def fit_transform(self, x, y):
+            xt = x.iloc[:, self.col]
+            return pd.DataFrame(xt, index=x.index)
+
+        def fit(self, x, y):
+            return self
+
+        def transform(self, x):
+            xt = x.iloc[:, self.col]
+            return pd.DataFrame(xt, index=x.index)
+
+    def test_pandas_support(self):
+        """ simple test to make sure the pandas wrapper works properly"""
+        x = pd.DataFrame(np.random.rand(500, 10), index=range(500))
+        y = x.iloc[:, 0]
+
+        trans_list = [
+            ('1', self.simple_transformer(col=0)),
+            ('2', self.simple_transformer(col=1))]
+
+        xt1 = self.simple_transformer().fit_transform(x, y)
+        self.assertEqual(xt1.shape, (len(x), 1))
+
+        feat_un = FeatureUnion(trans_list)
+
+        xt2 = feat_un.fit_transform(x, y)
+        self.assertEqual(xt2.shape, (len(x), 2))
+        self.assertListEqual(list(xt2.index), list(x.index))
+
+        feat_un.fit(x, y)
+        xt3 = feat_un.transform(x)
+        self.assertEqual(xt3.shape, (len(x), 2))
+        self.assertListEqual(list(xt3.index), list(x.index))
+
+
+class _FeatureUnionTest(unittest.TestCase):
 
     class simple_transformer(object):
         def __init__(self, col=0):
@@ -244,46 +287,16 @@ class _OperatorsTest(unittest.TestCase):
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
+    def test_triple_add(self):
+        s = frame(linear_model.LinearRegression())
+        x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
+        y = pd.Series([1, 2, 3])
 
-class _FeatureUnionTest(unittest.TestCase):
-
-    class simple_transformer(object):
-        def __init__(self, col=0):
-            self.col = col
-
-        def fit_transform(self, x, y):
-            xt = x.iloc[:, self.col]
-            return pd.DataFrame(xt, index=x.index)
-
-        def fit(self, x, y):
-            return self
-
-        def transform(self, x):
-            xt = x.iloc[:, self.col]
-            return pd.DataFrame(xt, index=x.index)
-
-    def test_pandas_support(self):
-        """ simple test to make sure the pandas wrapper works properly"""
-        x = pd.DataFrame(np.random.rand(500, 10), index=range(500))
-        y = x.iloc[:, 0]
-
-        trans_list = [
-            ('1', self.simple_transformer(col=0)),
-            ('2', self.simple_transformer(col=1))]
-
-        xt1 = self.simple_transformer().fit_transform(x, y)
-        self.assertEqual(xt1.shape, (len(x), 1))
-
-        feat_un = FeatureUnion(trans_list)
-
-        xt2 = feat_un.fit_transform(x, y)
-        self.assertEqual(xt2.shape, (len(x), 2))
-        self.assertListEqual(list(xt2.index), list(x.index))
-
-        feat_un.fit(x, y)
-        xt3 = feat_un.transform(x)
-        self.assertEqual(xt3.shape, (len(x), 2))
-        self.assertListEqual(list(xt3.index), list(x.index))
+        prd = frame(preprocessing.MinMaxScaler()) | \
+            trans() + trans() + trans() | \
+            frame(linear_model.LinearRegression())
+        y_hat = prd.fit(x, y).predict(x)
+        self.assertTrue(isinstance(y_hat, pd.Series))
 
 
 if False:

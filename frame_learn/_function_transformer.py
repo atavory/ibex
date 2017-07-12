@@ -5,29 +5,6 @@ from ._frame_mixin import FrameMixin
 
 
 class _FunctionTransformer(FrameMixin):
-    """
-    Applies some step to only some (or one) columns - Pandas version.
-
-    Arguments:
-        wh: Something for which df[:, wh]
-            is defined, where df is a pandas DataFrame.
-        st: A step.
-
-    Example:
-
-        import day_two
-
-        x = np.linspace(-3, 3, 50)
-        y = x
-        # Apply the step only to the first column of h.
-        sm = day_two.sklearn_.preprocessing\
-            .FunctionTransformer(
-                'moshe',
-                day_two.preprocessing.UnivariateSplineSmoother())
-        sm.fit(
-            pd.DataFrame({'moshe': x, 'koko': x}),
-            pd.Series(y))
-    """
     def __init__(self, func, pass_y, kw_args, columns):
         FrameMixin.__init__(self)
 
