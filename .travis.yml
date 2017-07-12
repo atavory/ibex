@@ -21,14 +21,13 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
   - sudo pip install python-coveralls
-  - sudo pip install coverage
 
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy scipy scikit-learn pandas
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy scipy scikit-learn pandas coverage
   - source activate test-environment
   - python setup.py install
 
 script: 
   - python frame_learn/_test/_test.py
-
+  - coverage run frame_learn/_test/_test.py
   
