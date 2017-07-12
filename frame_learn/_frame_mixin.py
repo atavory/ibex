@@ -1,4 +1,5 @@
 import operator
+import uuid
 
 from sklearn import pipeline
 
@@ -60,11 +61,11 @@ class FrameMixin(object):
         if isinstance(self, FeatureUnion):
             self_features = self.transformer_list
         else:
-            self_features = [('0', self)]
+            self_features = [(str(uuid.uuid4()), self)]
 
         if isinstance(other, FeatureUnion):
             other_features = other.transformer_list
         else:
-            other_features = [('0', other)]
+            other_features = [(str(uuid.uuid4()), other)]
 
         return FeatureUnion(self_features + other_features)
