@@ -19,7 +19,7 @@ class _FunctionTransformer(FrameMixin):
             self._single_fit(self._func, x, y)
             return self
 
-        for k, v in self._func.items():
+        for v in self._func.values():
             self._single_fit(v, x, y)
 
         return self
