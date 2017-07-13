@@ -255,7 +255,6 @@ class _FeatureUnionTest(unittest.TestCase):
 class _OperatorsTest(unittest.TestCase):
 
     def test_pipe_fit(self):
-        s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
@@ -272,7 +271,6 @@ class _OperatorsTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipe_trans_fit(self):
-        s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
@@ -283,7 +281,6 @@ class _OperatorsTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipe_add_trans_fit(self):
-        s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
@@ -294,7 +291,6 @@ class _OperatorsTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_triple_add(self):
-        s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
