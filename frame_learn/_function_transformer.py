@@ -15,27 +15,33 @@ class _FunctionTransformer(FrameMixin):
         # Tmp AmiAdd here call to fit
         return self
 
-    def transform(self, x, y=None):
-        # Tmp Ami Add here call to fit
-        if self._columns is not None:
-            # Tmp AMi - refactor next to utility in top of file
-            columns = \
-                [self._columns] if isinstance(self._columns, string_types) else self._columns
-            x = x[columns]
-
-        if self._func is None:
+    def _prep_x(self, x):
+        if self._columns is None:
             return x
 
-        if isinstance(self._func, dict):
-            dfs = []
-            for k, v in self._func.items():
-                res = pd.DataFrame(v(x))
-                columns = [k] if isinstance(k, string_types) else k
-                res.columns = columns
-                dfs.append(res)
-            return pd.concat(dfs, axis=1)
+        columns = \
+            [self._columns] if isinstance(self._columns, string_types) else self._columns
+        return x[columns]
 
-        return self._func(x)
+    def transform(self, x, y=None):
+        x = self._prep_x(x)
+
+        if not isinstance(self._func, dict):
+            return self._single_transform(self._func, x, y)
+
+        dfs = []
+        for k, v in self._func.items():
+            res = pd.DataFrame(self._single_transform(v, x, y))
+            columns = [k] if isinstance(k, string_types) else k
+            res.columns = columns
+            dfs.append(res)
+        return pd.concat(dfs, axis=1)
+
+    def _single_transform(self, stage, x, y):
+        if stage is None:
+            return x
+
+        return stage(x, y) if self._pass_y else stage(x)
 
     # Tmp Ami - add fit_transform
 

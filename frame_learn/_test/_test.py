@@ -80,7 +80,6 @@ class _FrameTest(unittest.TestCase):
         self.assertTrue(isinstance(xt, pd.DataFrame))
 
     def test_fit(self):
-        s = frame(linear_model.LinearRegression())
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
