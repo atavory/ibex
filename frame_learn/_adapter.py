@@ -9,13 +9,6 @@ import sklearn
 from ._frame_mixin import FrameMixin
 
 
-def _delegate_getattr_to_step(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return _Adapter(result)
-    return wrapper
-
-
 class _Adapter(FrameMixin):
     """
     Adapts a step to a pandas based step.
@@ -98,10 +91,7 @@ class _Adapter(FrameMixin):
         return set(xy), set(x), set(neut)
 
     def __getattr__(self, name):
-        result = getattr(self._step, name)
-        if callable(result):
-            result = _delegate_getattr_to_step(result)
-        return result
+        return getattr(self._step, name)
 
     def _x(self, x):
         return x if FrameMixin.is_subclass(self._step) else x.as_matrix()
