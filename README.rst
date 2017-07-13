@@ -12,6 +12,8 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: https://coveralls.io/repos/github/atavory/frame_learn/badge.png?branch=master
 	:target: https://coveralls.io/github/atavory/frame_learn?branch=master
 
+.. image:: https://www.workitdaily.com/wp-content/uploads/2012/12/incomplete-degree-resume.jpg
+
 
 `scikit-learn <http://scikit-learn.org/stable/>`_
 
