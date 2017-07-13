@@ -142,31 +142,68 @@ class _TransTest(unittest.TestCase):
     def test_trans_none(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
+        trans().fit(x)
+
         trans().transform(x)
+
+        trans().fit_transform(x)
 
     def test_trans_none_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
+        trans(columns=['a']).fit(x)
+
         trans(columns=['a']).transform(x)
+
+        trans(columns=['a']).fit_transform(x)
 
     def test_trans_none_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
         with self.assertRaises(KeyError):
+            trans(columns=['c']).fit(x)
+
+        with self.assertRaises(KeyError):
             trans(columns=['c']).transform(x)
+
+        with self.assertRaises(KeyError):
+            trans(columns=['c']).fit_transform(x)
 
     def test_trans_pd(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
+        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).fit(x)
+
         trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).transform(x)
+
+        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).fit_transform(x)
 
     def test_trans_no_pd_single(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit(x)
+
         trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
+
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit_transform(x)
 
     def test_trans_no_pd_multiple(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit(x)
+
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
+
+        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit_transform(x)
+
+    def test_trans_step(self):
+        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+
+        trans(frame(preprocessing.StandardScaler())).fit(x).fit(x)
+
+        trans(frame(preprocessing.StandardScaler())).fit(x).transform(x)
+
+        trans(frame(preprocessing.StandardScaler())).fit(x).fit_transform(x)
 
 
 class _UnionTest(unittest.TestCase):
