@@ -1,16 +1,16 @@
-`frame_learn` - `pandas` adapters for `scikit-learn`
+`ibex` - `pandas` adapters for `scikit-learn`
 ===================================================
 
 Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
-.. image:: https://travis-ci.org/atavory/frame_learn.svg?branch=master  
-    :target: https://travis-ci.org/atavory/frame_learn
+.. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
+    :target: https://travis-ci.org/atavory/ibex
 
-.. image:: https://landscape.io/github/atavory/frame_learn/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/atavory/frame_learn/master
+.. image:: https://landscape.io/github/atavory/ibex/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/atavory/ibex/master
 
-.. image:: https://coveralls.io/repos/github/atavory/frame_learn/badge.png?branch=master
-	:target: https://coveralls.io/github/atavory/frame_learn?branch=master
+.. image:: https://coveralls.io/repos/github/atavory/ibex/badge.png?branch=master
+	:target: https://coveralls.io/github/atavory/ibex?branch=master
 
 .. image:: https://readthedocs.org/projects/ibex/badge/
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
@@ -23,7 +23,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
 `pandas <http://pandas.pydata.org/>`_
 
-`documentation <https://atavory.github.io/frame_learn/>`_
+`documentation <https://atavory.github.io/ibex/>`_
 
 
 TL;DR
@@ -31,7 +31,7 @@ TL;DR
 
     >>> import pandas as pd
     >>> from sklearn import linear_model
-    >>> from frame_learn import *
+    >>> from ibex import *
 
 A `pd.DataFrame` and 
 
@@ -48,7 +48,7 @@ sdf
 API
 ---
 
-    >>> from frame_learn import *
+    >>> from ibex import *
 
 `FrameMixin`
 
