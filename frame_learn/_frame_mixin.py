@@ -13,11 +13,8 @@ class FrameMixin(object):
         entities.
     """
 
-    def __init__(self):
-        self._cols = None
-
     def set_x(self, x):
-        if self._cols is None:
+        if not hasattr(self, '_cols'):
             self._cols = x.columns
 
         if set(x.columns) != set(self._cols):

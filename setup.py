@@ -20,7 +20,7 @@ class _TestCommand(Command):
             self.level = '0'
 
     def run(self):
-        run_str = "%s -m unittest discover frame_learn/_test '*test.py'" % ('python' if _py2 else 'python3')
+        run_str = "%s -m unittest discover test '*test.py'" % ('python' if _py2 else 'python3')
        	os.system(run_str)
 
 
@@ -31,6 +31,7 @@ setup(
     author_email='atavory@gmail.com',
     packages=[
         'frame_learn',
+        'frame_learn.sklearn',
     ],
     license='bsd',
     description='Tmp Ami',
