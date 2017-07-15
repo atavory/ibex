@@ -25,13 +25,13 @@ class _TestCommand(Command):
 
 
 setup(
-    name='frame_learn',
-    version=open('frame_learn/_metadata/version.txt').read(),
-    author=open('frame_learn/_metadata/authors.txt').read(),
+    name='ibex',
+    version=open('ibex/_metadata/version.txt').read(),
+    author=open('ibex/_metadata/authors.txt').read(),
     author_email='atavory@gmail.com',
     packages=[
-        'frame_learn',
-        'frame_learn.sklearn',
+        'ibex',
+        'ibex.sklearn',
     ],
     license='bsd',
     description='Tmp Ami',
@@ -39,7 +39,7 @@ setup(
     install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,
     package_data={
-        'frame_learn': ['_metadata/*txt']
+        'ibex': ['_metadata/*txt']
     },
     include_package_data=True,
     cmdclass={

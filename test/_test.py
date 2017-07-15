@@ -4,15 +4,15 @@ import re
 from glob import glob
 
 from sklearn import linear_model
-from frame_learn.sklearn import linear_model as pd_linear_model
+from ibex.sklearn import linear_model as pd_linear_model
 from sklearn import preprocessing
-from frame_learn.sklearn import preprocessing as pd_preprocessing
+from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
 from sklearn import base
 from sklearn import decomposition
-from frame_learn.sklearn import decomposition as pd_decomposition
+from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
-from frame_learn.sklearn import linear_model as pd_linear_model
+from ibex.sklearn import linear_model as pd_linear_model
 from sklearn import model_selection
 from sklearn import datasets
 import pandas as pd
@@ -20,7 +20,7 @@ import numpy as np
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 
-from frame_learn import *
+from ibex import *
 
 
 class _ConceptsTest(unittest.TestCase):
@@ -84,26 +84,42 @@ class _FrameTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        xt = pd_preprocessing.StandardScaler().fit(x, y).transform(x)
-        self.assertTrue(isinstance(xt, pd.DataFrame))
-        xt = pd_preprocessing.StandardScaler().fit_transform(x, y)
-        self.assertTrue(isinstance(xt, pd.DataFrame))
+        pd_xt = pd_preprocessing.StandardScaler().fit(x, y).transform(x)
+        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
+        xt = preprocessing.StandardScaler().fit(x, y).transform(x)
+        self.assertFalse(isinstance(xt, pd.DataFrame))
+        np.testing.assert_equal(pd_xt, xt)
+
+        pd_xt = pd_preprocessing.StandardScaler().fit_transform(x, y)
+        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
+        xt = preprocessing.StandardScaler().fit_transform(x, y)
+        self.assertFalse(isinstance(xt, pd.DataFrame))
+        np.testing.assert_equal(pd_xt, xt)
 
     def test_transform_no_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
 
-        xt = pd_preprocessing.StandardScaler().fit(x).transform(x)
-        self.assertTrue(isinstance(xt, pd.DataFrame))
-        xt = pd_preprocessing.StandardScaler().fit_transform(x)
-        self.assertTrue(isinstance(xt, pd.DataFrame))
+        pd_xt = pd_preprocessing.StandardScaler().fit(x).transform(x)
+        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
+        xt = preprocessing.StandardScaler().fit(x).transform(x)
+        self.assertFalse(isinstance(xt, pd.DataFrame))
+        np.testing.assert_equal(pd_xt, xt)
+
+        pd_xt = pd_preprocessing.StandardScaler().fit_transform(x)
+        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
+        xt = preprocessing.StandardScaler().fit_transform(x)
+        self.assertFalse(isinstance(xt, pd.DataFrame))
+        np.testing.assert_equal(pd_xt, xt)
 
     def test_fit_predict(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        y_hat = pd_linear_model.LinearRegression().fit(x, y).predict(x)
-        self.assertTrue(isinstance(y_hat, pd.Series))
+        pd_y_hat = pd_linear_model.LinearRegression().fit(x, y).predict(x)
+        self.assertTrue(isinstance(pd_y_hat, pd.Series))
+        y_hat = linear_model.LinearRegression().fit(x, y).predict(x)
+        self.assertFalse(isinstance(y_hat, pd.Series))
+        np.testing.assert_equal(pd_y_hat, y_hat)
 
     def test_fit_permute_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
@@ -112,13 +128,14 @@ class _FrameTest(unittest.TestCase):
 
         pred = pd_linear_model.LinearRegression().fit(x, y)
 
+        pd_y_hat = pred.predict(z)
+        self.assertTrue(isinstance(pd_y_hat, pd.Series))
         y_hat = pred.predict(z)
         self.assertTrue(isinstance(y_hat, pd.Series))
+        np.testing.assert_equal(pd_y_hat, y_hat)
 
         y_hat = pred.predict(x[list(reversed(list(x.columns)))])
         self.assertTrue(isinstance(y_hat, pd.Series))
-
-        # Tmp Ami - compare
 
     def test_fit_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
@@ -366,7 +383,7 @@ class _OperatorsTest(unittest.TestCase):
 
 class _SKLearnTest(unittest.TestCase):
     def test_linear_model(self):
-        from frame_learn.sklearn import linear_model
+        from ibex.sklearn import linear_model
 
         print(linear_model.LinearRegression)
 

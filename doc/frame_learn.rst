@@ -1,10 +1,10 @@
-frame_learn package
+ibex package
 ===================
 
 Module contents
 ---------------
 
-.. automodule:: frame_learn
+.. automodule:: ibex
     :members:
     :undoc-members:
     :show-inheritance:

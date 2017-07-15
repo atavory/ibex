@@ -1,8 +1,8 @@
-frame_learn
+ibex
 ===========
 
 .. toctree::
    :maxdepth: 4
 
-   frame_learn
+   ibex
    setup
