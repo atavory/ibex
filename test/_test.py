@@ -4,13 +4,17 @@ import re
 from glob import glob
 
 from sklearn import linear_model
+from frame_learn.sklearn import linear_model as pd_linear_model
 from sklearn import preprocessing
+from frame_learn.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
 from sklearn import base
 from sklearn import decomposition
-from sklearn import datasets
+from frame_learn.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
+from frame_learn.sklearn import linear_model as pd_linear_model
 from sklearn import model_selection
+from sklearn import datasets
 import pandas as pd
 import numpy as np
 import nbformat
@@ -22,8 +26,8 @@ from frame_learn import *
 class _ConceptsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls._prd = frame(linear_model.LinearRegression)()
-        cls._clf = frame(linear_model.LogisticRegression)()
+        cls._prd = pd_linear_model.LinearRegression()
+        cls._clf = pd_linear_model.LogisticRegression()
 
     def test_base_estimator(self):
         self.assertTrue(
@@ -53,7 +57,7 @@ class _BaseTest(unittest.TestCase):
         self.assertIn('get_params', dir(prd))
         self.assertEqual(prd.get_params()['fit_intercept'], False)
 
-        prd = frame(linear_model.LinearRegression)(fit_intercept=False)
+        prd = pd_linear_model.LinearRegression(fit_intercept=False)
         self.assertIn('get_params', dir(prd))
         self.assertEqual(prd.get_params()['fit_intercept'], False)
 
@@ -61,7 +65,7 @@ class _BaseTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(linear_model.LinearRegression)()
+        prd = pd_linear_model.LinearRegression()
         with self.assertRaises(AttributeError):
             prd.coef_
         prd.fit(x, y)
@@ -73,32 +77,32 @@ class _FrameTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(preprocessing.StandardScaler)()
+        prd = pd_preprocessing.StandardScaler()
         self.assertEqual(prd, prd.fit(x, y))
 
     def test_transform_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        xt = frame(preprocessing.StandardScaler)().fit(x, y).transform(x)
+        xt = pd_preprocessing.StandardScaler().fit(x, y).transform(x)
         self.assertTrue(isinstance(xt, pd.DataFrame))
-        xt = frame(preprocessing.StandardScaler)().fit_transform(x, y)
+        xt = pd_preprocessing.StandardScaler().fit_transform(x, y)
         self.assertTrue(isinstance(xt, pd.DataFrame))
 
     def test_transform_no_y(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        xt = frame(preprocessing.StandardScaler)().fit(x).transform(x)
+        xt = pd_preprocessing.StandardScaler().fit(x).transform(x)
         self.assertTrue(isinstance(xt, pd.DataFrame))
-        xt = frame(preprocessing.StandardScaler)().fit_transform(x)
+        xt = pd_preprocessing.StandardScaler().fit_transform(x)
         self.assertTrue(isinstance(xt, pd.DataFrame))
 
     def test_fit_predict(self):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        y_hat = frame(linear_model.LinearRegression)().fit(x, y).predict(x)
+        y_hat = pd_linear_model.LinearRegression().fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_fit_permute_cols(self):
@@ -106,7 +110,7 @@ class _FrameTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
         z = pd.DataFrame({'b': [1, 2, 3], 'a': [30, 23, 2]})
 
-        pred = frame(linear_model.LinearRegression)().fit(x, y)
+        pred = pd_linear_model.LinearRegression().fit(x, y)
 
         y_hat = pred.predict(z)
         self.assertTrue(isinstance(y_hat, pd.Series))
@@ -120,7 +124,7 @@ class _FrameTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
 
-        pred = frame(linear_model.LinearRegression)().fit(x, y)
+        pred = pd_linear_model.LinearRegression().fit(x, y)
 
         y_hat = pred.predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
@@ -133,23 +137,23 @@ class _FrameTest(unittest.TestCase):
 
 class _FramePipelineTest(unittest.TestCase):
     def test_pipeline_fit(self):
-        s = frame(linear_model.LinearRegression)()
+        s = pd_linear_model.LinearRegression()
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         p = pipeline.make_pipeline(linear_model.LinearRegression)
-        prd = frame(p)
+        prd = pd_p
         prd = prd.fit(x, y)
-        y_hat = frame(p).fit(x, y).predict(x)
+        y_hat = pd_p.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
-        s = frame(linear_model.LinearRegression)()
+        s = pd_linear_model.LinearRegression()
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        p = pipeline.make_pipeline(frame(linear_model.LinearRegression)())
-        y_hat = frame(p).fit(x, y).predict(x)
+        p = pipeline.make_pipeline(pd_linear_model.LinearRegression())
+        y_hat = pd_p.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
 
@@ -214,11 +218,11 @@ class _TransTest(unittest.TestCase):
     def test_trans_step(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans(frame(preprocessing.StandardScaler)()).fit(x).fit(x)
+        trans(pd_preprocessing.StandardScaler()).fit(x).fit(x)
 
-        trans(frame(preprocessing.StandardScaler)()).fit(x).transform(x)
+        trans(pd_preprocessing.StandardScaler()).fit(x).transform(x)
 
-        trans(frame(preprocessing.StandardScaler)()).fit(x).fit_transform(x)
+        trans(pd_preprocessing.StandardScaler()).fit(x).fit_transform(x)
 
 
 class _IrisTest(unittest.TestCase):
@@ -232,7 +236,7 @@ class _IrisTest(unittest.TestCase):
 
     def test_fit_transform(self):
         decomp = trans(
-            {('pc1', 'pc2'): frame(decomposition.PCA)(n_components=2)},
+            {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
             columns=self._features)
 
         decomp.fit_transform(self._iris)
@@ -240,13 +244,13 @@ class _IrisTest(unittest.TestCase):
     def test_fit_plus_transform(self):
 
         decomp = trans(
-            {('pc1', 'pc2'): frame(decomposition.PCA)(n_components=2)},
+            {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
             columns=self._features)
 
         decomp.fit(self._iris).transform(self._iris)
 
     def test_iris_logistic_regression_cv(self):
-        clf = frame(linear_model.LogisticRegression)()
+        clf = pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
         res = model_selection.cross_val_score(
@@ -255,7 +259,7 @@ class _IrisTest(unittest.TestCase):
             y=self._iris['class'])
 
     def test_iris_pipeline_cv(self):
-        clf = frame(preprocessing.StandardScaler)() | frame(linear_model.LogisticRegression)()
+        clf = pd_preprocessing.StandardScaler() | pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
         res = model_selection.cross_val_score(
@@ -311,15 +315,15 @@ class _OperatorsTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(preprocessing.StandardScaler)() | \
-            frame(preprocessing.StandardScaler)() | \
-            frame(linear_model.LinearRegression)()
+        prd = pd_preprocessing.StandardScaler() | \
+            pd_preprocessing.StandardScaler() | \
+            pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-        prd = frame(preprocessing.StandardScaler)() | \
-            (frame(preprocessing.StandardScaler)() | \
-            frame(linear_model.LinearRegression)())
+        prd = pd_preprocessing.StandardScaler() | \
+            (pd_preprocessing.StandardScaler() | \
+            pd_linear_model.LinearRegression())
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
@@ -327,9 +331,9 @@ class _OperatorsTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(preprocessing.MinMaxScaler)() | \
+        prd = pd_preprocessing.MinMaxScaler() | \
             trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
-            frame(linear_model.LinearRegression)()
+            pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
@@ -337,9 +341,9 @@ class _OperatorsTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(preprocessing.MinMaxScaler)() | \
+        prd = pd_preprocessing.MinMaxScaler() | \
             trans() + trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
-            frame(linear_model.LinearRegression)()
+            pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
@@ -347,15 +351,15 @@ class _OperatorsTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
-        prd = frame(preprocessing.MinMaxScaler)() | \
+        prd = pd_preprocessing.MinMaxScaler() | \
             trans() + trans() + trans() | \
-            frame(linear_model.LinearRegression)()
+            pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-        prd = frame(preprocessing.MinMaxScaler)() | \
+        prd = pd_preprocessing.MinMaxScaler() | \
             trans() + (trans() + trans()) | \
-            frame(linear_model.LinearRegression)()
+            pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
