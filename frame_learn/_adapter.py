@@ -139,7 +139,11 @@ class _Adapter(FrameMixin):
             if len(ret.shape) == 1:
                 return pd.Series(ret, index=X.index)
             if len(ret.shape) == 2:
-                return pd.DataFrame(ret, index=X.index, columns=X.columns)
+                if len(X.columns) == ret.shape[1]:
+                    columns = X.columns
+                else:
+                    columns = range(ret.shape[1])
+                return pd.DataFrame(ret, index=X.index, columns=columns)
 
         if ret == step:
             return self

@@ -4,6 +4,9 @@ from six import string_types
 from ._frame_mixin import FrameMixin
 
 
+__all__ = []
+
+
 # Tmp Ami - add kw_args, inverse shit
 class _FunctionTransformer(FrameMixin):
     def __init__(self, func, pass_y, kw_args, columns):
@@ -88,6 +91,16 @@ class _FunctionTransformer(FrameMixin):
 
         return stage.transform(x, y) if self._pass_y else stage.transform(x)
 
+    def get_params(self, deep=True):
+        return {
+            'func': self._func,
+            'pass_y': self._pass_y,
+            'kw_args': self._kw_args,
+            'columns': self._columns}
+
 
 def trans(func=None, pass_y=False, kw_args=None, columns=None):
     return _FunctionTransformer(func, pass_y, kw_args, columns)
+
+__all__ += ['trans']
+

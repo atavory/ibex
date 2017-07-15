@@ -5,6 +5,7 @@ import re
 from sklearn import linear_model
 from sklearn import preprocessing
 from sklearn import pipeline, base
+from sklearn import pipeline, decomposition
 import pandas as pd
 import numpy as np
 
@@ -204,6 +205,36 @@ class _TransTest(unittest.TestCase):
         trans(frame(preprocessing.StandardScaler())).fit(x).transform(x)
 
         trans(frame(preprocessing.StandardScaler())).fit(x).fit_transform(x)
+
+    def test_iris_pca_fit_transform(self):
+        from sklearn import datasets
+
+        iris = datasets.load_iris()
+        features = iris['feature_names']
+        iris = pd.DataFrame(
+            np.c_[iris['data'], iris['target']],
+            columns=features+['class'])
+
+        decomp = trans(
+            {('pc1', 'pc2'): frame(decomposition.PCA(n_components=2))},
+            columns=features)
+
+        decomp.fit_transform(iris)
+
+    def test_iris_pca_fit_plus_transform(self):
+        from sklearn import datasets
+
+        iris = datasets.load_iris()
+        features = iris['feature_names']
+        iris = pd.DataFrame(
+            np.c_[iris['data'], iris['target']],
+            columns=features+['class'])
+
+        decomp = trans(
+            {('pc1', 'pc2'): frame(decomposition.PCA(n_components=2))},
+            columns=features)
+
+        decomp.fit(iris).transform(iris)
 
 
 class _UnionTest(unittest.TestCase):

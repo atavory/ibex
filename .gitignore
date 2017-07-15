@@ -1,6 +1,7 @@
 build
 dist
 *.pyc
-*.swp
+*.sw?
 */__pycache__
+.*
 

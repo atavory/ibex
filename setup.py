@@ -26,22 +26,21 @@ class _TestCommand(Command):
 
 setup(
     name='frame_learn',
-    version='0.1.0',
-    author='Shahar Azulay, Tali Raveh-Sadka, Ami Tavory',
+    version=open('frame_learn/_metadata/version.txt').read(),
+    author=open('frame_learn/_metadata/authors.txt').read(),
     author_email='atavory@gmail.com',
     packages=[
         'frame_learn',
     ],
-    package_data={
-    },
-    include_package_data=True,
     license='bsd',
     description='Tmp Ami',
     long_description=open('README.rst').read(),
     install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,
-    data_files=[
-    ],
+    package_data={
+        'frame_learn': ['_metadata/*txt']
+    },
+    include_package_data=True,
     cmdclass={
         'test': _TestCommand},
     classifiers=[
@@ -52,7 +51,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: C++',
+        'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Software Development :: Libraries :: Python Modules'])

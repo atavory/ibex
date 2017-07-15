@@ -1,22 +1,22 @@
-__all__ = []
-
+import os
 
 from ._frame_mixin import FrameMixin
+from ._adapter import frame
+from ._feature_union import FeatureUnion
+from ._function_transformer import trans
+
+
+__all__ = []
+
+__version__ = open(os.path.join(os.path.split(__file__)[0], '_metadata/version.txt')).read()
+
+__all__ += ['__version__']
 
 __all__ += ['FrameMixin']
 
-
-from ._adapter import frame
-
 __all__ += ['frame']
 
-
-from ._feature_union import FeatureUnion
-
 __all__ += ['FeatureUnion']
-
-
-from ._function_transformer import trans
 
 __all__ += ['trans']
 
