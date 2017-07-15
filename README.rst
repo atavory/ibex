@@ -23,7 +23,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
 `pandas <http://pandas.pydata.org/>`_
 
-`documentation <https://atavory.github.io/ibex/>`_
+`documentation <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
 
 
 TL;DR
