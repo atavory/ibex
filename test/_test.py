@@ -20,8 +20,12 @@ except ImportError:
 from sklearn import datasets
 import pandas as pd
 import numpy as np
-import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
+try:
+    import nbformat
+    from nbconvert.preprocessors import ExecutePreprocessor
+    _nbconvert = True:
+except ImportError
+    _nbconvert = False:
 
 from ibex import *
 
@@ -390,6 +394,8 @@ class _SKLearnTest(unittest.TestCase):
 
 class _ExamplesTest(unittest.TestCase):
     def test_notebooks(self):
+        if not _nbconvert:
+            return
         return
         for f_name in os.path.join(glob(os.path.split(__file__)[0])):
             with open(notebook_filename) as f:
