@@ -19,7 +19,7 @@ install:
   - conda update -q conda
   - conda info -a
   - sudo pip install python-coveralls
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage codecov
   - source activate test-environment
   - python setup.py install
 
@@ -29,5 +29,5 @@ script:
 
 after_success:
   - coverage report
-  - coveralls
+  - codecov
   
