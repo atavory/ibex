@@ -13,7 +13,10 @@ from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
-from sklearn import model_selection
+try:
+    from sklearn.model_selection import cross_val_score
+except ImportError:
+    from sklearn.cross_validation import cross_val_score
 from sklearn import datasets
 import pandas as pd
 import numpy as np
@@ -267,7 +270,7 @@ class _IrisTest(unittest.TestCase):
         clf = pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
-        res = model_selection.cross_val_score(
+        res = cross_val_score(
             clf,
             X=self._iris[self._features],
             y=self._iris['class'])
@@ -276,7 +279,7 @@ class _IrisTest(unittest.TestCase):
         clf = pd_preprocessing.StandardScaler() | pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
-        res = model_selection.cross_val_score(
+        res = cross_val_score(
             clf,
             X=self._iris[self._features],
             y=self._iris['class'])
