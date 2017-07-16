@@ -18,8 +18,8 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - sudo pip install python-coveralls
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage codecov
+  - sudo pip install codecov
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage 
   - source activate test-environment
   - python setup.py install
 
