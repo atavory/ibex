@@ -9,7 +9,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: https://landscape.io/github/atavory/ibex/master/landscape.svg?style=flat
    :target: https://landscape.io/github/atavory/ibex/master
 
-.. image:: https://coveralls.io/repos/github/atavory/ibex/badge.png?branch=master
+.. image:: https://coveralls.io/repos/github/atavory/ibex/badge.svg?branch=master
 	:target: https://coveralls.io/github/atavory/ibex?branch=master
 
 .. image:: https://readthedocs.org/projects/ibex/badge/

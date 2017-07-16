@@ -11,7 +11,7 @@ import sklearn
 
 __all__ = []
 
-__version__ = open(os.path.join(os.path.split(__file__)[0], '_metadata/version.txt')).read()
+__version__ = '0.1.0'
 
 __all__ += ['__version__']
 

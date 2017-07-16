@@ -124,18 +124,15 @@ class _FrameTest(unittest.TestCase):
     def test_fit_permute_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
-        z = pd.DataFrame({'b': [1, 2, 3], 'a': [30, 23, 2]})
+        z = pd.DataFrame({'b': [30, 23, 2], 'a': [1, 2, 3]})
 
         pred = pd_linear_model.LinearRegression().fit(x, y)
 
         pd_y_hat = pred.predict(z)
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
-        y_hat = pred.predict(z)
-        self.assertTrue(isinstance(y_hat, pd.Series))
+        y_hat = linear_model.LinearRegression().fit(x, y).predict(x)
+        self.assertFalse(isinstance(y_hat, pd.Series))
         np.testing.assert_equal(pd_y_hat, y_hat)
-
-        y_hat = pred.predict(x[list(reversed(list(x.columns)))])
-        self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_fit_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})

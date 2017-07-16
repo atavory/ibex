@@ -26,8 +26,8 @@ class _TestCommand(Command):
 
 setup(
     name='ibex',
-    version=open('ibex/_metadata/version.txt').read(),
-    author=open('ibex/_metadata/authors.txt').read(),
+    version='0.1.0',
+    author='Ami Tavory, Shahar Azulay, Tali Raveh-Sadka',
     author_email='atavory@gmail.com',
     packages=[
         'ibex',
