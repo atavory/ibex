@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import inspect
 import types
 import functools
@@ -23,6 +25,9 @@ def frame(step):
         return f
 
     class _Adapter(step, FrameMixin):
+        __name__ = step.__name__
+        __doc__ = step.__doc__
+
         def fit(self, X, *args):
             self.set_x(X)
 
@@ -59,8 +64,5 @@ def frame(step):
                     return pd.DataFrame(res, index=X.index, columns=columns)
 
             return res
-
-    _Adapter.__name__ = step.__name__
-    _Adapter.__doc__ = step.__doc__
 
     return _Adapter
