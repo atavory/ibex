@@ -53,18 +53,6 @@ class NamespaceSplitter(object):
         return fullname.split('.')[self.cutoff:]
 
 
-class _ModuleFinder(object):
-    def install(self):
-        sys.meta_path[:] = [x for x in sys.meta_path if self != x] + [self]
-
-    def find_module(self, fullname, path=None):
-        print(fullname)
-        # We should deal with all the parent packages of namespace, because
-        # some of the intermediate packages may not exist, and need to be
-        # created manually
-        return
-        if ModuleImportUtility.in_namespace(fullname, self.namespace):
-            return DefaultNewModuleLoader()
 
 
 class DefaultNewModuleLoader(object):
@@ -136,6 +124,21 @@ class DirModuleLoader(object):
             if ns not in sys.modules:
                 sys.modules[ns] = imp.load_module(ns, fp, filename, options)
         return sys.modules[fullname]
+
+
+class _ModuleFinder(object):
+    def install(self):
+        sys.meta_path[:] = [x for x in sys.meta_path if self != x] + [self]
+
+    def find_module(self, fullname, path=None):
+        print(fullname)
+        # We should deal with all the parent packages of namespace, because
+        # some of the intermediate packages may not exist, and need to be
+        # created manually
+        return
+        if ModuleImportUtility.in_namespace(fullname, self.namespace):
+            return DefaultNewModuleLoader()
+
 
 loader = _ModuleFinder()
 loader.install()
