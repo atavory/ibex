@@ -15,6 +15,8 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
+.. image:: http://ibex.readthedocs.io/en/latest/_static/logo.jpeg
+
 .. image:: https://www.workitdaily.com/wp-content/uploads/2012/12/incomplete-degree-resume.jpg
 
 
