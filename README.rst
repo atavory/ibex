@@ -12,7 +12,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: https://coveralls.io/repos/github/atavory/ibex/badge.svg?branch=master
 	:target: https://coveralls.io/github/atavory/ibex?branch=master
 
-.. image:: https://readthedocs.org/projects/ibex/badge/
+.. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 .. image:: https://www.workitdaily.com/wp-content/uploads/2012/12/incomplete-degree-resume.jpg
