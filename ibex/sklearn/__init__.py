@@ -54,11 +54,6 @@ class NamespaceSplitter(object):
 
 
 class _ModuleFinder(object):
-    def __init__(self, namespace, root_path):
-        self.namespace = namespace
-        self.root_path = root_path
-        self.ns_splitter = NamespaceSplitter(namespace)
-
     def install(self):
         sys.meta_path[:] = [x for x in sys.meta_path if self != x] + [self]
 
@@ -142,10 +137,7 @@ class DirModuleLoader(object):
                 sys.modules[ns] = imp.load_module(ns, fp, filename, options)
         return sys.modules[fullname]
 
-loader = _ModuleFinder(
-    'parent.intermediate',
-    os.path.realpath(os.path.join(os.path.dirname('do'), '..'))
-)
+loader = _ModuleFinder()
 loader.install()
 
 
