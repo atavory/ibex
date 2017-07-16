@@ -23,9 +23,9 @@ import numpy as np
 try:
     import nbformat
     from nbconvert.preprocessors import ExecutePreprocessor
-    _nbconvert = True:
-except ImportError
-    _nbconvert = False:
+    _nbconvert = True
+except ImportError:
+    _nbconvert = False
 
 from ibex import *
 
