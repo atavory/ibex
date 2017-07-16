@@ -24,8 +24,8 @@ install:
   - python setup.py install
 
 script: 
-  - python frame_learn/_test/_test.py
-  - coverage run frame_learn/_test/_test.py
+  - python test/_test.py
+  - coverage run test/_test.py
 
 after_success:
   - coverage report

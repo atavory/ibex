@@ -44,6 +44,7 @@ def frame(step):
         def __x(self, X):
             # Tmp Ami - should be in base?
             X = X[self._cols]
+            # Tmp Ami - is_subclass or isinstance?
             return X if FrameMixin.is_subclass(self) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
