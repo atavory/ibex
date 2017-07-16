@@ -6,41 +6,45 @@ import copy
 import six
 import numpy as np
 import pandas as pd
-import sklearn
+from sklearn import base
+from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin
 
 
 def frame(step):
+    if isinstance(step, pipeline.Pipeline):
+        return frame(pipeline.Pipeline)(steps=step.steps)
+
+    if not inspect.isclass(step):
+        f = frame(type(step))()
+        params = step.get_params()
+        f.set_params(params)
+        return f
+
     class _Adapter(step, FrameMixin):
         def fit(self, X, *args):
             self.set_x(X)
 
-            res = step.fit(self, X, *args)
+            res = super(_Adapter, self).fit(X, *args)
 
             return self.__process_wrapped_call_res(X, res)
 
         def predict(self, X, *args):
-            self.set_x(X)
+            res = super(_Adapter, self).predict(self.__x(X), *args)
 
-            res = step.predict(self, X, *args)
-
-            return self.__process_wrapped_call_res(X, res)
+            return self.__process_wrapped_call_res(X[self._cols], res)
 
         def transform(self, X, *args):
-            self.set_x(X)
+            res = super(_Adapter, self).transform(self.__x(X), *args)
 
-            res = step.transform(self, X, *args)
+            return self.__process_wrapped_call_res(X[self._cols], res)
 
-            return self.__process_wrapped_call_res(X, res)
-
+        # Tmp Ami - should be in base?
         def __x(self, X):
-            return X if FrameMixin.is_subclass(step) else X.as_matrix()
-
-        def __y(self, y):
-            if y is None:
-                return None
-            return y if FrameMixin.is_subclass(step) else y.values
+            # Tmp Ami - should be in base?
+            X = X[self._cols]
+            return X if FrameMixin.is_subclass(self) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
             if isinstance(res, np.ndarray):

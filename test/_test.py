@@ -124,11 +124,10 @@ class _FrameTest(unittest.TestCase):
     def test_fit_permute_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
-        z = pd.DataFrame({'b': [30, 23, 2], 'a': [1, 2, 3]})
 
         pred = pd_linear_model.LinearRegression().fit(x, y)
 
-        pd_y_hat = pred.predict(z)
+        pd_y_hat = pred.predict(x[['b', 'a']])
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
         y_hat = linear_model.LinearRegression().fit(x, y).predict(x)
         self.assertFalse(isinstance(y_hat, pd.Series))
@@ -155,9 +154,9 @@ class _FramePipelineTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        p = pipeline.make_pipeline(linear_model.LinearRegression)
-        prd = pd_p
-        prd = prd.fit(x, y)
+        p = pipeline.make_pipeline(linear_model.LinearRegression())
+        pd_p = frame(p)
+        pd_p = pd_p.fit(x, y)
         y_hat = pd_p.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
@@ -167,6 +166,7 @@ class _FramePipelineTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         p = pipeline.make_pipeline(pd_linear_model.LinearRegression())
+        pd_p = frame(p)
         y_hat = pd_p.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
