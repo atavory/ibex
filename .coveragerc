@@ -1,6 +1,6 @@
 [report]
 include = 
-    */frame_learn/*
+    */ibex/*
 
 omit =
     */*test.py
