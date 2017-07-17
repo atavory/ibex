@@ -28,23 +28,8 @@ def frame(step):
         __name__ = step.__name__
         __doc__ = step.__doc__
 
-        def set_params(self, **params):
-
-            if 'columns' in params:
-                FrameMixin.set_params(self, columns=params['columns'])
-                params = params.copy()
-                del params['columns']
-
-            super(_Adapter, self).set_params(**params)
-
-        def get_params(self, deep=True):
-            mixin_params = FrameMixin.get_params(self, deep=deep)
-            wrapped_params = super(_Adapter, self).get_params(deep=deep)
-            mixin_params.update(wrapped_params)
-            return mixin_params
-
         def fit(self, X, *args):
-            self.set_params(columns=X.columns)
+            self.x_columns = X.columns
 
             res = super(_Adapter, self).fit(X, *args)
 
@@ -53,17 +38,17 @@ def frame(step):
         def predict(self, X, *args):
             res = super(_Adapter, self).predict(self.__x(X), *args)
 
-            return self.__process_wrapped_call_res(X[self.get_params()['columns']], res)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         def transform(self, X, *args):
             res = super(_Adapter, self).transform(self.__x(X), *args)
 
-            return self.__process_wrapped_call_res(X[self.get_params()['columns']], res)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         # Tmp Ami - should be in base?
         def __x(self, X):
             # Tmp Ami - should be in base?
-            X = X[self.get_params()['columns']]
+            X = X[self.x_columns]
             # Tmp Ami - is_subclass or isinstance?
             return X if FrameMixin.is_subclass(self) else X.as_matrix()
 
