@@ -32,10 +32,10 @@ from sklearn import base
 import ibex
 
 for name in dir(_orig):
-    prd = getattr(_orig, name)
+    est = getattr(_orig, name)
     try:
-        if issubclass(prd, base.BaseEstimator):
-            globals()[name] = ibex.frame(prd)
+        if issubclass(est, base.BaseEstimator):
+            globals()[name] = ibex.frame(est)
     except TypeError:
         continue
         """ % orig

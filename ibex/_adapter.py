@@ -25,8 +25,11 @@ def frame(step):
         return f
 
     class _Adapter(step, FrameMixin):
-        __name__ = step.__name__
-        __doc__ = step.__doc__
+        def __repr__(self):
+            return step.__repr__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
+
+        def __str__(self):
+            return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
 
         def fit(self, X, *args):
             self.x_columns = X.columns
