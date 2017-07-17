@@ -13,6 +13,7 @@ from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
+from ibex.sklearn import ensemble as pd_ensemble
 try:
     from sklearn.model_selection import cross_val_score
 except ImportError:

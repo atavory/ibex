@@ -15,12 +15,27 @@ class FrameMixin(object):
         entities.
     """
 
-    def set_x(self, x):
-        if not hasattr(self, '_cols'):
-            self._cols = x.columns
+    def __init__(self, columns=None):
+        if columns is not None:
+            self.set_paams(columns=columns)
 
-        if set(x.columns) != set(self._cols):
+    def set_params(self, **params):
+        if 'columns' not in params:
+            return
+
+        if not hasattr(self, '__cols'):
+            self.__cols = params['columns']
+
+        if set(params['columns']) != set(self.__cols):
             raise KeyError()
+
+    def get_params(self, deep=True):
+        params = {}
+        try:
+            params['columns'] = self.__cols
+        except AttributeError:
+            pass
+        return params
 
     @classmethod
     def is_subclass(cls, step):
