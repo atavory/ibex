@@ -2,6 +2,7 @@ import unittest
 import os
 import re
 from glob import glob
+import doctest
 
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
@@ -385,17 +386,13 @@ class _ExamplesTest(unittest.TestCase):
             ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
 
 
-if False:
-    class _VerifyDocumentTest(unittest.TestCase):
-        def test(self):
-            f_name = os.path.join(os.path.split(__file__)[0], '../../README.rst')
-            lines = [l.rstrip() for l in open(f_name)]
-
-            python_re = re.compile(r'\s+(?:>>>|\.\.\.) (.*)')
-            lines = [python_re.match(l).groups()[0] for l in lines if python_re.match(l) if python_re.match(l)]
-            for l in lines:
-                print(l)
-            exec('\n'.join(lines))
+class _VerifyDocumentTest(unittest.TestCase):
+    def test(self):
+        this_dir = os.path.split(__file__)[0]
+        doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
+        doc_f_names += [os.path.join(this_dir, '../README.rst')]
+        for f_name in doc_f_names:
+            doctest.testfile(f_name, module_relative=False)
 
 
 if __name__ == '__main__':

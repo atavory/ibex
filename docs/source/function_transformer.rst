@@ -49,6 +49,21 @@ Specifying Input Columns
 Specifying Output Columns
 -------------------------
 
+    >>> trans(columns=['a'], trans_columns=['at']).fit_transform(x)
+        at
+    0  1.0
+    1  2.0
+
+    >>> trans(lambda df: df ** 2, columns=['a'], trans_columns=['at']).fit_transform(x)
+        at
+    0  1.0
+    1  4.0
+
+    >>> from ibex.sklearn.decomposition import PCA 
+    >>> trans(PCA(n_components=1), columns=['a'], trans_columns=['at']).fit_transform(x)
+        at
+    0 -0.5
+    1  0.5
 
 Multiple Transformations
 ------------------------
