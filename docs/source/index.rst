@@ -6,6 +6,8 @@
 ibex
 =======================================
 
+.. include:: ../../README.rst
+
 Contents:
 
 .. toctree::

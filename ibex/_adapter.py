@@ -24,6 +24,7 @@ def frame(step):
         f.set_params(params)
         return f
 
+<<<<<<< HEAD
     class _Base(step, FrameMixin):
         def __init__(self, *args, **kwargs):
             kwargs = kwargs.copy()
@@ -45,6 +46,14 @@ def frame(step):
             wrapped_params = super(_Base, self).get_params(deep=deep)
             mixin_params.update(wrapped_params)
             return mixin_params
+=======
+    class _Adapter(step, FrameMixin):
+        def __repr__(self):
+            return step.__repr__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
+
+        def __str__(self):
+            return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
+>>>>>>> temp-branch
 
         def fit(self, X, *args):
             FrameMixin.set_params(self, columns=X.columns)

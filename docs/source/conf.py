@@ -41,6 +41,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+doctest_test_doctest_blocks = 1
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

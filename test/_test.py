@@ -391,6 +391,7 @@ class _SKLearnTest(unittest.TestCase):
         from ibex.sklearn import linear_model
 
         print(linear_model.LinearRegression)
+        print(linear_model.LinearRegression())
 
 
 class _ExamplesTest(unittest.TestCase):

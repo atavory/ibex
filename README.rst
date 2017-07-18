@@ -15,9 +15,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
-.. image:: http://ibex.readthedocs.io/en/latest/_static/logo.jpeg
-
-.. image:: https://www.workitdaily.com/wp-content/uploads/2012/12/incomplete-degree-resume.jpg
+.. image:: doc/html/_static/logo.jpeg
 
 
 
@@ -25,15 +23,25 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 
 `pandas <http://pandas.pydata.org/>`_
 
-`documentation <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
+`documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
 
 
 TL;DR
 -----
 
+    >>> import numpy as np
+    >>> from sklearn import datasets
     >>> import pandas as pd
-    >>> from sklearn import linear_model
-    >>> from ibex import *
+
+    >>> iris = datasets.load_iris()
+    >>> iris = pd.DataFrame(
+    ...     np.c_[iris['data'], iris['target']],
+    ...     columns=iris['feature_names']+['class'])
+
+    >>> iris.columns
+    Index(['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
+           'petal width (cm)', 'class'],
+          dtype='object')
 
 A `pd.DataFrame` and 
 
