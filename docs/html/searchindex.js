@@ -1,1 +1,0 @@
-Search.setIndex({envversion:47,filenames:["examples","index"],objects:{},objnames:{},objtypes:{},terms:{content:1,index:1,iri:0,modul:1,page:1,search:1},titles:["Examples","ibex"],titleterms:{exampl:0,ibex:1,indic:1,tabl:1}})
