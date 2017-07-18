@@ -32,6 +32,8 @@ def frame(step):
             return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
 
         def fit(self, X, *args):
+            # Tmp Ami - bad; use property
+            # Tmp Ami - why not in function adapter? where are uts?
             FrameMixin.set_params(self, columns=X.columns)
 
             res = super(_Adapter, self).fit(X, *args)

@@ -9,81 +9,94 @@ __all__ = []
 
 # Tmp Ami - add kw_args, inverse shit
 class _FunctionTransformer(FrameMixin):
-    def __init__(self, func, pass_y, kw_args, columns, trans_columns):
+    def __init__(self, func, pass_y, kw_args):
         FrameMixin.__init__(self)
 
-        self._func, self._pass_y, self._kw_args, self._cols, self._trans_cols = \
-            func, pass_y, kw_args, columns, trans_columns
+        self._func, self._pass_y, self._kw_args = \
+            func, pass_y, kw_args
 
     def fit(self, x, y=None):
-        x = self._prep_x(x)
+        if not isinstance(self._func, dict):
+            self._single_fit(self._func, None, x, y)
+            return self
 
-        if not FrameMixin.is_subclass(self._func):
-            return
-
-        if self._pass_y:
-            self._func.fit(x, y)
-        else:
-            self._func.fit(x)
+        for v in self._func.values():
+            self._single_fit(v, x, y)
 
         return self
 
-    def fit_transform(self, x, y=None):
-        x = self._prep_x(x)
+    def _single_fit(self, step, cols, x, y):
+        if not FrameMixin.is_subclass(step):
+            return
 
-        if self._func is None:
-            return x
-
-        if not FrameMixin.is_subclass(self._func):
-            return self._func(x, y) if self._pass_y else self._func(x)
+        x = self._prep_x(cols, x)
 
         if self._pass_y:
-            res = self._func.fit_transform(x, y)
+            step.fit(x, y)
         else:
-            res = self._func.fit_transform(x)
+            step.fit(x)
 
-        return self._process_trans_res(res)
+    def fit_transform(self, x, y=None):
+        if not isinstance(self._func, dict):
+            return self._single_fit_transform(self._func, None, x, y)
 
-    def _prep_x(self, x):
-        if self._cols is None:
+        dfs = []
+        for k, v in self._func.items():
+            res = pd.DataFrame(self._single_fit_transform(v, x, y))
+            columns = [k] if isinstance(k, string_types) else k
+            res.columns = columns
+            dfs.append(res)
+        return pd.concat(dfs, axis=1)
+
+    def _single_fit_transform(self, step, cols, x, y):
+        if step is None:
             return x
 
-        columns = \
-            [self._cols] if isinstance(self._cols, string_types) else self._cols
-        return x[columns]
+        if not FrameMixin.is_subclass(step):
+            return step(x, y) if self._pass_y else step(x)
+
+        # Tmp Ami - bad
+        return step.fit_transform(x, y) if self._pass_y else step.fit_transform(x)
+
+    def _prep_x(self, cols, x):
+        if cols is None:
+            return x
+
+        if isinstance(cols, string_types):
+            cols = [cols]
+
+        return x[cols]
 
     def transform(self, x, y=None):
-        x = self._prep_x(x)
+        if not isinstance(self._func, dict):
+            return self._single_transform(self._func, x, y)
 
-        if self._func is None:
+        dfs = []
+        for k, v in self._func.items():
+            res = pd.DataFrame(self._single_transform(v, x, y))
+            columns = [k] if isinstance(k, string_types) else k
+            res.columns = columns
+            dfs.append(res)
+        return pd.concat(dfs, axis=1)
+
+    def _single_transform(self, step, x, y):
+        if step is None:
             return x
 
-        if not FrameMixin.is_subclass(self._func):
-            res = self._func(x, y) if self._pass_y else self._func(x)
-        elif self._pass_y:
-            res = self._func.fit_transform(x, y)
-        else:
-            res = self._func.fit_transform(x)
+        if not FrameMixin.is_subclass(step):
+            return step(x, y) if self._pass_y else step(x)
 
-        return self._process_trans_res(res)
+        return step.transform(x, y) if self._pass_y else step.transform(x)
 
-    # Tmp Ami - set_params? ut?
     def get_params(self, deep=True):
         return {
             'func': self._func,
             'pass_y': self._pass_y,
-            'kw_args': self._kw_args,
-            'columns': self._cols,
-            'trans_columns': self._trans_cols}
-
-    def _process_trans_res(self, res):
-        if self._trans_cols is not None:
-            res.columns = self._trans_cols
-        return res
+            'kw_args': self._kw_args}
 
 
-def trans(func=None, pass_y=False, kw_args=None, columns=None, trans_columns=None):
-    return _FunctionTransformer(func, pass_y, kw_args, columns, trans_columns)
+def trans(func=None, pass_y=False, kw_args=None):
+    return _FunctionTransformer(func, pass_y, kw_args)
 
 __all__ += ['trans']
 

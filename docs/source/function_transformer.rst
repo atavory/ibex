@@ -14,7 +14,8 @@ Specifying Functions
     0  1.0  3.0
     1  2.0  4.0
 
-    >>> trans(lambda df: df ** 2).fit_transform(x)
+    >>> import numpy as np
+    >>> trans(np.sqrt).fit_transform(x)
          a     b
     0  1.0   9.0
     1  4.0  16.0
@@ -29,18 +30,39 @@ Specifying Functions
 Specifying Input Columns
 ------------------------
 
-    >>> trans(columns=['a']).fit_transform(x)
+    >>> trans({'a': None}).fit_transform(x)
          a
     0  1.0
     1  2.0
 
-    >>> trans(lambda df: df ** 2, columns=['a']).fit_transform(x)
+    >>> trans({'a': None, 'b': np.sqrt}).fit_transform(x)
+         a
+    0  1.0
+    1  2.0
+
+    >>> trans({('a', 'b'): None}).fit_transform(x)
+         a
+    0  1.0
+    1  2.0
+
+    >>> trans({'a': np.sqrt}).fit_transform(x)
+         a
+    0  1.0
+    1  4.0
+
+    >>> trans({('a', 'b'): np.sqrt}).fit_transform(x)
          a
     0  1.0
     1  4.0
 
     >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans(PCA(n_components=1), columns=['a']).fit_transform(x)
+    >>> trans({'a': PCA(n_components=1)}).fit_transform(x)
+         a
+    0 -0.5
+    1  0.5
+
+    >>> from ibex.sklearn.decomposition import PCA 
+    >>> trans({('a', 'b'): PCA(n_components=1)}).fit_transform(x)
          a
     0 -0.5
     1  0.5
@@ -49,19 +71,9 @@ Specifying Input Columns
 Specifying Output Columns
 -------------------------
 
-    >>> trans(columns=['a'], trans_columns=['at']).fit_transform(x)
-        at
-    0  1.0
-    1  2.0
-
-    >>> trans(lambda df: df ** 2, columns=['a'], trans_columns=['at']).fit_transform(x)
-        at
-    0  1.0
-    1  4.0
-
     >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans(PCA(n_components=1), columns=['a'], trans_columns=['at']).fit_transform(x)
-        at
+    >>> trans({('a', 'b'): PCA(n_components=1)}).fit_transform(x)
+         a
     0 -0.5
     1  0.5
 
