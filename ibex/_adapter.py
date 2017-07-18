@@ -63,7 +63,7 @@ def frame(step):
                     if len(X.columns) == res.shape[1]:
                         columns = X.columns
                     else:
-                        columns = range(res.shape[1])
+                        columns = [' ' for _ in range(res.shape[1])]
                     return pd.DataFrame(res, index=X.index, columns=columns)
 
             return res

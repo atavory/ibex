@@ -5,6 +5,7 @@ Ibex
     :maxdepth: 2
     
     input_verification_and_output_processing
+    function_transformer
     examples
 
 .. include:: ../../README.rst
