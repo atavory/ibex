@@ -23,17 +23,26 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 TL;DR
 -----
 
+We first load the [iris dataset](http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html):
+
     >>> import numpy as np
     >>> from sklearn import datasets
     >>> import pandas as pd
-
+    >>> 
     >>> iris = datasets.load_iris()
     >>> iris = pd.DataFrame(
     ...     np.c_[iris['data'], iris['target']],
     ...     columns=iris['feature_names']+['class'])
-
+    >>> 
     >>> iris.columns
     Index(['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
            'petal width (cm)', 'class'],
           dtype='object')
+
+	>>> from ibex.sklearn.svm import SVC
+	>>> from ibex.sklearn.decomposition import PCA
+	>>> from ibex.sklearn.feature_selection import SelectKBest
+
+	>>> clf = (PCA(n_components=2) + SelectKBest(k=1)) | SVC(kernel="linear")
+
 
