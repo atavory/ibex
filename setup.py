@@ -3,6 +3,7 @@ import sys
 import distutils
 from setuptools import setup, Command
 from distutils.core import setup
+import subprocess
 
 
 _py2 = sys.version_info[0] < 3
@@ -21,8 +22,23 @@ class _TestCommand(Command):
             self.level = '0'
 
     def run(self):
-        run_str = "%s -m unittest discover test '*test.py'" % ('python' if _py2 else 'python3')
-       	os.system(run_str)
+        run_str = "%s -m unittest discover test *test.py" % ('python' if _py2 else 'python3')
+        subprocess.check_call(run_str.split(' '))
+
+
+class _DocumentCommand(Command):
+    user_options = [
+        ]
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        run_str = "make html doctest"
+        subprocess.check_call(run_str.split(' '), cwd='docs')
 
 
 setup(
@@ -44,7 +60,9 @@ setup(
     },
     include_package_data=True,
     cmdclass={
-        'test': _TestCommand},
+        'document': _DocumentCommand,
+        'test': _TestCommand,
+    },
     classifiers=[
         'Development Status :: 5 - Alpha',
         'Environment :: Console',

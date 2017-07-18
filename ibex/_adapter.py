@@ -43,6 +43,13 @@ def frame(step):
 
             return self.__process_wrapped_call_res(X[FrameMixin.get_params(self)['columns']], res)
 
+        def fit_transform(self, X, *args):
+            FrameMixin.set_params(self, columns=X.columns)
+
+            res = super(_Adapter, self).fit_transform(self.__x(X), *args)
+
+            return self.__process_wrapped_call_res(X[FrameMixin.get_params(self)['columns']], res)
+
         def transform(self, X, *args):
             res = super(_Adapter, self).transform(self.__x(X), *args)
 
