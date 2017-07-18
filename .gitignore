@@ -4,4 +4,6 @@ dist
 *.sw?
 */__pycache__
 .*
+*egg-info*
+Untitled*.*
 
