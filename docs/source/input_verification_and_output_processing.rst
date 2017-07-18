@@ -12,7 +12,7 @@ Input Verification And Output Processing
     0 -1.0 -1.0
     1  1.0  1.0
 
-    >>> x_1 = pd.DataFrame({'a': [1., 2., 3.], 'b': [3., 4., 5.]})
+    >>> x_1 = pd.DataFrame({'a': [1., 2., 3.], 'b': [3., 4., 5.]}, index=['a', 'b', 'c'])
     >>> est.transform(x_1[['b', 'a']])
          a    b
     0 -1.0 -1.0
