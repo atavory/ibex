@@ -210,33 +210,6 @@ class _TransTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             trans(columns=['c']).fit_transform(x)
 
-    def test_trans_pd(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
-
-        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).fit(x)
-
-        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).transform(x)
-
-        trans(lambda x: pd.DataFrame({'sqrt_a': np.sqrt(x['a'])})).fit_transform(x)
-
-    def test_trans_no_pd_single(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit(x)
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit_transform(x)
-
-    def test_trans_no_pd_multiple(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit(x)
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').transform(x)
-
-        trans({'sqrt_a': lambda x: np.sqrt(x)}, columns='a').fit_transform(x)
-
     def test_trans_step(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
@@ -258,18 +231,22 @@ class _IrisTest(unittest.TestCase):
 
     def test_fit_transform(self):
         decomp = trans(
-            {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
+            pd_decomposition.PCA(n_components=2),
+            trans_columns=['pc1', 'pc2'],
             columns=self._features)
 
-        decomp.fit_transform(self._iris)
+        tr = decomp.fit_transform(self._iris)
+        self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_fit_plus_transform(self):
 
         decomp = trans(
-            {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
+            pd_decomposition.PCA(n_components=2),
+            trans_columns=['pc1', 'pc2'],
             columns=self._features)
 
-        decomp.fit(self._iris).transform(self._iris)
+        tr = decomp.fit(self._iris).transform(self._iris)
+        self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_iris_logistic_regression_cv(self):
         clf = pd_linear_model.LogisticRegression()
@@ -354,7 +331,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
+            trans(np.sqrt, columns='a') | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
@@ -364,7 +341,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans() + trans({'sqrt_a': np.sqrt, 'sqr_a': lambda x: x ** 2}, columns='a') | \
+            trans() + trans(np.sqrt, columns='a') | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))

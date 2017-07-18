@@ -26,8 +26,8 @@ Specifying Functions
     1  0.707107  0.0
 
 
-Specifying Input Column 
------------------------
+Specifying Input Columns
+------------------------
 
     >>> trans(columns=['a']).fit_transform(x)
          a
@@ -46,8 +46,8 @@ Specifying Input Column
     1  0.5
 
 
-Specifying Output Column 
------------------------
+Specifying Output Columns
+-------------------------
 
 
 Multiple Transformations

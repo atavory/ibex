@@ -23,7 +23,7 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 TL;DR
 -----
 
-We first load the [iris dataset](http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html):
+We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_:
 
     >>> import numpy as np
     >>> from sklearn import datasets
