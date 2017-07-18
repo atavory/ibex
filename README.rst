@@ -3,21 +3,21 @@ Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
     :target: https://travis-ci.org/atavory/ibex
 
- .. image:: https://landscape.io/github/atavory/ibex/master/landscape.svg?style=flat
+.. image:: https://landscape.io/github/atavory/ibex/master/landscape.svg?style=flat
     :target: https://landscape.io/github/atavory/ibex/master
 
- .. image:: https://coveralls.io/repos/github/atavory/ibex/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/github/atavory/ibex/badge.svg?branch=master
     :target: https://coveralls.io/github/atavory/ibex?branch=master
 
- .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
-     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
+.. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
+    :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 
-  `scikit-learn <http://scikit-learn.org/stable/>`_
+`scikit-learn <http://scikit-learn.org/stable/>`_
 
-  `pandas <http://pandas.pydata.org/>`_
+`pandas <http://pandas.pydata.org/>`_
 
-  `documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
+`documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
 
 
 TL;DR
