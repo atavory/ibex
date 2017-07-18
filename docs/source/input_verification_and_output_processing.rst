@@ -15,9 +15,9 @@ Input Verification And Output Processing
     >>> x_1 = pd.DataFrame({'a': [1., 2., 3.], 'b': [3., 4., 5.]}, index=['a', 'b', 'c'])
     >>> est.transform(x_1[['b', 'a']])
          a    b
-    0 -1.0 -1.0
-    1  1.0  1.0
-    2  3.0  3.0
+    a -1.0 -1.0
+    b  1.0  1.0
+    c  3.0  3.0
 
     >>> x_2 = x_1.rename(columns={'b': 'c'})
     >>> est.transform(x_2)
