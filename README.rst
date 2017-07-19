@@ -1,4 +1,4 @@
-Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka
+Ami Tavory and Shahar Azulay
 
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
     :target: https://travis-ci.org/atavory/ibex
