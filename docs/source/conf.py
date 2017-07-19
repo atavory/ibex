@@ -59,8 +59,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ibex'
-copyright = u'2017, Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka'
-author = u'Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka'
+copyright = u'2017, Ami Tavory and Shahar Azulay'
+author = u'Ami Tavory, Shahar Azulay'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -243,7 +243,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'ibex.tex', u'frame\\_learn Documentation',
-     u'Ami Tavory, Shahar Azulay, and Tali Raveh-Sadka', 'manual'),
+     u'Ami Tavory and Shahar Azulay', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

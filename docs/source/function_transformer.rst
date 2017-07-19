@@ -2,7 +2,7 @@ Function Transformers
 =====================
 
     >>> import pandas as pd
-    >>> X = pd.DataFrame({'a': [1., 2.], 'b': [3., 4.]})
+    >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
 
     >>> from ibex import trans
 
@@ -11,9 +11,9 @@ Specifying Functions
 --------------------
     
     >>> trans().fit_transform(X)
-         a ...b
-    0  1...  3...
-    1  2...  4...
+       a  b
+    0  1  3
+    1  2  4
 
     >>> import numpy as np
     >>> trans(np.sqrt).fit_transform(X)
@@ -23,7 +23,7 @@ Specifying Functions
 
     >>> from ibex.sklearn.decomposition import PCA 
     >>> trans(PCA(n_components=2)).fit_transform(X)
-              a   ... b
+              a   ...b
     0 -0.707107  ...
     1  0.707107  ...
 
@@ -32,14 +32,14 @@ Specifying Input Columns
 ------------------------
 
     >>> trans(None, 'a').fit_transform(X)
-         a
-    0  1.0
-    1  2.0
+       a
+    0  1
+    1  2
 
     >>> trans(None, ['a']).fit_transform(X)
-         a
-    0  1.0
-    1  2.0
+       a
+    0  1
+    1  2
 
     >>> trans(np.sqrt, 'a').fit_transform(X)
               a
@@ -66,9 +66,9 @@ Specifying Output Columns
 ------------------------
 
     >>> trans(None, out_cols=['c', 'd']).fit_transform(X)
-         c    d
-    0  1.0  3.0
-    1  2.0  4.0
+       c  d
+    0  1  3
+    1  2  4
 
     >>> trans(np.sqrt, out_cols=['c', 'd']).fit_transform(X)
               c         d
@@ -85,14 +85,14 @@ Specifying Output and Input Columns
 -----------------------------------
 
     >>> trans(None, 'a', 'c').fit_transform(X)
-         c
-    0  1.0
-    1  2.0
+       c
+    0  1
+    1  2
 
     >>> trans(None, ['a'], ['c']).fit_transform(X)
-         c
-    0  1.0
-    1  2.0
+       c
+    0  1
+    1  2
 
     >>> trans(np.sqrt, ['a', 'b'], ['c', 'd']).fit_transform(X)
               c         d
