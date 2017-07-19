@@ -35,8 +35,8 @@ We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/da
     ...     columns=iris['feature_names']+['class'])
     >>> 
     >>> iris.columns
-    Index(['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
-           'petal width (cm)', 'class'],
+    Index([...'sepal length (cm)', ...'sepal width (cm)', ...'petal length (cm)',
+           ...'petal width (cm)', ...'class'],
           dtype='object')
 
 	>>> from ibex.sklearn.svm import SVC

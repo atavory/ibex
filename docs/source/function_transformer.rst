@@ -6,6 +6,7 @@ Function Transformers
 
     >>> from ibex import trans
 
+
 Specifying Functions
 --------------------
     
@@ -41,19 +42,19 @@ Specifying Input Columns
     1  2.0  2.000000
 
     >>> trans({('a', 'b'): None}).fit_transform(X)
-         a
-    0  1.0
-    1  2.0
+         a    b
+    0  1.0  3.0
+    1  2.0  4.0
 
     >>> trans({'a': np.sqrt}).fit_transform(X)
-         a
-    0  1.0
-    1  4.0
+              a
+    0  1.000000
+    1  1.414214
 
     >>> trans({('a', 'b'): np.sqrt}).fit_transform(X)
-         a
-    0  1.0
-    1  4.0
+              a         b
+    0  1.000000  1.732051
+    1  1.414214  2.000000
 
     >>> from ibex.sklearn.decomposition import PCA 
     >>> trans({'a': PCA(n_components=1)}).fit_transform(X)
@@ -62,20 +63,16 @@ Specifying Input Columns
     1  0.5
 
     >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans({('a', 'b'): PCA(n_components=1)}).fit_transform(X)
-         a
-    0 -0.5
-    1  0.5
+    >>> trans({('a', 'b'): {'pca_1': PCA(n_components=1)}}).fit_transform(X)
+          pca_1
+    0 -0.707107
+    1  0.707107
 
+    >>> trans({('a', 'b'): {('pca_1', 'pca_2'): PCA(n_components=2)}}).fit_transform(X)
+          pca_1  pca_2
+    0 -0.707107    0.0
+    1  0.707107    0.0
 
-Specifying Output Columns
--------------------------
-
-    >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans({('a', 'b'): PCA(n_components=1)}).fit_transform(X)
-         a
-    0 -0.5
-    1  0.5
 
 Multiple Transformations
 ------------------------
