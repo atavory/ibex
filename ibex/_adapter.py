@@ -34,7 +34,7 @@ def frame(step):
         def fit(self, X, *args):
             # Tmp Ami - bad; use property
             # Tmp Ami - why not in function adapter? where are uts?
-            FrameMixin.set_params(self, columns=X.columns)
+            self.x_columns = X.columns
 
             res = super(_Adapter, self).fit(X, *args)
 
@@ -43,24 +43,24 @@ def frame(step):
         def predict(self, X, *args):
             res = super(_Adapter, self).predict(self.__x(X), *args)
 
-            return self.__process_wrapped_call_res(X[FrameMixin.get_params(self)['columns']], res)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         def fit_transform(self, X, *args):
-            FrameMixin.set_params(self, columns=X.columns)
+            self.x_columns = X.columns
 
             res = super(_Adapter, self).fit_transform(self.__x(X), *args)
 
-            return self.__process_wrapped_call_res(X[FrameMixin.get_params(self)['columns']], res)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         def transform(self, X, *args):
             res = super(_Adapter, self).transform(self.__x(X), *args)
 
-            return self.__process_wrapped_call_res(X[FrameMixin.get_params(self)['columns']], res)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         # Tmp Ami - should be in base?
         def __x(self, X):
             # Tmp Ami - should be in base?
-            X = X[FrameMixin.get_params(self)['columns']]
+            X = X[self.x_columns]
             # Tmp Ami - is_subclass or isinstance?
             return X if FrameMixin.is_subclass(self) else X.as_matrix()
 

@@ -19,22 +19,19 @@ class FrameMixin(object):
         if columns is not None:
             self.set_params(columns=columns)
 
-    def set_params(self, **params):
+    @property
+    def x_columns(self):
+        return self.__cols
+
+    @x_columns.setter
+    def x_columns(self, columns):
         try:
             self.__cols
         except AttributeError:
-            self.__cols = params['columns']
+            self.__cols = columns
 
-        if set(params['columns']) != set(self.__cols):
+        if set(columns) != set(self.__cols):
             raise KeyError()
-
-    def get_params(self, deep=True):
-        params = {}
-        try:
-            params['columns'] = self.__cols
-        except AttributeError:
-            pass
-        return params
 
     @classmethod
     def is_subclass(cls, step):

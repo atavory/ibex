@@ -184,9 +184,11 @@ class _TransTest(unittest.TestCase):
     def test_trans_none(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans().fit(x)
+        # Tmp Ami
+        # with self.assertRaises(KeyError):
+        #   trans().fit(x)
 
-        trans().transform(x)
+        trans().fit(x).transform(x)
 
         trans().fit_transform(x)
 
@@ -195,36 +197,37 @@ class _TransTest(unittest.TestCase):
 
         trans({'a': None}).fit(x)
 
-        trans().fit({('a', ): x})
+        trans().fit({('a', ): None})
 
-        trans().transform({'a': x})
+        trans({'a': None}).fit(x).transform(x)
 
-        trans().transform({('a', ): x})
+        trans({('a', ): None}).fit(x).transform(x)
 
-        trans().fit_transform({'a': x})
+        trans({'a': None}).fit_transform(x)
 
-        trans().fit_transform({('a', ): x})
+        trans({('a', ): None}).fit_transform(x)
 
     def test_trans_none_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        bad_x = pd.DataFrame({'a': [1, 2, 3], 'c': [30, 23, 2]})
 
         with self.assertRaises(KeyError):
-            trans().fit({'c': x})
+            trans({'b': None}).fit(bad_x)
 
         with self.assertRaises(KeyError):
-            trans().fit({('c', ): x})
+            trans({('b', ): None}).fit(bad_x)
 
         with self.assertRaises(KeyError):
-            trans().transform({'c': x})
+            trans({'c': None}).fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            trans().transform({('c', ): x})
+            trans({('c', ): None}).fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            fit_trans().fit_transform({'c': x})
+            fit_trans({'c': None}).fit_transform(bad_x)
 
         with self.assertRaises(KeyError):
-            fit_trans().fit_transform({('c', ): x})
+            fit_trans({('c', ): None}).fit_transform(bad_x)
 
     def test_trans_step(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
