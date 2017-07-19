@@ -7,7 +7,7 @@ Input Verification And Output Processing
     >>> from ibex.sklearn import preprocessing
     >>> est = preprocessing.StandardScaler().fit(X)
 
-    >>> X_1 = pd.DataFrame({'a': [1., 2., 3.], 'b': [3., 4., 5.]}, index=[10, 20, 30])
+    >>> X_1 = pd.DataFrame({'a': [1, 2, 3], 'b': [3, 4, 5]}, index=[10, 20, 30])
     >>> est.transform(X_1)
           a    b
     10 -1.0 -1.0
