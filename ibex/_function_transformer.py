@@ -71,20 +71,19 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         for t in self._flattened:
             func, cols, out_cols = t[0], t[1], t[2]
 
-            if cols is not None:
-                X = X[cols]
+            Xt = X[cols] if cols is not None else X
 
             if func is None:
-                df = X
+                df = Xt
             elif FrameMixin.is_subclass(t[0]):
                 if self.pass_y:
-                    df = t[0].fit_transform(X, y)
+                    df = t[0].fit_transform(Xt, y)
                 else:
-                    df = t[0].fit_transform(X)
+                    df = t[0].fit_transform(Xt)
             else:
 
                 # Tmp Ami
-                df = pd.DataFrame(t[0](X), index=X.index)
+                df = pd.DataFrame(t[0](Xt), index=Xt.index)
 
             df = self.__process_res(X, df, cols, out_cols)
 

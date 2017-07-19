@@ -238,6 +238,11 @@ class _TransTest(unittest.TestCase):
 
         trans(pd_preprocessing.StandardScaler()).fit(x).fit_transform(x)
 
+    def test_trans_none_sqrt(self):
+        X = pd.DataFrame({'a': [1., 2.], 'b': [3., 4.]})
+        X = trans({'a': None, 'b': np.sqrt}).fit_transform(X)
+        print(X)
+
 
 class _IrisTest(unittest.TestCase):
     @classmethod
@@ -409,8 +414,13 @@ class _VerifyDocumentTest(unittest.TestCase):
         this_dir = os.path.split(__file__)[0]
         doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
         doc_f_names += [os.path.join(this_dir, '../README.rst')]
+        failed, attempted = 0, 0
         for f_name in doc_f_names:
-            doctest.testfile(f_name, module_relative=False)
+            res = doctest.testfile(f_name, module_relative=False, optionflags=doctest.ELLIPSIS)
+            failed += res[0]
+            attempted += res[1]
+        self.assertGreater(attempted, 0)
+        self.assertEqual(failed, 0)
 
 
 if __name__ == '__main__':
