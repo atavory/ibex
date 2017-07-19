@@ -184,50 +184,62 @@ class _TransTest(unittest.TestCase):
     def test_trans_none(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
+        trans().fit(x).transform(x)
+
         # Tmp Ami
         # with self.assertRaises(KeyError):
-        #   trans().fit(x)
-
-        trans().fit(x).transform(x)
+        #   trans().transform(x)
 
         trans().fit_transform(x)
 
     def test_trans_none_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans({'a': None}).fit(x)
+        trans(None, 'a').fit(x)
 
-        trans({('a', ): None}).fit(x)
+        trans(None, ['a']).fit(x)
 
-        trans({'a': None}).fit(x).transform(x)
+        trans(None, 'a').fit(x).transform(x)
 
-        trans({('a', ): None}).fit(x).transform(x)
+        trans(None, ['a']).fit(x).transform(x)
 
-        trans({'a': None}).fit_transform(x)
+        trans(None, 'a').fit_transform(x)
 
-        trans({('a', ): None}).fit_transform(x)
+        trans(None, ['a']).fit_transform(x)
+
+        trans(None, 'a', 'b').fit(x)
+
+        trans(None, 'b', ['a']).fit(x)
+
+        trans(None, 'a', 'b').fit(x).transform(x)
+
+        trans(None, 'b', ['a']).fit(x).transform(x)
+
+        trans(None, 'a', 'b').fit_transform(x)
+
+        trans(None, 'b', ['a']).fit_transform(x)
 
     def test_trans_none_bad_cols(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         bad_x = pd.DataFrame({'a': [1, 2, 3], 'c': [30, 23, 2]})
 
         with self.assertRaises(KeyError):
-            trans({'b': None}).fit(bad_x)
+            trans(None, 'b').fit(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({('b', ): None}).fit(bad_x)
+            trans(None, ['b']).fit(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({'c': None}).fit(x).transform(bad_x)
+            trans(None, 'b').fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({('b', ): None}).fit(x).transform(bad_x)
+            trans(None, ['b']).fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({'b': None}).fit_transform(bad_x)
+            trans(None, 'b').fit_transform(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({('b', ): None}).fit_transform(bad_x)
+            trans(None, ['b']).fit_transform(bad_x)
 
     def test_trans_step(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
@@ -237,11 +249,6 @@ class _TransTest(unittest.TestCase):
         trans(pd_preprocessing.StandardScaler()).fit(x).transform(x)
 
         trans(pd_preprocessing.StandardScaler()).fit(x).fit_transform(x)
-
-    def test_trans_none_sqrt(self):
-        X = pd.DataFrame({'a': [1., 2.], 'b': [3., 4.]})
-        X = trans({'a': None, 'b': np.sqrt}).fit_transform(X)
-        print(X)
 
 
 class _IrisTest(unittest.TestCase):
@@ -254,20 +261,13 @@ class _IrisTest(unittest.TestCase):
             columns=cls._features+['class'])
 
     def test_fit_transform(self):
-        decomp = trans({
-            tuple(self._features):
-                {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
-        })
+        decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
 
         tr = decomp.fit_transform(self._iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_fit_plus_transform(self):
-
-        decomp = trans({
-            tuple(self._features):
-                {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
-        })
+        decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
 
         tr = decomp.fit(self._iris).transform(self._iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
@@ -355,7 +355,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans({'a': np.sqrt}) | \
+            trans(np.sqrt, 'a') | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
@@ -365,7 +365,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans() + trans({'a': np.sqrt}) | \
+            trans() + trans(np.sqrt, 'a') | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))

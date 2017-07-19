@@ -11,9 +11,9 @@ Specifying Functions
 --------------------
     
     >>> trans().fit_transform(X)
-         a    b
-    0  1.0  3.0
-    1  2.0  4.0
+         a ...b
+    0  1...  3...
+    1  2...  4...
 
     >>> import numpy as np
     >>> trans(np.sqrt).fit_transform(X)
@@ -23,7 +23,26 @@ Specifying Functions
 
     >>> from ibex.sklearn.decomposition import PCA 
     >>> trans(PCA(n_components=2)).fit_transform(X)
-              a   ... b
+              c   ... d
+    0 -0.707107  ...
+    1  0.707107  ...
+
+
+Specifying Output Columns
+------------------------
+
+    >>> trans(None, ['c', 'd']).fit_transform(X)
+         a
+    0  1.0
+    1  2.0
+
+    >>> trans(np.sqrt, ['c', 'd']).fit_transform(X)
+              c         d
+    0  1.000000  1.732051
+    1  1.414214  2.000000
+
+    >>> trans(PCA(n_components=2), ['c', 'd']).fit_transform(X)
+              c   ... d
     0 -0.707107  ...
     1  0.707107  ...
 
@@ -31,47 +50,39 @@ Specifying Functions
 Specifying Input Columns
 ------------------------
 
-    >>> trans({'a': None}).fit_transform(X)
+    >>> trans(None, ['c', 'd']).fit_transform(X)
          a
     0  1.0
     1  2.0
 
-    >>> trans({'a': None, 'b': np.sqrt}).fit_transform(X)
-         a         b
-    0  1.0  1.732051
-    1  2.0  2.000000
-
-    >>> trans({('a', 'b'): None}).fit_transform(X)
-         a    b
-    0  1.0  3.0
-    1  2.0  4.0
-
-    >>> trans({'a': np.sqrt}).fit_transform(X)
-              a
-    0  1.000000
-    1  1.414214
-
-    >>> trans({('a', 'b'): np.sqrt}).fit_transform(X)
-              a         b
+    >>> trans(np.sqrt, ['c', 'd']).fit_transform(X)
+              c         d
     0  1.000000  1.732051
     1  1.414214  2.000000
 
-    >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans({'a': PCA(n_components=1)}).fit_transform(X)
+    >>> trans(PCA(n_components=2), ['c', 'd']).fit_transform(X)
+              c   ... d
+    0 -0.707107  ...
+    1  0.707107  ...
+
+
+Specifying Output and Input Columns
+-----------------------------------
+
+    >>> trans(None, ['c', 'd']).fit_transform(X)
          a
-    0 -0.5
-    1  0.5
+    0  1.0
+    1  2.0
 
-    >>> from ibex.sklearn.decomposition import PCA 
-    >>> trans({('a', 'b'): {'pca_1': PCA(n_components=1)}}).fit_transform(X)
-          pca_1
-    0 -0.707107
-    1  0.707107
+    >>> trans(np.sqrt, ['c', 'd']).fit_transform(X)
+              c         d
+    0  1.000000  1.732051
+    1  1.414214  2.000000
 
-    >>> trans({('a', 'b'): {('pca_1', 'pca_2'): PCA(n_components=2)}}).fit_transform(X)
-          pca_1  ...pca_2
-    0 -0.707107    ...
-    1  0.707107    ...
+    >>> trans(PCA(n_components=2), ['c', 'd']).fit_transform(X)
+              c   ... d
+    0 -0.707107  ...
+    1  0.707107  ...
 
 
 Multiple Transformations
