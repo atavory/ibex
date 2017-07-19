@@ -43,7 +43,9 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
         self.set_params(**params)
 
-    def fit(self, x, y=None):
+    def fit(self, X, y=None):
+        self.x_columns = X.columns
+
         print(self._flattened)
 
         # Tmp Ami - set x? uts?
@@ -54,16 +56,18 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
                 continue
 
             if cols is not None:
-                x = x[cols]
+                X = X[cols]
 
             if self.pass_y:
-                t[0].fit(x, y)
+                t[0].fit(X, y)
             else:
-                t[0].fit(x)
+                t[0].fit(X)
 
         return self
 
-    def fit_transform(self, x, y=None):
+    def fit_transform(self, X, y=None):
+        X = X[self.x_columns]
+
         dfs = []
 
         print(self._flattened)
@@ -72,15 +76,15 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
             func, cols, out_cols = t[0], t[1], t[2]
 
             if cols is not None:
-                x = x[cols]
+                X = X[cols]
 
             if func is None:
-                df = x
-            elif FrameMixin.is_subclass(t[0]):
+                df = X
+            elif FrameMiXin.is_subclass(t[0]):
                 if self.pass_y:
-                    df = t[0].fit_transform(x, y)
+                    df = t[0].fit_transform(X, y)
                 else:
-                    df = t[0].fit_transform(x)
+                    df = t[0].fit_transform(X)
             else:
                 # Tmp Ami
                 ff
@@ -89,7 +93,9 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
         return pd.concat(dfs, axis=1)
 
-    def transform(self, x, y=None):
+    def transform(self, X, y=None):
+        X = X[self.x_columns]
+
         dfs = []
 
         print(self._flattened)
@@ -99,16 +105,16 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
             print(func, cols, out_cols)
 
             if cols is not None:
-                x = x[cols]
+                X = X[cols]
 
             if func is None:
-                df = x
+                df = X
                 print(df)
-            elif FrameMixin.is_subclass(t[0]):
+            elif FrameMiXin.is_subclass(t[0]):
                 if self.pass_y:
-                    df = t[0].transform(x, y)
+                    df = t[0].transform(X, y)
                 else:
-                    df = t[0].transform(x)
+                    df = t[0].transform(X)
             else:
                 # Tmp Ami
                 ff
