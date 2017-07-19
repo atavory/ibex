@@ -23,7 +23,7 @@ Specifying Functions
 
     >>> from ibex.sklearn.decomposition import PCA 
     >>> trans(PCA(n_components=2)).fit_transform(X)
-              a    b
+              a   ... b
     0 -0.707107  ...
     1  0.707107  ...
 
@@ -69,9 +69,9 @@ Specifying Input Columns
     1  0.707107
 
     >>> trans({('a', 'b'): {('pca_1', 'pca_2'): PCA(n_components=2)}}).fit_transform(X)
-              a    b
-    0 -0.707107  ...
-    1  0.707107  ...
+          pca_1  pca_2
+    0 -0.707107    ...
+    1  0.707107    ...
 
 
 Multiple Transformations
