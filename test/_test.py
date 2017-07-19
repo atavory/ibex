@@ -221,13 +221,13 @@ class _TransTest(unittest.TestCase):
             trans({'c': None}).fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            trans({('c', ): None}).fit(x).transform(bad_x)
+            trans({('b', ): None}).fit(x).transform(bad_x)
 
         with self.assertRaises(KeyError):
-            fit_trans({'c': None}).fit_transform(bad_x)
+            trans({'b': None}).fit_transform(bad_x)
 
         with self.assertRaises(KeyError):
-            fit_trans({('c', ): None}).fit_transform(bad_x)
+            trans({('b', ): None}).fit_transform(bad_x)
 
     def test_trans_step(self):
         x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
