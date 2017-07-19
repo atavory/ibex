@@ -1,13 +1,15 @@
 from __future__ import absolute_import
 
 import pandas as pd
+from sklearn import base
 from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin
 
 
 # Tmp Ami - take care of weights
-class FeatureUnion(FrameMixin):
+# Tmp Ami - derive from appropriate sklearn mixins
+class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
     - Pandas version -
     Concatenates results of multiple transformer objects.

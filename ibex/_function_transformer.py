@@ -1,4 +1,7 @@
+from __future__ import absolute_import
+
 import pandas as pd
+from sklearn import base
 from six import string_types
 
 from ._frame_mixin import FrameMixin
@@ -7,92 +10,103 @@ from ._frame_mixin import FrameMixin
 __all__ = []
 
 
+def _flatten(func):
+    if not isinstance(func, dict):
+        return [(func, None, None)]
+
+    ret = []
+    for k, v in func.items():
+        if not isinstance(v, dict):
+            ret.append((v, _to_list(k), None))
+            continue
+
+        for kk, vv in v.items():
+            ret.append((vv, _to_list(k), _to_list(kk)))
+    return ret
+
+def _to_list(cols):
+    if cols is None:
+        return None
+    return [cols] if isinstance(cols, string_types) else cols
+
+
 # Tmp Ami - add kw_args, inverse shit
-class _FunctionTransformer(FrameMixin):
+class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     def __init__(self, func, pass_y, kw_args):
         FrameMixin.__init__(self)
 
-        self._func, self._pass_y, self._kw_args = \
-            func, pass_y, kw_args
+        params = {
+            'func': func,
+            'pass_y': pass_y,
+            'kw_args': kw_args,
+        }
+
+        self.set_params(**params)
 
     def fit(self, x, y=None):
-        if not isinstance(self._func, dict):
-            self._single_fit(self._func, None, x, y)
-            return self
+        # Tmp Ami - set x? uts?
+        for t in self._flattened:
+            func, cols = t[0], t[1]
 
-        for v in self._func.values():
-            self._single_fit(v, x, y)
+            if func is None:
+                continue
 
-        return self
+            if columns is not None:
+                x = x[cols]
 
-    def _single_fit(self, step, cols, x, y):
-        if not FrameMixin.is_subclass(step):
-            return
-
-        x = self._prep_x(cols, x)
-
-        if self._pass_y:
-            step.fit(x, y)
-        else:
-            step.fit(x)
+            if self._pass_y:
+                t[0].fit(x, y)
+            else:
+                t[0].fit(x)
 
     def fit_transform(self, x, y=None):
-        if not isinstance(self._func, dict):
-            return self._single_fit_transform(self._func, None, x, y)
-
         dfs = []
-        for k, v in self._func.items():
-            res = pd.DataFrame(self._single_fit_transform(v, x, y))
-            columns = [k] if isinstance(k, string_types) else k
-            res.columns = columns
-            dfs.append(res)
+
+        for t in self._flattened:
+            func, columns, out_columns = t[0], t[1], t[2]
+
+            if columns is not None:
+                x = x[cols]
+
+            if func is None:
+                df = x
+            elif FrameMixin.is_subclass(t[0]):
+                if self._pass_y:
+                    df = t[0].fit_transform(x, y)
+                else:
+                    df = t[0].fit_transform(x)
+            else:
+                # Tmp Ami
+                ff
+
         return pd.concat(dfs, axis=1)
-
-    def _single_fit_transform(self, step, cols, x, y):
-        if step is None:
-            return x
-
-        if not FrameMixin.is_subclass(step):
-            return step(x, y) if self._pass_y else step(x)
-
-        # Tmp Ami - bad
-        return step.fit_transform(x, y) if self._pass_y else step.fit_transform(x)
-
-    def _prep_x(self, cols, x):
-        if cols is None:
-            return x
-
-        if isinstance(cols, string_types):
-            cols = [cols]
-
-        return x[cols]
 
     def transform(self, x, y=None):
-        if not isinstance(self._func, dict):
-            return self._single_transform(self._func, x, y)
-
         dfs = []
-        for k, v in self._func.items():
-            res = pd.DataFrame(self._single_transform(v, x, y))
-            columns = [k] if isinstance(k, string_types) else k
-            res.columns = columns
-            dfs.append(res)
+
+        for t in self._flattened:
+            func, columns, out_columns = t[0], t[1], t[2]
+
+            if columns is not None:
+                x = x[cols]
+
+            if func is None:
+                df = x
+            elif FrameMixin.is_subclass(t[0]):
+                if self._pass_y:
+                    df = t[0].transform(x, y)
+                else:
+                    df = t[0].transform(x)
+            else:
+                # Tmp Ami
+                ff
+
         return pd.concat(dfs, axis=1)
 
-    def _single_transform(self, step, x, y):
-        if step is None:
-            return x
+    def set_params(self, **params):
+        base.BaseEstimator.set_params(self, **params)
 
-        if not FrameMixin.is_subclass(step):
-            return step(x, y) if self._pass_y else step(x)
-
-        return step.transform(x, y) if self._pass_y else step.transform(x)
-
-    def get_params(self, deep=True):
-        return {
-            'func': self._func,
-            'pass_y': self._pass_y,
-            'kw_args': self._kw_args}
+        self._flattened = _flatten(self.get_params()['func'])
 
 
 def trans(func=None, pass_y=False, kw_args=None):
