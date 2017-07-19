@@ -69,7 +69,7 @@ Specifying Input Columns
     1  0.707107
 
     >>> trans({('a', 'b'): {('pca_1', 'pca_2'): PCA(n_components=2)}}).fit_transform(X)
-          pca_1  pca_2
+          pca_1  ...pca_2
     0 -0.707107    ...
     1  0.707107    ...
 
