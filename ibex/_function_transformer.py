@@ -66,7 +66,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         return self
 
     def fit_transform(self, X, y=None):
-        X = X[self.x_columns]
+        self.x_columns = X.columns
 
         dfs = []
 
@@ -80,7 +80,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             if func is None:
                 df = X
-            elif FrameMiXin.is_subclass(t[0]):
+            elif FrameMixin.is_subclass(t[0]):
                 if self.pass_y:
                     df = t[0].fit_transform(X, y)
                 else:
@@ -110,7 +110,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
             if func is None:
                 df = X
                 print(df)
-            elif FrameMiXin.is_subclass(t[0]):
+            elif FrameMixin.is_subclass(t[0]):
                 if self.pass_y:
                     df = t[0].transform(X, y)
                 else:

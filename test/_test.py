@@ -197,7 +197,7 @@ class _TransTest(unittest.TestCase):
 
         trans({'a': None}).fit(x)
 
-        trans().fit({('a', ): None})
+        trans({('a', ): None}).fit(x)
 
         trans({'a': None}).fit(x).transform(x)
 
@@ -249,20 +249,20 @@ class _IrisTest(unittest.TestCase):
             columns=cls._features+['class'])
 
     def test_fit_transform(self):
-        decomp = trans(
-            pd_decomposition.PCA(n_components=2),
-            trans_columns=['pc1', 'pc2'],
-            columns=self._features)
+        decomp = trans({
+            tuple(self._features):
+                {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
+        })
 
         tr = decomp.fit_transform(self._iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_fit_plus_transform(self):
 
-        decomp = trans(
-            pd_decomposition.PCA(n_components=2),
-            trans_columns=['pc1', 'pc2'],
-            columns=self._features)
+        decomp = trans({
+            tuple(self._features):
+                {('pc1', 'pc2'): pd_decomposition.PCA(n_components=2)},
+        })
 
         tr = decomp.fit(self._iris).transform(self._iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
@@ -350,7 +350,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans(np.sqrt, columns='a') | \
+            trans({'a': np.sqrt}) | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
@@ -360,7 +360,7 @@ class _OperatorsTest(unittest.TestCase):
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
-            trans() + trans(np.sqrt, columns='a') | \
+            trans() + trans({'a': np.sqrt}) | \
             pd_linear_model.LinearRegression()
         y_hat = prd.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
