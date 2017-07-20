@@ -32,7 +32,7 @@ TL;DR
 
 The following short example shows the main points of the library. It is an adaptation of the sickit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
 
-We first load the Iris dataset into a pandas dataframe:
+We first load the Iris dataset into a pandas dataframe.
 
     >>> import numpy as np
     >>> from sklearn import datasets
