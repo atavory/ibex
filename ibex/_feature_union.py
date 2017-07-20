@@ -69,3 +69,6 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     @property
     def transformer_list(self):
         return self._feature_union.transformer_list
+
+    def __getitem__(self, ind):
+        return self.transformer_list[ind][1]

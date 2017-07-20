@@ -12,5 +12,4 @@ class Pipeline(pipeline.Pipeline):
 
 def make_pipeline(*steps):
     orig = pipeline.make_pipeline(*steps)
-    params = orig.get_params()
     return Pipeline(orig.steps)
