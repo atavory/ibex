@@ -24,7 +24,7 @@ Input Verification And Output Processing
     >>> est.transform(X_2)
     Traceback (most recent call last):
     ...
-    KeyError: "Index([...'b'], dtype='object') not in index"
+    KeyError: "...'b'...not in index"
 
     >>> from ibex.sklearn import decomposition
     >>> decomposition.PCA(n_components=1).fit(X).transform(X)

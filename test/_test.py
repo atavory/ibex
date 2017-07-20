@@ -416,7 +416,7 @@ class _VerifyDocumentTest(unittest.TestCase):
         doc_f_names += [os.path.join(this_dir, '../README.rst')]
         failed, attempted = 0, 0
         for f_name in doc_f_names:
-            res = doctest.testfile(f_name, module_relative=False, optionflags=doctest.ELLIPSIS)
+            res = doctest.testfile(f_name, module_relative=False, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
             failed += res[0]
             attempted += res[1]
         self.assertGreater(attempted, 0)
