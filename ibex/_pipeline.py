@@ -6,10 +6,11 @@ from ._frame_mixin import FrameMixin
 
 
 class Pipeline(pipeline.Pipeline):
-    pass
+    def __getitem__(self, ind):
+        return self.steps[ind][1]
 
 
 def make_pipeline(*steps):
     orig = pipeline.make_pipeline(*steps)
     params = orig.get_params()
-    return Pipeline(params['steps'])
+    return Pipeline(orig.steps)
