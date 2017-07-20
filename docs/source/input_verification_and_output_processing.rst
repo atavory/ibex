@@ -10,15 +10,15 @@ Input Verification And Output Processing
     >>> X_1 = pd.DataFrame({'a': [1, 2, 3], 'b': [3, 4, 5]}, index=[10, 20, 30])
     >>> est.transform(X_1)
           a    b
-    10 -1.0 -1.0
-    20  1.0  1.0
-    30  3.0  3.0
+    10 -1... -1...
+    20  1...  1...
+    30  3...  3...
 
     >>> est.transform(X_1[['b', 'a']])
           a    b
-    10 -1.0 -1.0
-    20  1.0  1.0
-    30  3.0  3.0
+    10 -1... -1...
+    20  1...  1...
+    30  3...  3...
 
     >>> X_2 = X_1.rename(columns={'b': 'c'})
     >>> est.transform(X_2)
