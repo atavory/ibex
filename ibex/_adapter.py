@@ -1,14 +1,9 @@
 from __future__ import absolute_import
 
 import inspect
-import types
-import functools
-import copy
 
-import six
 import numpy as np
 import pandas as pd
-from sklearn import base
 from sklearn import pipeline
 
 from ._frame_mixin import FrameMixin

@@ -49,15 +49,10 @@ class _ModuleFinder(object):
     def install(self):
         sys.meta_path[:] = [x for x in sys.meta_path if self != x] + [self]
 
-    def find_module(self, full_name, path=None):
+    def find_module(self, full_name, _=None):
         if full_name.startswith('ibex.sklearn.'):
             return NewModuleLoader()
 
 
 loader = _ModuleFinder()
 loader.install()
-
-
-import numpy as np
-from ibex.sklearn import linear_model
-import sys
