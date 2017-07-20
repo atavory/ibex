@@ -156,6 +156,20 @@ class _FrameTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             pred.predict(x)
 
+    def test_object(self):
+        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        y = pd.Series([1, 2, 3])
+
+        pred = frame(linear_model.LinearRegression()).fit(x, y)
+
+        y_hat = pred.predict(x)
+        self.assertTrue(isinstance(y_hat, pd.Series))
+
+        x.rename(columns={'a': 'c'}, inplace=True)
+
+        with self.assertRaises(KeyError):
+            pred.predict(x)
+
 
 class _FramePipelineTest(unittest.TestCase):
     def test_pipeline_fit(self):

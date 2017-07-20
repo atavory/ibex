@@ -14,9 +14,8 @@ def frame(step):
         return frame(pipeline.Pipeline)(steps=step.steps)
 
     if not inspect.isclass(step):
-        f = frame(type(step))()
         params = step.get_params()
-        f.set_params(params)
+        f = frame(type(step))(**params)
         return f
 
     class _Adapter(step, FrameMixin):
