@@ -51,7 +51,7 @@ Contents
 ========
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
     
     input_verification_and_output_processing
     function_transformer
