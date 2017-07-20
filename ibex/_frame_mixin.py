@@ -49,21 +49,25 @@ class FrameMixin(object):
         return issubclass(type(step), FrameMixin)
 
     def __or__(self, other):
+        from ._pipeline import make_pipeline
+
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
 
-        return pipeline.make_pipeline(self, *others)
+        return make_pipeline(self, *others)
 
     def __ror__(self, other):
+        from ._pipeline import make_pipeline
+
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
         others += [self]
 
-        return pipeline.make_pipeline(*others)
+        return make_pipeline(*others)
 
     def __add__(self, other):
         from ._feature_union import FeatureUnion
