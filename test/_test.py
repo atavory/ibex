@@ -12,8 +12,10 @@ from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
 try:
     from sklearn.model_selection import cross_val_score
+    from sklearn.model_selection import GridSearchCV
 except ImportError:
     from sklearn.cross_validation import cross_val_score
+    from sklearn.cross_validation import GridSearchCV
 from sklearn import datasets
 import pandas as pd
 import numpy as np
@@ -297,8 +299,6 @@ class _IrisTest(unittest.TestCase):
             y=self._iris['class'])
 
     def test_pipeline_feature_union_grid_search_cv(self):
-        from sklearn.model_selection import GridSearchCV
-
         from ibex.sklearn.svm import SVC
         from ibex.sklearn.decomposition import PCA
         from ibex.sklearn.feature_selection import SelectKBest
