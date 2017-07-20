@@ -1,8 +1,23 @@
 from __future__ import absolute_import
 
 import operator
+import collections
 
 from sklearn import pipeline
+
+
+def _make_pipeline_steps(objs):
+    names = [type(o).__name__.lower() for o in objs]
+    name_counts = collections.Counter(names)
+    unique_names = []
+    for name in names:
+        if name_counts[name] > 1:
+            unique_names.append(name + '_' + str(name_counts[name] - 1))
+            name_counts[name] -= 1
+        else:
+            unique_names.append(name)
+
+    return list(zip(unique_names, objs))
 
 
 class FrameMixin(object):
@@ -54,13 +69,9 @@ class FrameMixin(object):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
-        others = [self] + others
+        combined = [self] + others
 
-        import random
-        import string
-        combined = [(''.join(random.choice(string.digits) for _ in range(10)), o) for o in others]
-
-        return Pipeline(combined)
+        return Pipeline(_make_pipeline_steps(combined))
 
     def __ror__(self, other):
         from ._pipeline import Pipeline
@@ -69,14 +80,9 @@ class FrameMixin(object):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
-        others += [self]
+        combined = others + [self]
 
-        combined = [(type(o).__name__, o) for o in others]
-        import random
-        import string
-        combined = [(''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)), o) for o in others]
-
-        return Pipeline(combined)
+        return Pipeline(_make_pipeline_steps(combined))
 
     def __add__(self, other):
         from ._feature_union import FeatureUnion
@@ -91,8 +97,6 @@ class FrameMixin(object):
         else:
             other_features = [other]
 
-        import random
-        import string
-        combined = [(''.join(random.choice(string.digits) for _ in range(10)), o) for o in self_features + other_features]
+        combined = self_features + other_features
 
-        return FeatureUnion(combined)
+        return FeatureUnion(_make_pipeline_steps(combined))

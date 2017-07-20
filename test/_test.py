@@ -304,8 +304,7 @@ class _IrisTest(unittest.TestCase):
             X=self._iris[self._features],
             y=self._iris['class'])
 
-    # Tmp Ami
-    def _test_pipeline_feature_union_grid_search_cv(self):
+    def test_pipeline_feature_union_grid_search_cv(self):
         from sklearn.model_selection import GridSearchCV
 
         from ibex.sklearn.svm import SVC
@@ -314,18 +313,13 @@ class _IrisTest(unittest.TestCase):
 
         clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
-        print(clf.get_params())
-
         param_grid = dict(
-            features__pca__n_components=[1, 2, 3],
-            features__univ_select__k=[1, 2],
-            svm__C=[0.1, 1, 10])
-
-        X = self._iris[self._features]
-        y = self._iris['class']
+            featureunion__pca__n_components=[1, 2, 3],
+            featureunion__selectkbest__k=[1, 2],
+            svc__C=[0.1, 1, 10])
 
         grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=10)
-        grid_search.fit(X, y)
+        grid_search.fit(self._iris[self._features], self._iris['class'])
         print(grid_search.best_estimator_)
 
 
