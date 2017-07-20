@@ -10,7 +10,10 @@ from sklearn import base
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
-from sklearn.model_selection import GridSearchCV
+try:
+    from sklearn.model_selection import GridSearchCV
+except ImportError:
+    from sklearn.grid_search import GridSearchCV
 try:
     from sklearn.model_selection import cross_val_score
 except ImportError:
