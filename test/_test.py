@@ -1,20 +1,15 @@
 import unittest
 import os
-import re
 from glob import glob
 import doctest
 
-from sklearn import linear_model
-from ibex.sklearn import linear_model as pd_linear_model
 from sklearn import preprocessing
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
 from sklearn import base
-from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
-from ibex.sklearn import ensemble as pd_ensemble
 try:
     from sklearn.model_selection import cross_val_score
 except ImportError:
@@ -59,9 +54,6 @@ class _ConceptsTest(unittest.TestCase):
 
 class _BaseTest(unittest.TestCase):
     def test_neut(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
         prd = linear_model.LinearRegression(fit_intercept=False)
         self.assertIn('get_params', dir(prd))
         self.assertEqual(prd.get_params()['fit_intercept'], False)
@@ -321,8 +313,6 @@ class _IrisTest(unittest.TestCase):
         grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=10)
         grid_search.fit(self._iris[self._features], self._iris['class'])
         print(grid_search.best_estimator_)
-
-
 
 
 class _FeatureUnionTest(unittest.TestCase):
