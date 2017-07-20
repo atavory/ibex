@@ -18,17 +18,21 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 
-`scikit-learn <http://scikit-learn.org/stable/>`_
+This library aims for two (somewhat independent) goals:
 
-`pandas <http://pandas.pydata.org/>`_
+* providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
 
-`documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
+* allowing easier, and more succint ways of combining estimators, features, and pipelines
+
+The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small interface.
 
 
 TL;DR
 =====
 
-We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_:
+The following short example shows the main points of the library. It is an adaptation of the sickit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
+
+We first load the Iris dataset into a pandas dataframe:
 
     >>> import numpy as np
     >>> from sklearn import datasets
@@ -44,8 +48,15 @@ We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/da
            ...'petal width (cm)', ...'class'],
           dtype='object')
 
+Now, we import the relevant steps. Note that, in this example, we import them from `ibex.sklearn` rather than `sklearn`.
+
 	>>> from ibex.sklearn.svm import SVC
-	>>> from ibex.sklearn.decomposition import PCA
 	>>> from ibex.sklearn.feature_selection import SelectKBest
+	>>> from ibex.sklearn.decomposition import PCA
+
+Finally, we construct a pipeline that, given a dataframe of features:
+
+* horizontally concatenates a 2-component PCA dataframe, and the best-feature dataframe, to a resulting dataframe  
+* then, passes the result to a support-vector machine classifier outputting a pandas series
 
 	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
