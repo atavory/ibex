@@ -60,8 +60,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ibex'
-copyright = u'2017, Ami Tavory and Shahar Azulay'
-author = u'Ami Tavory, Shahar Azulay'
+copyright = u'2017, Ami Tavory, Shahar Azulay, Tali Raveh-Sadka'
+author = u'Ami Tavory, Shahar Azulay, Tali Raveh-Sadka'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

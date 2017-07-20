@@ -2,8 +2,8 @@ Ibex
 ====
 
 
+Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
 
-Ami Tavory and Shahar Azulay
 
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
     :target: https://travis-ci.org/atavory/ibex
@@ -24,6 +24,9 @@ Ami Tavory and Shahar Azulay
 
 `documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
 
+
+TL;DR
+=====
 
 We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_:
 
