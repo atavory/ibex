@@ -71,4 +71,6 @@ def frame(step):
 
             return res
 
+    _Adapter.__name__ = step.__name__
+
     return _Adapter

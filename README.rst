@@ -43,6 +43,6 @@ We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/da
 	>>> from ibex.sklearn.decomposition import PCA
 	>>> from ibex.sklearn.feature_selection import SelectKBest
 
-	>>> clf = (PCA(n_components=2) + SelectKBest(k=1)) | SVC(kernel="linear")
+	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
 

@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import operator
-import uuid
 
 from sklearn import pipeline
 
@@ -49,17 +48,22 @@ class FrameMixin(object):
         return issubclass(type(step), FrameMixin)
 
     def __or__(self, other):
-        from ._pipeline import make_pipeline
+        from ._pipeline import Pipeline
 
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
+        others = [self] + others
 
-        return make_pipeline(self, *others)
+        import random
+        import string
+        combined = [(''.join(random.choice(string.digits) for _ in range(10)), o) for o in others]
+
+        return Pipeline(combined)
 
     def __ror__(self, other):
-        from ._pipeline import make_pipeline
+        from ._pipeline import Pipeline
 
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
@@ -67,19 +71,28 @@ class FrameMixin(object):
             others = [other]
         others += [self]
 
-        return make_pipeline(*others)
+        combined = [(type(o).__name__, o) for o in others]
+        import random
+        import string
+        combined = [(''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)), o) for o in others]
+
+        return Pipeline(combined)
 
     def __add__(self, other):
         from ._feature_union import FeatureUnion
 
         if isinstance(self, FeatureUnion):
-            self_features = self.transformer_list
+            self_features = [operator.itemgetter(1)(e) for e in self.transformer_list]
         else:
-            self_features = [(str(uuid.uuid4()), self)]
+            self_features = [self]
 
         if isinstance(other, FeatureUnion):
-            other_features = other.transformer_list
+            other_features = [operator.itemgetter(1)(e) for e in other.transformer_list]
         else:
-            other_features = [(str(uuid.uuid4()), other)]
+            other_features = [other]
 
-        return FeatureUnion(self_features + other_features)
+        import random
+        import string
+        combined = [(''.join(random.choice(string.digits) for _ in range(10)), o) for o in self_features + other_features]
+
+        return FeatureUnion(combined)

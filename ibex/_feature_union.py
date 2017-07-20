@@ -66,6 +66,12 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
         return pd.DataFrame(xt, index=x.index)
 
+    def get_params(self, deep=True):
+        return self._feature_union.get_params(deep)
+
+    def set_params(self, **params):
+        return self._feature_union.set_params(**params)
+
     @property
     def transformer_list(self):
         return self._feature_union.transformer_list

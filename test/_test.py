@@ -286,7 +286,7 @@ class _IrisTest(unittest.TestCase):
         tr = decomp.fit(self._iris).transform(self._iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
-    def test_iris_logistic_regression_cv(self):
+    def test_logistic_regression_cv(self):
         clf = pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
@@ -295,7 +295,7 @@ class _IrisTest(unittest.TestCase):
             X=self._iris[self._features],
             y=self._iris['class'])
 
-    def test_iris_pipeline_cv(self):
+    def test_pipeline_cv(self):
         clf = pd_preprocessing.StandardScaler() | pd_linear_model.LogisticRegression()
         clf.fit(self._iris[self._features], self._iris['class'])
 
@@ -303,6 +303,32 @@ class _IrisTest(unittest.TestCase):
             clf,
             X=self._iris[self._features],
             y=self._iris['class'])
+
+    # Tmp Ami
+    def _test_pipeline_feature_union_grid_search_cv(self):
+        from sklearn.model_selection import GridSearchCV
+
+        from ibex.sklearn.svm import SVC
+        from ibex.sklearn.decomposition import PCA
+        from ibex.sklearn.feature_selection import SelectKBest
+
+        clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
+
+        print(clf.get_params())
+
+        param_grid = dict(
+            features__pca__n_components=[1, 2, 3],
+            features__univ_select__k=[1, 2],
+            svm__C=[0.1, 1, 10])
+
+        X = self._iris[self._features]
+        y = self._iris['class']
+
+        grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=10)
+        grid_search.fit(X, y)
+        print(grid_search.best_estimator_)
+
+
 
 
 class _FeatureUnionTest(unittest.TestCase):
