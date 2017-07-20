@@ -1,4 +1,4 @@
-Input Verification And Output Processing
+Verification and Processing
 ========================================
 
     >>> import pandas as pd 

@@ -1,3 +1,8 @@
+Ibex
+====
+
+
+
 Ami Tavory and Shahar Azulay
 
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
@@ -20,9 +25,6 @@ Ami Tavory and Shahar Azulay
 `documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_
 
 
-TL;DR
------
-
 We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_:
 
     >>> import numpy as np
@@ -44,5 +46,3 @@ We first load the `iris dataset <http://scikit-learn.org/stable/auto_examples/da
 	>>> from ibex.sklearn.feature_selection import SelectKBest
 
 	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
-
-
