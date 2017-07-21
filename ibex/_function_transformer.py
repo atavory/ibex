@@ -19,6 +19,9 @@ def _process_cols(cols):
 
 # Tmp Ami - add kw_args, inverse shit
 class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
+    """
+    Transforms them functions.
+    """
     def __init__(self, func, in_cols, out_cols, pass_y, kw_args):
         FrameMixin.__init__(self)
 
