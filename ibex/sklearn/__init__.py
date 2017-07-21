@@ -32,6 +32,9 @@ from sklearn import base
 import ibex
 
 for name in dir(_orig):
+    if name == 'FeatureUnion':
+        globals()[name] = ibex._FeatureUnion
+        continue
     est = getattr(_orig, name)
     try:
         if issubclass(est, base.BaseEstimator):

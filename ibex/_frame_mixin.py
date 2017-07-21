@@ -84,18 +84,18 @@ class FrameMixin(object):
         return pipeline.Pipeline(_make_pipeline_steps(combined))
 
     def __add__(self, other):
-        from ._feature_union import FeatureUnion
+        from ._feature_union import _FeatureUnion
 
-        if isinstance(self, FeatureUnion):
+        if isinstance(self, _FeatureUnion):
             self_features = [operator.itemgetter(1)(e) for e in self.transformer_list]
         else:
             self_features = [self]
 
-        if isinstance(other, FeatureUnion):
+        if isinstance(other, _FeatureUnion):
             other_features = [operator.itemgetter(1)(e) for e in other.transformer_list]
         else:
             other_features = [other]
 
         combined = self_features + other_features
 
-        return FeatureUnion(_make_pipeline_steps(combined))
+        return _FeatureUnion(_make_pipeline_steps(combined))

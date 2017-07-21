@@ -335,7 +335,8 @@ class _FeatureUnionTest(unittest.TestCase):
             return pd.DataFrame(xt, index=x.index)
 
     def test_pandas_support(self):
-        """ simple test to make sure the pandas wrapper works properly"""
+        from ibex.sklearn import pipeline as pd_pipeline
+
         x = pd.DataFrame(np.random.rand(500, 10), index=range(500))
         y = x.iloc[:, 0]
 
@@ -346,7 +347,7 @@ class _FeatureUnionTest(unittest.TestCase):
         xt1 = self.simple_transformer().fit_transform(x, y)
         self.assertEqual(xt1.shape, (len(x), 1))
 
-        feat_un = FeatureUnion(trans_list)
+        feat_un = pd_pipeline.FeatureUnion(trans_list)
 
         xt2 = feat_un.fit_transform(x, y)
         self.assertEqual(xt2.shape, (len(x), 2))

@@ -9,7 +9,7 @@ from ._frame_mixin import FrameMixin
 
 # Tmp Ami - take care of weights
 # Tmp Ami - derive from appropriate sklearn mixins
-class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
+class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
     - Pandas version -
     Concatenates results of multiple transformer objects.
@@ -75,3 +75,5 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     @property
     def transformer_list(self):
         return self._feature_union.transformer_list
+
+_FeatureUnion.__name__ = 'FeatureUnion'

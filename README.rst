@@ -75,7 +75,8 @@ gg
     ...     featureunion__pca__n_components=[1, 2, 3],
     ...     featureunion__selectkbest__k=[1, 2],
     ...     svc__C=[0.1, 1, 10])
-    >>> GridSearchCV(clf, param_grid=param_grid, verbose=10).fit(iris[features], iris['class'])
-    Fitting 3 folds for each of 18 candidates, totalling 54 fits
+    >>> GridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class'])
+    GridSearchCV(cv=None, error_score='raise',
+           estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
     ...
 
