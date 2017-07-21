@@ -24,11 +24,13 @@ This library aims for two (somewhat independent) goals:
 
 * allowing easier, and more succint ways of combining estimators, features, and pipelines
 
+(You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different pproach.)
+
 The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small interface.
 
 
 TL;DR
-=====
+-----
 
 The following short example shows the main points of the library. It is an adaptation of the sickit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
 
@@ -39,7 +41,7 @@ We first load the Iris dataset into a pandas dataframe.
     >>> import pandas as pd
     >>> 
     >>> iris = datasets.load_iris()
-    >>> iris = pd.DataFrame(
+    >>> features, iris = iris['feature_names'], pd.DataFrame(
     ...     np.c_[iris['data'], iris['target']],
     ...     columns=iris['feature_names']+['class'])
     >>> 
@@ -59,4 +61,21 @@ Finally, we construct a pipeline that, given a dataframe of features:
 * horizontally concatenates a 2-component PCA dataframe, and the best-feature dataframe, to a resulting dataframe  
 * then, passes the result to a support-vector machine classifier outputting a pandas series
 
+ff
+
 	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
+
+gg
+
+    >>> try:
+    ...     from sklearn.model_selection import GridSearchCV
+    ... except ImportError:
+    ...     from sklearn.grid_search import GridSearchCV
+    >>> param_grid = dict(
+    ...     featureunion__pca__n_components=[1, 2, 3],
+    ...     featureunion__selectkbest__k=[1, 2],
+    ...     svc__C=[0.1, 1, 10])
+    >>> GridSearchCV(clf, param_grid=param_grid, verbose=10).fit(iris[features], iris['class'])
+    Fitting 3 folds for each of 18 candidates, totalling 54 fits
+    ...
+

@@ -1,1 +1,6 @@
+six
+numpy
+scipy
+sklearn
+pandas
 sphinxcontrib-fulltoc

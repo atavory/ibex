@@ -35,6 +35,9 @@ class FrameMixin(object):
 
     @property
     def x_columns(self):
+        """
+        The columns set
+        """
         return self.__cols
 
     @x_columns.setter

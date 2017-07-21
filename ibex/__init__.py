@@ -1,3 +1,8 @@
+"""
+Pandas adapters for sklearn.
+"""
+
+
 from ._frame_mixin import FrameMixin
 from ._adapter import frame
 from ._feature_union import FeatureUnion
