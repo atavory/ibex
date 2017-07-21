@@ -35,6 +35,11 @@ for name in dir(_orig):
     if name == 'FeatureUnion':
         globals()[name] = ibex._FeatureUnion
         continue
+
+    if name == 'FunctionTransformer':
+        globals()[name] = ibex._FunctionTransformer
+        continue
+
     est = getattr(_orig, name)
     try:
         if issubclass(est, base.BaseEstimator):

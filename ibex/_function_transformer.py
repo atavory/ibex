@@ -106,9 +106,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         res.columns = res_cols
         return res
 
+_FunctionTransformer.__name__ = 'FunctionTransformer'
 
-def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
-    return _FunctionTransformer(func, in_cols, out_cols, pass_y, kw_args)
 
-__all__ += ['trans']
 
