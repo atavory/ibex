@@ -23,6 +23,8 @@ class NewModuleLoader(object):
         mod.__loader__ = self
         mod.__package__ = '.'.join(full_name.split('.')[:-1])
 
+        place_function_transformer = full_name == 'ibex.sklearn.preprocessing'
+
         code = """
 from __future__ import absolute_import
 
@@ -36,17 +38,16 @@ for name in dir(_orig):
         globals()[name] = ibex._FeatureUnion
         continue
 
-    if name == 'FunctionTransformer':
-        globals()[name] = ibex._FunctionTransformer
-        continue
-
     est = getattr(_orig, name)
     try:
         if issubclass(est, base.BaseEstimator):
             globals()[name] = ibex.frame(est)
     except TypeError:
         continue
-        """ % orig
+
+if %d:
+    globals()['FunctionTransformer'] = ibex._FunctionTransformer
+        """ % (orig, place_function_transformer)
 
         six.exec_(code, mod.__dict__)
 

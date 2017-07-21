@@ -53,7 +53,7 @@ setup(
     license='bsd',
     description='Tmp Ami',
     long_description=open('README.rst').read(),
-    install_requires=['six', 'numpy', 'scipy', 'sklearn>=0.17', 'pandas'],
+    install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,
     package_data={
         'ibex': ['_metadata/*txt']
