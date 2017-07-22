@@ -15,6 +15,7 @@ def frame(step):
         step: blah
 
     Returns:
+        `step` :py:class:`sklearn.base.BaseEstimator` :py:class:`ibex.FrameMixin`
     """
     if isinstance(step, pipeline.Pipeline):
         return frame(pipeline.Pipeline)(steps=step.steps)

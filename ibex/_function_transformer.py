@@ -22,6 +22,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
     """
     Transforms them functions.
     """
+    # Tmp Ami - This is now a public class; make params take defaults
     def __init__(self, func, in_cols, out_cols, pass_y, kw_args):
         FrameMixin.__init__(self)
 

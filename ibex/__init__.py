@@ -35,6 +35,7 @@ def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
         kw_args:
 
     Returns:
+        :py:class:`sklearn.preprocessing.FunctionTransformer`
     """
     from ibex.sklearn import preprocessing
 

@@ -7,8 +7,8 @@ API
 
 .. automodule:: ibex
 
-`ibex.FrameMixin`
-~~~~~~~~~~~~
+`FrameMixin`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: ibex.FrameMixin
     :members:
@@ -16,43 +16,51 @@ API
     :show-inheritance:
 
 
-`ibex.frame`
-~~~~~~~~~~~~
+`frame`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: ibex.frame
 
 
-`ibex.trans`
-~~~~~~~~~~~~
+`trans`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: ibex.trans
 
 
-`ibex.sklearn`
--------------
+`sklearn`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: ibex.sklearn
    :members:
 
 
-`ibex.sklearn.preprocessing`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.preprocessing
    :members:
 
+`FunctionTransformer`
+******************************************
+
 .. autoclass:: ibex.sklearn.preprocessing.FunctionTransformer
-   :members:
-   :special-members:
+    :members:
+    :special-members:
+    :show-inheritance:
 
 
-`ibex.sklearn.pipeline`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`pipeline`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.pipeline
    :members:
 
+`FeatureUnion`
+******************************************
+
 .. autoclass:: ibex.sklearn.pipeline.FeatureUnion
    :members:
    :special-members:
+    :show-inheritance:
 

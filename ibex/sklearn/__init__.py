@@ -1,5 +1,14 @@
 """
 Wrappers for sklearn
+
+Example:
+
+    >>> from ibex.sklearn import linear_regression # doctest: +SKIP
+
+    >>> from ibex.sklearn import foo
+    Traceback (most recent call last):
+	...
+    ImportError: cannot import name 'foo'
 """
 
 from __future__ import absolute_import
