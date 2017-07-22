@@ -10,6 +10,12 @@ from ._frame_mixin import FrameMixin
 
 
 def frame(step):
+    """
+    Arguments:
+        step: blah
+
+    Returns:
+    """
     if isinstance(step, pipeline.Pipeline):
         return frame(pipeline.Pipeline)(steps=step.steps)
 

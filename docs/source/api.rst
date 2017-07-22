@@ -37,3 +37,4 @@ API
 .. autoclass:: ibex.sklearn.pipeline.FeatureUnion
    :members:
    :special-members:
+

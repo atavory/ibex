@@ -12,7 +12,8 @@ Contents
 .. toctree::
     :maxdepth: 3
     
-    interface
+    overview
+    frame_adapter
     input_verification_and_output_processing
     function_transformer
     pipelines

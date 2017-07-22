@@ -26,6 +26,16 @@ __all__ += ['sklearn']
 
 
 def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
+    """
+    Arguments:
+        func:
+        in_cols:
+        out_cols:
+        pass_y:
+        kw_args:
+
+    Returns:
+    """
     from ibex.sklearn import preprocessing
 
     return preprocessing.FunctionTransformer(func, in_cols, out_cols, pass_y, kw_args)
