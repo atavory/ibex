@@ -76,7 +76,11 @@ class FrameMixin(object):
 
         Arguments:
             other: A different step object whose class subclasses this one.
+
+        Returns:
+            :py:class:`sklearn.pipeline.Pipeline`
         """
+
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
@@ -86,6 +90,12 @@ class FrameMixin(object):
         return pipeline.Pipeline(_make_pipeline_steps(combined))
 
     def __ror__(self, other):
+        """
+
+        Returns:
+            :py:class:`sklearn.pipeline.Pipeline`
+        """
+
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
@@ -95,6 +105,12 @@ class FrameMixin(object):
         return pipeline.Pipeline(_make_pipeline_steps(combined))
 
     def __add__(self, other):
+        """
+
+        Returns:
+            :py:class:`ibex.sklearn.pipeline.FeatureUnion`
+        """
+
         from ._feature_union import _FeatureUnion
 
         if isinstance(self, _FeatureUnion):

@@ -11,7 +11,10 @@ API
 ~~~~~~~~~~~~
 
 .. autoclass:: ibex.FrameMixin
-   :members:
+    :members:
+    :special-members: __or__, __ror__, __add__
+    :show-inheritance:
+
 
 `ibex.frame`
 ~~~~~~~~~~~~
