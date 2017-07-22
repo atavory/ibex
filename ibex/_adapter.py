@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
 import inspect
+import types
 
+import six
 import numpy as np
 import pandas as pd
 from sklearn import pipeline
@@ -33,7 +35,6 @@ def frame(step):
             return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
 
         def fit(self, X, *args):
-            # Tmp Ami - bad; use property
             # Tmp Ami - why not in function adapter? where are uts?
             self.x_columns = X.columns
 
@@ -79,5 +80,19 @@ def frame(step):
             return res
 
     _Adapter.__name__ = step.__name__
+
+    for name, func in vars(_Adapter).items():
+        if name.startswith('_'):
+            continue
+
+        if not six.callable(func) and not func.__doc__:
+            continue
+
+        parfunc = getattr(step, name, None)
+        if parfunc and getattr(parfunc, '__doc__', None):
+            func.__doc__ = parfunc.__doc__
+
+    if not hasattr(step, 'fit_transform') and hasattr(_Adapter, 'fit_transform'):
+        delattr(_Adapter, 'fit_transform')
 
     return _Adapter
