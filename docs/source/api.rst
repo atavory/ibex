@@ -6,8 +6,23 @@ API
 ------
 
 .. automodule:: ibex
+
+`ibex.FrameMixin`
+~~~~~~~~~~~~
+
+.. autoclass:: ibex.FrameMixin
    :members:
-   :special-members:
+
+`ibex.frame`
+~~~~~~~~~~~~
+
+.. autofunction:: ibex.frame
+
+
+`ibex.trans`
+~~~~~~~~~~~~
+
+.. autofunction:: ibex.trans
 
 
 `ibex.sklearn`
