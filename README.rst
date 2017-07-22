@@ -26,7 +26,7 @@ This library aims for two (somewhat independent) goals:
 
 (You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different pproach.)
 
-The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small interface.
+The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small `interface <http://ibex.readthedocs.io/en/latest/interface.html>`_.
 
 
 TL;DR

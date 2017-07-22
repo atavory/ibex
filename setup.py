@@ -45,7 +45,8 @@ setup(
     name='ibex',
     version='0.1.0',
     author='Ami Tavory, Shahar Azulay, Tali Raveh-Sadka',
-    author_email='atavory@gmail.com',
+    author_email='atavory at gmail',
+    url='https://github.com/atavory/ibex',
     packages=[
         'ibex',
         'ibex.sklearn',
@@ -64,7 +65,7 @@ setup(
         'test': _TestCommand,
     },
     classifiers=[
-        'Development Status :: 5 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: BSD License',
@@ -74,7 +75,8 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Information Analysis',
-        'Topic :: Software Development :: Libraries :: Python Modules'])
+    ],
+)
 
 
 
