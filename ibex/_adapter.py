@@ -37,14 +37,33 @@ def frame(step):
         def fit(self, X, *args):
             return self.__run(super(_Adapter, self).fit, True, X, *args)
 
-        def predict(self, X, *args):
-            return self.__run(super(_Adapter, self).predict, False, X, *args)
+        def partial_fit(self, X, *args):
+            return self.__run(super(_Adapter, self).partial_fit, True, X, *args)
 
         def fit_transform(self, X, *args):
             return self.__run(super(_Adapter, self).fit_transform, True, X, *args)
 
+        def predict(self, X, *args):
+            return self.__run(super(_Adapter, self).predict, False, X, *args)
+
+        # Tmp Ami
+        #def decision_function(self, X, *args):
+        #    return self.__run(super(_Adapter, self).decision_function, False, X, *args)
+
+        def predict_log_proba(self, X, *args):
+            return self.__run(super(_Adapter, self).predict_log_proba, False, X, *args)
+
+        def predict_proba(self, X, *args):
+            return self.__run(super(_Adapter, self).predict_proba, False, X, *args)
+
         def transform(self, X, *args):
             return self.__run(super(_Adapter, self).transform, False, X, *args)
+
+        def aic(self, X, *args):
+            return self.__run(super(_Adapter, self).aic, False, X, *args)
+
+        def bic(self, X, *args):
+            return self.__run(super(_Adapter, self).bic, False, X, *args)
 
         def __run(self, fn, fit, X, *args):
             # Tmp Ami - why not in function adapter? where are uts?
@@ -87,7 +106,22 @@ def frame(step):
         if parfunc and getattr(parfunc, '__doc__', None):
             func.__doc__ = parfunc.__doc__
 
-    if not hasattr(step, 'fit_transform') and hasattr(_Adapter, 'fit_transform'):
-        delattr(_Adapter, 'fit_transform')
+    wrapped = [
+        'fit',
+        'partial_fit',
+        'fit_transform',
+        'predict',
+        'decision_function',
+        'predict_log_proba',
+        'predict_proba',
+        'transform',
+        'score',
+        'aic',
+        'bic',
+    ]
+
+    for wrap in wrapped:
+        if not hasattr(step, wrap) and hasattr(_Adapter, wrap):
+            delattr(_Adapter, wrap)
 
     return _Adapter
