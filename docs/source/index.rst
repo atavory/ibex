@@ -15,7 +15,9 @@ Contents
     interface
     input_verification_and_output_processing
     function_transformer
+    pipelines
     feature_union
+    extending
     examples
     api
 

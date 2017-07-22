@@ -1,3 +1,7 @@
+"""
+Wrappers for sklearn
+"""
+
 from __future__ import absolute_import
 
 import sys
@@ -7,7 +11,7 @@ import os
 import six
 
 
-class NewModuleLoader(object):
+class _NewModuleLoader(object):
     """
     Load the requested module via standard import, or create a new module if
     not exist.
@@ -25,7 +29,11 @@ class NewModuleLoader(object):
 
         place_function_transformer = full_name == 'ibex.sklearn.preprocessing'
 
-        code = """
+        code = '''
+"""
+Auto-generated ibex wrapper for %s
+"""
+
 from __future__ import absolute_import
 
 from sklearn import %s as _orig
@@ -47,7 +55,7 @@ for name in dir(_orig):
 
 if %d:
     globals()['FunctionTransformer'] = ibex._FunctionTransformer
-        """ % (orig, place_function_transformer)
+        ''' % (orig, orig, place_function_transformer)
 
         six.exec_(code, mod.__dict__)
 
@@ -60,7 +68,7 @@ class _ModuleFinder(object):
 
     def find_module(self, full_name, _=None):
         if full_name.startswith('ibex.sklearn.'):
-            return NewModuleLoader()
+            return _NewModuleLoader()
 
 
 loader = _ModuleFinder()

@@ -56,6 +56,8 @@ Now, we import the relevant steps. Note that, in this example, we import them fr
 	>>> from ibex.sklearn.feature_selection import SelectKBest
 	>>> from ibex.sklearn.decomposition import PCA
 
+(Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.):w
+
 Finally, we construct a pipeline that, given a dataframe of features:
 
 * horizontally concatenates a 2-component PCA dataframe, and the best-feature dataframe, to a resulting dataframe  

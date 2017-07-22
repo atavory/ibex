@@ -1,5 +1,5 @@
 """
-Pandas adapters for sklearn.
+Pandas adapters for sklearn-type estimators
 """
 
 

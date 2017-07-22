@@ -63,7 +63,7 @@ Specifying Input Columns
 
 
 Specifying Output Columns
-------------------------
+-------------------------
 
     >>> trans(None, out_cols=['c', 'd']).fit_transform(X)
        c  d

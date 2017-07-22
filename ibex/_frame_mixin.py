@@ -22,21 +22,25 @@ def _make_pipeline_steps(objs):
 
 class FrameMixin(object):
     """
-    A base class for steps taking pandas entities, not
-        numpy entities.
+    A base class for steps taking pandas entities, not numpy entities.
 
-    Subclass this step to indicate that a step takes pandas
-        entities.
+    Subclass this step to indicate that a step takes pandas entities.
+
+    Example:
+
+        >>> import ibex
+        >>>
+        >>> class GroupbyAggregator(ibex.FrameMixin):
+        ...     pass
     """
-
-    def __init__(self, columns=None):
-        if columns is not None:
-            self.set_params(columns=columns)
 
     @property
     def x_columns(self):
         """
-        The columns set
+        The columns set in the last call to fit.
+
+        Set this property at fit, and call it in other methods:
+
         """
         return self.__cols
 
@@ -66,6 +70,13 @@ class FrameMixin(object):
         return issubclass(type(step), FrameMixin)
 
     def __or__(self, other):
+        """
+        Pipes the result of this stage to other.
+
+
+        Arguments:
+            other: A different step object whose class subclasses this one.
+        """
         if issubclass(type(other), pipeline.Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
