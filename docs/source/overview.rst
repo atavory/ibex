@@ -8,9 +8,16 @@ Overview
 
 :py:func:`ibex.trans`
 
+`sklearn`
+
+
 :py:mod:`ibex.sklearn`
 
+:py:mod:`sklearn.preprocessing`
+
 :py:mod:`ibex.sklearn.preprocessing`
+
+:py:class:`sklearn.preprocessing.FunctionTransformer`
 
 :py:class:`ibex.sklearn.preprocessing.FunctionTransformer`
 
