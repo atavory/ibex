@@ -35,33 +35,24 @@ def frame(step):
             return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
 
         def fit(self, X, *args):
-			return self.__run(self, super(_Adapter, self).fit, True, X, *args)
+            return self.__run(super(_Adapter, self).fit, True, X, *args)
 
         def predict(self, X, *args):
-            res = super(_Adapter, self).predict(self.__x(X), *args)
-
-            return self.__process_wrapped_call_res(X[self.x_columns], res)
+            return self.__run(super(_Adapter, self).predict, False, X, *args)
 
         def fit_transform(self, X, *args):
-            self.x_columns = X.columns
-
-            res = super(_Adapter, self).fit_transform(self.__x(X), *args)
-
-            return self.__process_wrapped_call_res(X[self.x_columns], res)
+            return self.__run(super(_Adapter, self).fit_transform, True, X, *args)
 
         def transform(self, X, *args):
-            res = super(_Adapter, self).transform(self.__x(X), *args)
+            return self.__run(super(_Adapter, self).transform, False, X, *args)
 
-            return self.__process_wrapped_call_res(X[self.x_columns], res)
-
-		def __run(self, fn, fit, X, *args):
+        def __run(self, fn, fit, X, *args):
             # Tmp Ami - why not in function adapter? where are uts?
-			if fit:
-				self.x_columns = X.columns
+            if fit:
+                self.x_columns = X.columns
 
-            res = fn.fit(self.__x(X), *args)
-
-            return self.__process_wrapped_call_res(X, res)
+            res = fn(self.__x(X), *args)
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         # Tmp Ami - should be in base?
         def __x(self, X):
