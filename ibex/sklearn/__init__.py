@@ -7,7 +7,7 @@ Example:
 
     >>> from ibex.sklearn import foo
     Traceback (most recent call last):
-	...
+    ...
     ImportError: cannot import name 'foo'
 """
 
@@ -15,7 +15,6 @@ from __future__ import absolute_import
 
 import sys
 import imp
-import os
 
 import six
 
