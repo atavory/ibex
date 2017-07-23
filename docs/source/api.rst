@@ -41,6 +41,7 @@ API
 .. automodule:: ibex.sklearn.preprocessing
    :members:
 
+
 `FunctionTransformer`
 ******************************************
 
@@ -56,11 +57,12 @@ API
 .. automodule:: ibex.sklearn.pipeline
    :members:
 
+
 `FeatureUnion`
 ******************************************
 
 .. autoclass:: ibex.sklearn.pipeline.FeatureUnion
-   :members:
-   :special-members:
+    :members:
+    :special-members:
     :show-inheritance:
 

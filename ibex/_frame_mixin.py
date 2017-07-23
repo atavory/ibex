@@ -28,9 +28,13 @@ class FrameMixin(object):
 
     Example:
 
+        >>> from sklearn import base
         >>> import ibex
         >>>
-        >>> class GroupbyAggregator(ibex.FrameMixin):
+        >>> class GroupbyAggregator(
+        ...         base.BaseEstimator,
+        ...         base.TransformerMixin,
+        ...         ibex.FrameMixin):
         ...     pass
     """
 

@@ -427,7 +427,7 @@ class _ExamplesTest(unittest.TestCase):
         if not _nbconvert:
             return
         return
-        for f_name in os.path.join(glob(os.path.split(__file__)[0])):
+        for f_name in os.path.join(glob(os.path.dirname(__file__))):
             with open(notebook_filename) as f:
                 nb = nbformat.read(f, as_version=4)
 
@@ -438,7 +438,7 @@ class _ExamplesTest(unittest.TestCase):
 
 class _VerifyDocumentTest(unittest.TestCase):
     def test(self):
-        this_dir = os.path.split(__file__)[0]
+        this_dir = os.path.dirname(__file__)
         doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
         doc_f_names += [os.path.join(this_dir, '../README.rst')]
         failed, attempted = 0, 0
