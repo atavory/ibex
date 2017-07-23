@@ -24,7 +24,13 @@ def frame(step):
         >>> import ibex
         >>>
         >>> prd = ibex.frame(linear_model.LinearRegression())
+        >>> prd
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
         >>> PDLinearRegression = ibex.frame(linear_model.LinearRegression)
+        >>> PDLinearRegression()
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+        >>> PDLinearRegression(fit_intercept=False)
+        Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
     if isinstance(step, pipeline.Pipeline):
         return frame(pipeline.Pipeline)(steps=step.steps)
@@ -36,16 +42,17 @@ def frame(step):
 
     class _Adapter(step, FrameMixin):
         def __repr__(self):
-            return step.__repr__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
+            parts = step.__repr__(self).split('(', 1)
+            return 'Adapter[' + parts[0] + '](' + parts[1]
 
         def __str__(self):
-            return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
+            return self.__repr__()
 
-        {% for m_name in m_names %}
+        {% for m_name in m_names -%}
         def {{ m_name }}(self, X, *args):
             return self.__run(super(_Adapter, self).{{ m_name }}, '{{ m_name }}'.startswith('fit'), X, *args)
+            
         {% endfor %}
-
         def __run(self, fn, fit, X, *args):
             # Tmp Ami - why not in function adapter? where are uts?
             if fit:
@@ -88,9 +95,9 @@ def frame(step):
             func.__doc__ = parfunc.__doc__
 
     wrapped = [
-    {% for m_name in m_names %}
-        '{{ m_name }}',
-    {% endfor %}
+        {% for m_name in m_names -%}
+            '{{ m_name }}',
+        {% endfor %}
     ]
     for wrap in wrapped:
         if not hasattr(step, wrap) and hasattr(_Adapter, wrap):
