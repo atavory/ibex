@@ -32,6 +32,8 @@ for mod_name in sklearn.__all__:
             # print(name, c, m_name, params)
             m_names.add(m_name)
 
+    # Tmp Ami
+    m_names.discard('decision_function')
 
 loader = jinja2.FileSystemLoader(os.path.dirname(__file__))
 env = jinja2.Environment(loader=loader)

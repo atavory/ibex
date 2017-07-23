@@ -15,9 +15,7 @@ from ._frame_mixin import FrameMixin
 def frame(step):
     """
     Arguments:
-        step: blah
-
-    Returns:
+        step: blah Returns:
         `step` :py:class:`sklearn.base.BaseEstimator` :py:class:`ibex.FrameMixin`
 
     Example:
@@ -44,41 +42,32 @@ def frame(step):
             return step.__str__(self).replace('_Adapter', 'Adapter[' + step.__name__ + ']', 1)
 
         
-        def inverse_transform(self, X, *args):
-            return self.__run(super(_Adapter, self).inverse_transform, 'inverse_transform'.startswith('fit'), X, *args)
-        
-        def staged_decision_function(self, X, *args):
-            return self.__run(super(_Adapter, self).staged_decision_function, 'staged_decision_function'.startswith('fit'), X, *args)
-        
-        def fit_predict(self, X, *args):
-            return self.__run(super(_Adapter, self).fit_predict, 'fit_predict'.startswith('fit'), X, *args)
-        
         def bic(self, X, *args):
             return self.__run(super(_Adapter, self).bic, 'bic'.startswith('fit'), X, *args)
-        
-        def kneighbors(self, X, *args):
-            return self.__run(super(_Adapter, self).kneighbors, 'kneighbors'.startswith('fit'), X, *args)
-        
-        def staged_predict(self, X, *args):
-            return self.__run(super(_Adapter, self).staged_predict, 'staged_predict'.startswith('fit'), X, *args)
-        
-        def score_samples(self, X, *args):
-            return self.__run(super(_Adapter, self).score_samples, 'score_samples'.startswith('fit'), X, *args)
         
         def predict_proba(self, X, *args):
             return self.__run(super(_Adapter, self).predict_proba, 'predict_proba'.startswith('fit'), X, *args)
         
-        def partial_fit(self, X, *args):
-            return self.__run(super(_Adapter, self).partial_fit, 'partial_fit'.startswith('fit'), X, *args)
+        def kneighbors(self, X, *args):
+            return self.__run(super(_Adapter, self).kneighbors, 'kneighbors'.startswith('fit'), X, *args)
         
-        def perplexity(self, X, *args):
-            return self.__run(super(_Adapter, self).perplexity, 'perplexity'.startswith('fit'), X, *args)
-        
-        def aic(self, X, *args):
-            return self.__run(super(_Adapter, self).aic, 'aic'.startswith('fit'), X, *args)
+        def transform(self, X, *args):
+            return self.__run(super(_Adapter, self).transform, 'transform'.startswith('fit'), X, *args)
         
         def fit(self, X, *args):
             return self.__run(super(_Adapter, self).fit, 'fit'.startswith('fit'), X, *args)
+        
+        def fit_transform(self, X, *args):
+            return self.__run(super(_Adapter, self).fit_transform, 'fit_transform'.startswith('fit'), X, *args)
+        
+        def staged_decision_function(self, X, *args):
+            return self.__run(super(_Adapter, self).staged_decision_function, 'staged_decision_function'.startswith('fit'), X, *args)
+        
+        def inverse_transform(self, X, *args):
+            return self.__run(super(_Adapter, self).inverse_transform, 'inverse_transform'.startswith('fit'), X, *args)
+        
+        def sample_y(self, X, *args):
+            return self.__run(super(_Adapter, self).sample_y, 'sample_y'.startswith('fit'), X, *args)
         
         def predict_log_proba(self, X, *args):
             return self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba'.startswith('fit'), X, *args)
@@ -86,29 +75,35 @@ def frame(step):
         def staged_predict_proba(self, X, *args):
             return self.__run(super(_Adapter, self).staged_predict_proba, 'staged_predict_proba'.startswith('fit'), X, *args)
         
+        def staged_predict(self, X, *args):
+            return self.__run(super(_Adapter, self).staged_predict, 'staged_predict'.startswith('fit'), X, *args)
+        
+        def score_samples(self, X, *args):
+            return self.__run(super(_Adapter, self).score_samples, 'score_samples'.startswith('fit'), X, *args)
+        
         def predict(self, X, *args):
             return self.__run(super(_Adapter, self).predict, 'predict'.startswith('fit'), X, *args)
         
         def score(self, X, *args):
             return self.__run(super(_Adapter, self).score, 'score'.startswith('fit'), X, *args)
         
+        def perplexity(self, X, *args):
+            return self.__run(super(_Adapter, self).perplexity, 'perplexity'.startswith('fit'), X, *args)
+        
         def apply(self, X, *args):
             return self.__run(super(_Adapter, self).apply, 'apply'.startswith('fit'), X, *args)
-        
-        def sample_y(self, X, *args):
-            return self.__run(super(_Adapter, self).sample_y, 'sample_y'.startswith('fit'), X, *args)
-        
-        def transform(self, X, *args):
-            return self.__run(super(_Adapter, self).transform, 'transform'.startswith('fit'), X, *args)
         
         def radius_neighbors(self, X, *args):
             return self.__run(super(_Adapter, self).radius_neighbors, 'radius_neighbors'.startswith('fit'), X, *args)
         
-        def fit_transform(self, X, *args):
-            return self.__run(super(_Adapter, self).fit_transform, 'fit_transform'.startswith('fit'), X, *args)
+        def aic(self, X, *args):
+            return self.__run(super(_Adapter, self).aic, 'aic'.startswith('fit'), X, *args)
         
-        def decision_function(self, X, *args):
-            return self.__run(super(_Adapter, self).decision_function, 'decision_function'.startswith('fit'), X, *args)
+        def partial_fit(self, X, *args):
+            return self.__run(super(_Adapter, self).partial_fit, 'partial_fit'.startswith('fit'), X, *args)
+        
+        def fit_predict(self, X, *args):
+            return self.__run(super(_Adapter, self).fit_predict, 'fit_predict'.startswith('fit'), X, *args)
         
 
         def __run(self, fn, fit, X, *args):
@@ -154,49 +149,47 @@ def frame(step):
 
     wrapped = [
     
-        'inverse_transform',
-    
-        'staged_decision_function',
-    
-        'fit_predict',
-    
         'bic',
-    
-        'kneighbors',
-    
-        'staged_predict',
-    
-        'score_samples',
     
         'predict_proba',
     
-        'partial_fit',
+        'kneighbors',
     
-        'perplexity',
-    
-        'aic',
+        'transform',
     
         'fit',
+    
+        'fit_transform',
+    
+        'staged_decision_function',
+    
+        'inverse_transform',
+    
+        'sample_y',
     
         'predict_log_proba',
     
         'staged_predict_proba',
     
+        'staged_predict',
+    
+        'score_samples',
+    
         'predict',
     
         'score',
     
+        'perplexity',
+    
         'apply',
-    
-        'sample_y',
-    
-        'transform',
     
         'radius_neighbors',
     
-        'fit_transform',
+        'aic',
     
-        'decision_function',
+        'partial_fit',
+    
+        'fit_predict',
     
     ]
     for wrap in wrapped:
