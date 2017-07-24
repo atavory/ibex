@@ -38,33 +38,34 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             n_jobs,
             transformer_weights)
 
-    def fit_transform(self, x, y):
+    # Tmp Ami - get docstrings from sklearn.
+    def fit_transform(self, X, y=None):
         """
         Same signature as any sklearn step.
         """
-        xt = self._feature_union.fit_transform(
-            x,
+        Xt = self._feature_union.fit_transform(
+            X,
             y)
 
-        return pd.DataFrame(xt, index=x.index)
+        return pd.DataFrame(Xt, index=X.index)
 
-    def fit(self, x, y):
+    def fit(self, X, y=None):
         """
         Same signature as any sklearn step.
         """
         self._feature_union.fit(
-            x,
+            X,
             y)
 
         return self
 
-    def transform(self, x):
+    def transform(self, X):
         """
         Same signature as any sklearn step.
         """
-        xt = self._feature_union.transform(x)
+        Xt = self._feature_union.transform(X)
 
-        return pd.DataFrame(xt, index=x.index)
+        return pd.DataFrame(Xt, index=X.index)
 
     def get_params(self, deep=True):
         return self._feature_union.get_params(deep)

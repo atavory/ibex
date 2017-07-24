@@ -3,9 +3,9 @@
 Verification and Processing
 ========================================
 
-Since ``sklearn`` is defined in terms of :class:`numpy.ndarray`, Ibex estimators perform verification and processing on their inputs and outputs. 
+Since ``sklearn`` is defined in terms of :class:`numpy.ndarray` (and not :class:`pandas.DataFrame`), Ibex estimators perform verification and processing on their inputs and outputs. 
 
-In this chapter we'll use a :class:`pandas.DataFrame` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``.
+In this chapter we'll use a ``DataFrame`` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``.
 
     >>> import pandas as pd 
     >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
@@ -15,7 +15,7 @@ a scaling transformer ``trn`` which is ``fit``-ted on ``X``
     >>> from ibex.sklearn import preprocessing as pd_preprocessing
     >>> trn = pd_preprocessing.StandardScaler().fit(X)
 
-and a linear-regression predicto ``prd`` which is ``fit``-ted on ``X`` also
+and a linear-regression predictor ``prd`` which is also ``fit``-ted on ``X``
 
     >>> from ibex.sklearn import linear_model as pd_linear_model
     >>> prd = pd_linear_model.LinearRegression().fit(X, pd.Series([3, 4]))
@@ -43,7 +43,7 @@ but this is not
 
 |
 
-Once an estimator has been ``fit``-ed, the order of columns of further inputs will no longer matters:
+Once an estimator has been ``fit``-ed, the order of columns of further inputs no longer matters:
 
     >>> trn.transform(X_1[['a', 'b']])
           a    b
@@ -73,7 +73,7 @@ Output Processing
 Indexes
 ~~~~~~~
 
-The indexes of returned ``DataFrame`` and ``Series`` objects, is that of the input:
+The index of a returned ``DataFrame`` or ``Series`` objects, is that of the input:
 
     >>> X_1 = pd.DataFrame({'a': [1, 2, 3], 'b': [3, 4, 5]}, index=[10, 20, 30])
     >>> trn.transform(X_1)

@@ -4,7 +4,7 @@ Transforming
 ============
 
 
-This chapter describes the :py:func:`ibex.trans` function. It allows
+This chapter describes the :py:func:`ibex.trans` function, which allows
 
 #. applying functions or estimators to :class:`pandas.DataFrame` objects
 
@@ -15,7 +15,7 @@ This chapter describes the :py:func:`ibex.trans` function. It allows
 or any combination of these.
 
 
-We'll use a :class:`pandas.DataFrame` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``,
+We'll use a ``DataFrame`` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``,
 
     >>> import pandas as pd
     >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
@@ -112,15 +112,16 @@ in
     0  1.000000  1.732051
     1  1.414214  2.000000
 
-If it is a string, the function will be applied to the ``DataFrame`` consisting of the single column corresponding to this string:
+If it is a string, it will become the (single) column of the resulting ``DataFrame``.
 
     >>> trans(PCA(n_components=1), out_cols='pc').fit_transform(X)
             pc
     0 -0.707107
     1  0.707107
 
+If it is a ``list`` of strings, these will become the columns of the resulting ``DataFrame``.
 
-    >>> trans(None, out_cols=['c', 'd']).fit_transform(X)
+    >>> trans(out_cols=['c', 'd']).fit_transform(X)
        c  d
     0  1  3
     1  2  4
@@ -129,15 +130,20 @@ If it is a string, the function will be applied to the ``DataFrame`` consisting 
               c         d
     0  1.000000  1.732051
     1  1.414214  2.000000
-
     >>> trans(PCA(n_components=2), out_cols=['pc1', 'pc2']).fit_transform(X)
               pc1  pc2
     0 -0.707107  ...
     1  0.707107  ...
 
+.. tip::
 
-Specifying Output and Input Columns
+    As can be seen from the first of the examples just above, this can be used to build a step that simply changes the column names of a ``DataFrame``.
+
+
+Specifying Combinations
 -----------------------------------
+
+Of course, you can combine the arguments specified above:
 
     >>> trans(None, 'a', 'c').fit_transform(X)
        c
@@ -165,4 +171,9 @@ Specifying Output and Input Columns
 Multiple Transformations
 ------------------------
 
-
+    >>> trn = trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
+    >>> trn.fit_transform(X)
+              c         d
+    0  0.841471 -0.989992
+    1  0.909297 -0.653644
+    
