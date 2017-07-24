@@ -15,7 +15,7 @@ This chapter describes the :py:func:`ibex.trans` function. It allows
 or any combination of these.
 
 
-We'll use a :class:`pandas.dataframe` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``,
+We'll use a :class:`pandas.DataFrame` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``,
 
     >>> import pandas as pd
     >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
