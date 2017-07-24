@@ -41,7 +41,7 @@ but this is not
 
 |
 
-Once an trnimater has been ``fit``-ed, the order of columns of further inputs will no longer matters:
+Once an estimator has been ``fit``-ed, the order of columns of further inputs will no longer matters:
 
     >>> trn.transform(X_1[['a', 'b']])
           a    b
