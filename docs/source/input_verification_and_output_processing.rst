@@ -110,7 +110,6 @@ Some outputted ``DataFrame`` objects have a number of columns that is different 
     0 -0.707107
     1  0.707107
 
-.. seealso::
-    
-    
-	blach
+.. note::
+
+    In some cases, we might want greater control over the naming of output columns. For example, when transforming a 2-component PCA, we might want to name the ``DataFrame`` columns ``'pc1'`` and ``'pc2'``. :ref:`function_transformer_specifying_output_columns` in :ref:`function_transformer` shows how to do this.

@@ -82,3 +82,5 @@ gg
            estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
     ...
 
+`verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_
+

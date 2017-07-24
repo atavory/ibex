@@ -1,7 +1,8 @@
+.. _function_transformer:
+
 Function Transformer
 ====================
-
-    >>> import pandas as pd
+>>> import pandas as pd
     >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
 
     >>> from ibex import trans
@@ -62,6 +63,8 @@ Specifying Input Columns
     1  0.5
 
 
+.. _function_transformer_specifying_output_columns:
+
 Specifying Output Columns
 -------------------------
 
@@ -75,8 +78,8 @@ Specifying Output Columns
     0  1.000000  1.732051
     1  1.414214  2.000000
 
-    >>> trans(PCA(n_components=2), out_cols=['c', 'd']).fit_transform(X)
-              c  ...d
+    >>> trans(PCA(n_components=2), out_cols=['pc1', 'pc2']).fit_transform(X)
+              pc1  pc2
     0 -0.707107  ...
     1  0.707107  ...
 
@@ -99,8 +102,8 @@ Specifying Output and Input Columns
     0  1.000000  1.732051
     1  1.414214  2.000000
 
-    >>> trans(PCA(n_components=1), 'a', 'c').fit_transform(X)
-         c
+    >>> trans(PCA(n_components=1), 'a', 'pc').fit_transform(X)
+         pc
     0 -0.5
     1  0.5
 
