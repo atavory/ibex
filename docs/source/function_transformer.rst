@@ -54,7 +54,7 @@ Finally, it can be a different estimator:
 
     >>> from ibex.sklearn.decomposition import PCA 
     >>> trans(PCA(n_components=2)).fit_transform(X)
-              a  ...b
+              a  b
     0 -0.707107  ...
     1  0.707107  ...
 
