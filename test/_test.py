@@ -10,6 +10,10 @@ from sklearn import base
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
+from sklearn import ensemble
+from ibex.sklearn import ensemble as pd_ensemble
+from sklearn import mixture
+from ibex.sklearn import mixture as pd_mixture
 try:
     from sklearn.model_selection import GridSearchCV
 except ImportError:
@@ -314,7 +318,19 @@ class _IrisTest(unittest.TestCase):
 
         grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=10)
         grid_search.fit(self._iris[self._features], self._iris['class'])
-        print(grid_search.best_estimator_)
+        grid_search.best_estimator_
+
+    def test_staged_predict(self):
+        clf = pd_ensemble.GradientBoostingRegressor()
+        clf.fit(self._iris[self._features], self._iris['class'])
+        clf.staged_predict(self._iris[self._features])
+
+        # Tmp Ami
+    def _test_aic_bic(self):
+        clf = pd_mixture.GaussianMixture()
+        clf.fit(self._iris[self._features], self._iris['class'])
+        clf.aic(self._iris[self._features])
+        clf.bic(self._iris[self._features])
 
 
 class _FeatureUnionTest(unittest.TestCase):
