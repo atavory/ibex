@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import operator
+
 import pandas as pd
 from sklearn import base
 from sklearn import pipeline
@@ -43,11 +45,10 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         """
         Same signature as any sklearn step.
         """
-        Xt = self._feature_union.fit_transform(
-            X,
-            y)
-
-        return pd.DataFrame(Xt, index=X.index)
+        Xts = [e.fit_transform(X, y) for e in self._transformers]
+        return pd.concat(
+            [pd.DataFrame(Xt, index=X.index) for Xt in Xts],
+            axis=1)
 
     def fit(self, X, y=None):
         """
@@ -63,9 +64,10 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         """
         Same signature as any sklearn step.
         """
-        Xt = self._feature_union.transform(X)
-
-        return pd.DataFrame(Xt, index=X.index)
+        Xts = [e.transform(X) for e in self._transformers]
+        return pd.concat(
+            [pd.DataFrame(Xt, index=X.index) for Xt in Xts],
+            axis=1)
 
     def get_params(self, deep=True):
         return self._feature_union.get_params(deep)
@@ -76,5 +78,9 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     @property
     def transformer_list(self):
         return self._feature_union.transformer_list
+
+    @property
+    def _transformers(self):
+        return [operator.itemgetter(1)(e) for e in self.transformer_list]
 
 _FeatureUnion.__name__ = 'FeatureUnion'
