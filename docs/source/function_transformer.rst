@@ -37,7 +37,11 @@ This can be ``None``, meaning that the output should be the input:
     0  1  3
     1  2  4
 
-(see :ref:`function_transformer_multiple_transformations` for a use for this). It can alternatively be a function, which will be applied to the 
+.. tip::
+
+    :ref:`function_transformer_specifying_output_columns` and :ref:`function_transformer_multiple_transformations` show uses for this.
+
+The ``func`` argument can alternatively be a function, which will be applied to the 
 :attr:`pandas.DataFrame.values` of the input:
 
     >>> import numpy as np
@@ -171,19 +175,21 @@ Of course, you can combine the arguments specified above:
 Multiple Transformations
 ------------------------
 
+Applying multiple transformations on a single ``DataFrame`` is no different than any other case of uniting features (see :ref:`feature_union`). In particular, it's possible to succintly use the ``+`` operator:
+
     >>> trn = trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
     >>> trn.fit_transform(X)
           sin_a     cos_b
     0  0.841471 -0.989992
     1  0.909297 -0.653644
 
+    >>> trn = trans() + trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
+    >>> trn.fit_transform(X)
+    a  b     sin_a     cos_b
+    0  1  3  0.841471 -0.989992
+    1  2  4  0.909297 -0.653644
+
 .. tip::
 
-    If you want 
-
-        >>> trn = trans() + trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
-        >>> trn.fit_transform(X)
-        a  b     sin_a     cos_b
-        0  1  3  0.841471 -0.989992
-        1  2  4  0.909297 -0.653644
-
+    As can be seen from the last of the examples just above, this can be used to build a step that simply adds to the 
+    existing columns of some ``DataFrame``.
