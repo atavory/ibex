@@ -76,6 +76,10 @@ If it is a string, the function will be applied to the ``DataFrame`` consisting 
               a
     0  1.000000
     1  1.414214
+    >>> trans(PCA(n_components=1), 'a').fit_transform(X)
+         a
+    0 -0.5
+    1  0.5
 
 
 If it is a ``list`` of strings, the function will be applied to the ``DataFrame`` consisting of the columns corresponding to these strings:
@@ -89,10 +93,6 @@ If it is a ``list`` of strings, the function will be applied to the ``DataFrame`
               a
     0  1.000000
     1  1.414214
-    >>> trans(PCA(n_components=1), 'a').fit_transform(X)
-         a
-    0 -0.5
-    1  0.5
     >>> trans(PCA(n_components=1), ['a']).fit_transform(X)
          a
     0 -0.5
