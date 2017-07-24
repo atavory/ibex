@@ -28,6 +28,6 @@ script:
   - coverage run test/_test.py
 
 after_success:
-  - coverage report
+  - coverage report -m
   - coveralls
   
