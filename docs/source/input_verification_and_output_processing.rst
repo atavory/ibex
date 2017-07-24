@@ -1,9 +1,11 @@
+.. _verification_and_processing:
+
 Verification and Processing
 ========================================
 
 Since ``sklearn`` is defined in terms of :class:`numpy.ndarray`, Ibex estimators perform verification and processing on their inputs and outputs. 
 
-In this chapter we'll use a :class:`pandas.dataframe` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``.
+In this chapter we'll use a :class:`pandas.DataFrame` ``X``, with columns ``'a'`` and ``'b'``, and (implied) index ``1, 2, 3``.
 
     >>> import pandas as pd 
     >>> X = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
@@ -63,6 +65,8 @@ The ``step`` will reorder the ``DataFrame`` to the same order of columns seen by
     For methods that take both ``X`` and ``y``, check the indexes match.
 
 
+.. _verification_and_processing_output:
+
 Output Processing
 -----------------
 
@@ -84,6 +88,8 @@ The indexes of returned ``DataFrame`` and ``Series`` objects, is that of the inp
     30    5...
     dtype: ...
 
+
+.. _verification_and_processing_output_dataframe_columns:
 
 ``DataFrame`` Columns
 ~~~~~~~~~~~~~~~~~~~~~

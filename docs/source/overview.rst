@@ -8,8 +8,7 @@ Overview
 
 :py:func:`ibex.trans`
 
-`sklearn`
-
+:py:mod:`sklearn`
 
 :py:mod:`ibex.sklearn`
 

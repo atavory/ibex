@@ -18,6 +18,7 @@ Contents
     function_transformer
     pipelines
     feature_union
+    sklearn
     extending
     examples
     api
