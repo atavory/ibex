@@ -22,6 +22,8 @@ for mod_name in sklearn.__all__:
         for m_name in c.__dict__:
             if m_name.startswith('_'):
                 continue
+            if m_name == 'score':
+                continue
             m = getattr(c, m_name)
             if not six.callable(m):
                 continue
