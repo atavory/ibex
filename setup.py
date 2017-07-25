@@ -37,7 +37,7 @@ class _DocumentCommand(Command):
         pass
 
     def run(self):
-        run_str = "make html"
+        run_str = "make html spelling"
         subprocess.check_call(run_str.split(' '), cwd='docs')
 
 

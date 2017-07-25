@@ -22,9 +22,10 @@ This library aims for two (somewhat independent) goals:
 
 * providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
 
-* allowing easier, and more succint ways of combining estimators, features, and pipelines
+* allowing easier, and more succinct ways of combining estimators, features, and pipelines
 
-(You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different pproach.)
+(You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different 
+approach.)
 
 The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small `interface <http://ibex.readthedocs.io/en/latest/overview.html>`_.
 
@@ -32,9 +33,9 @@ The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?ba
 TL;DR
 -----
 
-The following short example shows the main points of the library. It is an adaptation of the sickit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
+The following short example shows the main points of the library. It is an adaptation of the scikit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
 
-We first load the Iris dataset into a pandas dataframe.
+We first load the Iris dataset into a pandas ``DataFrame``.
 
     >>> import numpy as np
     >>> from sklearn import datasets
@@ -58,16 +59,16 @@ Now, we import the relevant steps. Note that, in this example, we import them fr
 
 (Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.):w
 
-Finally, we construct a pipeline that, given a dataframe of features:
+Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 
-* horizontally concatenates a 2-component PCA dataframe, and the best-feature dataframe, to a resulting dataframe  
+* horizontally concatenates a 2-component PCA ``DataFrame``, and the best-feature ``DataFrame``, to a resulting ``DataFrame``  
 * then, passes the result to a support-vector machine classifier outputting a pandas series
 
-ff
+
 
 	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
-gg
+
 
     >>> try:
     ...     from sklearn.model_selection import GridSearchCV

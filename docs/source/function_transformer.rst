@@ -8,7 +8,7 @@ This chapter describes the :py:func:`ibex.trans` function, which allows
 
 #. applying functions or estimators to :class:`pandas.DataFrame` objects
 
-#. selcting a subset of columns for applications
+#. selecting a subset of columns for applications
 
 #. naming the output columns of the results
 
@@ -175,7 +175,7 @@ Of course, you can combine the arguments specified above:
 Multiple Transformations
 ------------------------
 
-Applying multiple transformations on a single ``DataFrame`` is no different than any other case of uniting features (see :ref:`feature_union`). In particular, it's possible to succintly use the ``+`` operator:
+Applying multiple transformations on a single ``DataFrame`` is no different than any other case of uniting features (see :ref:`feature_union`). In particular, it's possible to succinctly use the ``+`` operator:
 
     >>> trn = trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
     >>> trn.fit_transform(X)

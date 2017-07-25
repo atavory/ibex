@@ -23,7 +23,7 @@ Contents
     examples
     api
 
-Indices and tables
+Indexes and tables
 ==================
 
 * :ref:`genindex`

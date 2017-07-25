@@ -45,6 +45,7 @@ help:
 	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+	@echo "  spelling   to run spellcheck"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 
 .PHONY: clean
@@ -218,4 +219,10 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+.PHONY: spelling
+spelling:
+	$(SPHINXBUILD) -b spelling -d $(BUILDDIR)/doctrees source/ $(BUILDDIR)/spelling
+	@echo
+	@echo "Build finished. The words are in $(BUILDDIR)/spelling"
 

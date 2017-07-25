@@ -43,6 +43,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+spelling_word_list_filename='spelling_wordlist.txt'
+
 doctest_test_doctest_blocks = 1
 
 # Add any paths that contain templates here, relative to this directory.
