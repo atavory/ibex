@@ -86,5 +86,5 @@ In fact, this is exactly the behavior of :func:`sklearn.pipeline.make_pipeline`.
               ...)), ('functiontransformer_2', FunctionTransformer(...
               ...))]
 
-This alternative, therefore, is more succinct, but allows less control over the class names.
+This alternative, therefore, is more succinct, but allows less control over the steps' names.
 
