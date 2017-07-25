@@ -1,8 +1,7 @@
 .. _function_transformer:
 
 Transforming
-============
-
+============ 
 
 This chapter describes the :py:func:`ibex.trans` function, which allows
 

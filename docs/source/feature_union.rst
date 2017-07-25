@@ -58,32 +58,45 @@ Using the pipeline syntax, we can use ``+`` to create a pipeline:
 
 	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
 
-Note that the name of the second step is ``'selectkbest'``:
+The output using this, however, discards the meaning of the columns:
+
+	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
+    >>> trn.fit_transform(iris[features], iris['class'])
+    <BLANKLINE>
+    0   -2.684207  0.326607  1.4
+    1   -2.715391 -0.169557  1.4
+    2   -2.889820 -0.137346  1.3
+    3   -2.746437 -0.311124  1.5
+    4   -2.728593  0.333925  1.4
+	...
+
+A better way would be to combine this with :func:`ibex.trans`:
+
+	>>> from ibex import trans
+	>>> 
+	>>> trn = trans(PDPCA(n_components=2), out_cols=['pc1', 'pc2']) + trans(PDSelectKBest(k=1), out_cols='best', pass_y=True)
+    >>> trn.fit_transform(iris[features], iris['class'])
+              pc1       pc2  best
+    0   -2.684207  0.326607   1.4
+    1   -2.715391 -0.169557   1.4
+    2   -2.889820 -0.137346   1.3
+    3   -2.746437 -0.311124   1.5
+    4   -2.728593  0.333925   1.4
+	...
+ 
+
+Note the names of the transformers:
 
     >>> trn.transformer_list
-    [('pca', Adapter[PCA](...
-      ...), ('selectkbest', Adapter[SelectKBest](...)]
-
-
-This is `because the name of the class (in lowercase) <http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html>`_ is ``'selectkbest'``:
-
-    >>> PDSelectKBest.__name__.lower()
-    'selectkbest'
-
-In fact, this is exactly the behavior of :func:`sklearn.pipeline.make_pipeline`. The ``make_pipeline`` function, however, does not allow using same-class objects, as the names would be duplicated. Ibex allows this by detecting this, and numbering same-class steps:
-
-    >>> from ibex import trans
-    >>>
-    >>> (trans(np.sin) | trans(np.cos)). steps
-    [('functiontransformer_0', FunctionTransformer(...
-              ...)), ('functiontransformer_1', FunctionTransformer(...
-              ...))]
-    >>>
-    >>> (trans(np.sin) | trans(np.cos) | trans(np.tan)). steps
-    [('functiontransformer_0', FunctionTransformer(...
-              ...)), ('functiontransformer_1', FunctionTransformer(...
-              ...)), ('functiontransformer_2', FunctionTransformer(...
+    [('functiontransformer_0', FunctionTransformer(func=Adapter[PCA](...
+      ...
+              ...
+              ...)), ('functiontransformer_1', FunctionTransformer(func=Adapter[SelectKBest](...
               ...))]
 
-This alternative, therefore, is more succinct, but allows less control over the steps' names.
+This is similar to the discussion of :ref:`pipeline_pipeline_syntax_alternative` in :ref:`pipeline`.
 
+.. note::
+
+    Just as with :class:`sklearn.pipeline.Pipeline` vs. ``|``, also :class:`sklearn.pipeline.FeatureUnion` gives greater control over steps name
+    relative to ``+``. Note, however that ``FeatureUnion`` provides control over further aspects, e.g., the ability to run steps in parallel.
