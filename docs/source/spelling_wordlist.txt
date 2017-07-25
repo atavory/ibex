@@ -5,9 +5,6 @@ args
 Todo
 Ami
 Tavory
-Tali
-Raveh
-Sadka
 Shahar
 Azulay
 ted

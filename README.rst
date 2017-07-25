@@ -2,7 +2,7 @@ Ibex
 ====
 
 
-Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
+Ami Tavory, Shahar Azulay
 
 
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  

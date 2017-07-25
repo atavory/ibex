@@ -23,6 +23,8 @@ Contents
     examples
     api
 
+.. include:: /example/iris.rst
+
 Indexes and tables
 ==================
 
