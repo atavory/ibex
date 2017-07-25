@@ -3,4 +3,5 @@ numpy
 scipy
 sklearn
 pandas
+pyenchant
 sphinxcontrib-fulltoc
