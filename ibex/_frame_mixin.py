@@ -9,11 +9,12 @@ from sklearn import pipeline
 def _make_pipeline_steps(objs):
     names = [type(o).__name__.lower() for o in objs]
     name_counts = collections.Counter(names)
+    name_inds = name_counts.copy()
     unique_names = []
     for name in names:
         if name_counts[name] > 1:
-            unique_names.append(name + '_' + str(name_counts[name] - 1))
-            name_counts[name] -= 1
+            unique_names.append(name + '_' + str(name_counts[name] - name_inds[name]))
+            name_inds[name] -= 1
         else:
             unique_names.append(name)
 
