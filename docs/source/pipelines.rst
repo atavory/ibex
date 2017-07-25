@@ -66,7 +66,7 @@ Note that the name of the second step is ``'svc'``:
 	  ...
       ...))]
 
-This is because the (lowercase) name of the class is ``'svc'``:
+This is `because the name of the class (in lowercase) <http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html>`_ is ``'svc'``:
 
     >>> PDSVC.__name__.lower()
     'svc'
