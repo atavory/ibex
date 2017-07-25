@@ -17,6 +17,9 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
+.. image:: https://img.shields.io/badge/license-BSD--3--Clause-green.svg
+    :target: https://github.com/atavory/ibex/blob/master/LICENSE.txt
+
 
 This library aims for two (somewhat independent) goals:
 
