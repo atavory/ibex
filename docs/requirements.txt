@@ -4,4 +4,5 @@ scipy
 sklearn
 pandas
 pyenchant
+sphinxcontrib-spelling
 sphinxcontrib-fulltoc
