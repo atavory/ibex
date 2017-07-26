@@ -325,6 +325,13 @@ class _IrisTest(unittest.TestCase):
         clf.fit(self._iris[self._features], self._iris['class'])
         clf.staged_predict(self._iris[self._features])
 
+    def test_feature_importances(self):
+        clf = pd_ensemble.GradientBoostingRegressor()
+        with self.assertRaises(AttributeError):
+            clf.feature_importances_
+        clf.fit(self._iris[self._features], self._iris['class'])
+        self.assertTrue(isinstance(clf.feature_importances_, pd.Series))
+
         # Tmp Ami
     def _test_aic_bic(self):
         clf = pd_mixture.GaussianMixture()

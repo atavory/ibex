@@ -52,12 +52,12 @@ We can write a (slightly more general) estimator, as follows:
     ...         self._group_col, self._agg_func = group_col, agg_func
     ...
     ...     def fit(self, X, _=None):
-    ...         self.x_cols = X.columns # (4)
+    ...         self.x_columns = X.columns # (4)
     ...         self._agg = X.groupby(df[self._group_col]).apply(self._agg_func)
     ...         return self
     ...         
     ...     def transform(self, X):
-    ...         Xt = X[self.x_cols] # (5)
+    ...         Xt = X[self.x_columns] # (5)
     ...         Xt = pd.merge(
     ...             Xt[[self._group_col]],
     ...             self._agg,
@@ -73,9 +73,9 @@ Note the following general points:
 
 3. We subclass :class:`ibex.FrameMixin`, as this estimator deals with ``pandas`` entities.
 
-4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_cols`; this will ensure that the transformer will "remember" the columns it should see in further calls.   
+4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_columns`; this will ensure that the transformer will "remember" the columns it should see in further calls.   
 
-5. In ``transform``, we first use ``x_cols``. This will verify the columns of ``X``, and also reorder them according to the original order seen in ``fit`` (if needed). 
+5. In ``transform``, we first use ``x_columns``. This will verify the columns of ``X``, and also reorder them according to the original order seen in ``fit`` (if needed). 
 
 The rest is logic specific to this transformer. 
 
