@@ -60,6 +60,18 @@ class FrameMixin(object):
         ... except KeyError:
         ...     print('caught')
         caught
+
+		>>> (Id() | Id()).fit(X_1).transform(X_1)
+		a  b
+		0  1  3
+		1  2  4
+		2  3  5
+
+		>>> (Id() + Id()).fit(X_1).transform(X_1)
+		a  b  a  b
+		0  1  3  1  3
+		1  2  4  2  4
+		2  3  5  3  5
     """
 
     @property
@@ -137,9 +149,6 @@ class FrameMixin(object):
 
         Returns:
             :py:class:`ibex.sklearn.pipeline.FeatureUnion`
-
-		Example:
-			>>> (Id() + Id()).fit(X_1).transform(X_1)
         """
 
         from ._feature_union import _FeatureUnion
