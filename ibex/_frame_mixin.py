@@ -32,11 +32,34 @@ class FrameMixin(object):
         >>> from sklearn import base
         >>> import ibex
         >>>
-        >>> class GroupbyAggregator(
-        ...         base.BaseEstimator,
-        ...         base.TransformerMixin,
-        ...         ibex.FrameMixin):
-        ...     pass
+        >>> class Id(
+        ...            base.BaseEstimator, # (1)
+        ...            base.TransformerMixin, # (2)
+        ...            ibex.FrameMixin): # (3)
+        ...
+        ...     def fit(self, X, _=None):
+        ...         self.x_columns = X.columns # (4)
+        ...         return self
+        ...
+        ...     def transform(self, X):
+        ...         return X[self.x_columns] # (5)
+
+        >>> import pandas as pd
+        >>>
+        >>> X_1 = pd.DataFrame({'a': [1, 2, 3], 'b': [3, 4, 5]})
+        >>> X_2 = X_1.rename(columns={'b': 'd'})
+
+        >>> Id().fit(X_1).transform(X_1)
+		a  b
+		0  1  3
+		1  2  4
+		2  3  5
+
+        >>> try:
+        ...     Id().fit(X_1).transform(X_2)
+        ... except KeyError:
+        ...     print('caught')
+        caught
     """
 
     @property

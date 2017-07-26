@@ -460,10 +460,9 @@ class _ExamplesTest(unittest.TestCase):
 
 
 class _VerifyDocumentTest(unittest.TestCase):
-    def test(self):
+    def test_rst(self):
         this_dir = os.path.dirname(__file__)
         doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
-        doc_f_names += [os.path.join(this_dir, '../README.rst')]
         failed, attempted = 0, 0
         for f_name in doc_f_names:
             res = doctest.testfile(f_name, module_relative=False, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
@@ -471,6 +470,17 @@ class _VerifyDocumentTest(unittest.TestCase):
             attempted += res[1]
         self.assertGreater(attempted, 0)
         self.assertEqual(failed, 0)
+
+    def test_module(self):
+        import ibex
+
+        failed, attempted = 0, 0
+        res = doctest.testmod(ibex._frame_mixin, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
+        failed += res[0]
+        attempted += res[1]
+        self.assertGreater(attempted, 0)
+        self.assertEqual(failed, 0)
+
 
 
 if __name__ == '__main__':
