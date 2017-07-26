@@ -92,6 +92,10 @@ def frame(step):
 
             return res
 
+        def __getattribute__(self, name):
+            base_attr = super(_Adapter, self).__getattribute__(name)
+            return base_attr
+
     _Adapter.__name__ = step.__name__
 
     for name, func in vars(_Adapter).items():

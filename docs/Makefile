@@ -46,6 +46,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  spelling   to run spellcheck"
+	@echo "  lint   	to run lint"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 
 .PHONY: clean
@@ -226,3 +227,7 @@ spelling:
 	@echo
 	@echo "Build finished. The words are in $(BUILDDIR)/spelling"
 
+.PHONY: lint
+lint:
+	rst-lint ../README.rst
+	doc8 source/*.rst

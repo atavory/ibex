@@ -11,15 +11,13 @@ _py2 = sys.version_info[0] < 3
 
 class _TestCommand(Command):
     user_options = [
-        ('level=', '0', 'Specify the level of the tests')
         ]
 
     def initialize_options(self):
-        self.level = None
+        pass
 
     def finalize_options(self):
-        if self.level is None:
-            self.level = '0'
+        pass
 
     def run(self):
         run_str = "%s -m unittest discover test *test.py" % ('python' if _py2 else 'python3')
@@ -37,7 +35,7 @@ class _DocumentCommand(Command):
         pass
 
     def run(self):
-        run_str = "make html spelling"
+        run_str = "make html spelling lint"
         subprocess.check_call(run_str.split(' '), cwd='docs')
 
 

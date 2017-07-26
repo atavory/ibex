@@ -81,9 +81,9 @@ The rest is logic specific to this transformer.
 
 * In ``__init__``, the group column and aggregation function are stored. 
 
-* In ``fit``, ``X`` is aggregated by the group column according to the aggregataion function, and the result is recorded. 
+* In ``fit``, ``X`` is aggregated by the group column according to the aggregation function, and the result is recorded. 
 
-* In ``transform``, ``X`` (which is not necessarily the one used in ``fit``) is left-merged with the aggreation result, and then the relevant columns of the result are returned.
+* In ``transform``, ``X`` (which is not necessarily the one used in ``fit``) is left-merged with the aggregation result, and then the relevant columns of the result are returned.
 
 | 
 
@@ -99,7 +99,7 @@ We can now use this as a regular step. If we fit it on ``df`` and transform it o
     4  3.0  5.0
 
 
-We can, however, now use it for fitting on one ``DataFrame``, and transforming nother:
+We can, however, now use it for fitting on one ``DataFrame``, and transforming another:
 
     >>> from sklearn import model_selection
     >>>
