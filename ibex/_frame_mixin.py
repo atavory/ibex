@@ -137,6 +137,9 @@ class FrameMixin(object):
 
         Returns:
             :py:class:`ibex.sklearn.pipeline.FeatureUnion`
+
+		Example:
+			>>> (Id() + Id()).fit(X_1).transform(X_1)
         """
 
         from ._feature_union import _FeatureUnion
