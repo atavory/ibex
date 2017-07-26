@@ -1,8 +1,4 @@
 max-line-length: 120
-uses:
-  - sklearn
-  - pandas
-  - numpy
 ignore-paths:
   - test
   - scripts
