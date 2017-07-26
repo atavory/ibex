@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import functools
 import inspect
 
 import six
@@ -10,45 +11,7 @@ from sklearn import pipeline
 from ._frame_mixin import FrameMixin
 
 
-def frame(step):
-    """
-    Arguments:
-        step: either a step class or a step object. The class (or class of the
-            object) should subclass :py:class:`ibex.sklearn.base.BaseEstimator`.
-
-    Returns:
-        If ``step`` is a class, returns a class; if ``step`` is an object,
-            returns an object. Note that the result will subclass ``step``
-            and :py:class:`ibex.FrameMixin`
-
-    Example:
-
-        >>> from sklearn import linear_model
-        >>> import ibex
-        >>>
-
-        We can use ``frame`` to adapt an object:
-
-        >>> prd = ibex.frame(linear_model.LinearRegression())
-        >>> prd
-        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
-
-        We can use ``frame`` to adapt a class:
-
-        >>> PDLinearRegression = ibex.frame(linear_model.LinearRegression)
-        >>> PDLinearRegression()
-        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
-
-        >>> PDLinearRegression(fit_intercept=False)
-        Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
-    """
-    if isinstance(step, pipeline.Pipeline):
-        return frame(pipeline.Pipeline)(steps=step.steps)
-
-    if not inspect.isclass(step):
-        params = step.get_params()
-        f = frame(type(step))(**params)
-        return f
+def make_adapter(step):
 
     class _Adapter(step, FrameMixin):
         def __repr__(self):
@@ -177,6 +140,50 @@ def frame(step):
                 return pd.Series(base_attr, index=self.x_columns)
             return base_attr
 
+    return _Adapter
+
+def frame(step):
+    """
+    Arguments:
+        step: either a step class or a step object. The class (or class of the
+            object) should subclass :py:class:`ibex.sklearn.base.BaseEstimator`.
+
+    Returns:
+        If ``step`` is a class, returns a class; if ``step`` is an object,
+            returns an object. Note that the result will subclass ``step``
+            and :py:class:`ibex.FrameMixin`
+
+    Example:
+
+        >>> from sklearn import linear_model
+        >>> import ibex
+        >>>
+
+        We can use ``frame`` to adapt an object:
+
+        >>> prd = ibex.frame(linear_model.LinearRegression())
+        >>> prd
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+
+        We can use ``frame`` to adapt a class:
+
+        >>> PDLinearRegression = ibex.frame(linear_model.LinearRegression)
+        >>> PDLinearRegression()
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+
+        >>> PDLinearRegression(fit_intercept=False)
+        Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
+    """
+    if isinstance(step, pipeline.Pipeline):
+        return frame(pipeline.Pipeline)(steps=step.steps)
+
+    if not inspect.isclass(step):
+        params = step.get_params()
+        f = frame(type(step))(**params)
+        return f
+
+    _Adapter = make_adapter(step)
+
     _Adapter.__name__ = step.__name__
 
     for name, func in vars(_Adapter).items():
@@ -214,5 +221,10 @@ def frame(step):
     for wrap in wrapped:
         if not hasattr(step, wrap) and hasattr(_Adapter, wrap):
             delattr(_Adapter, wrap)
+        elif six.callable(getattr(_Adapter, wrap)):
+            try:
+                functools.update_wrapper(getattr(_Adapter, wrap), getattr(step, wrap))
+            except AttributeError:
+                pass
 
     return _Adapter

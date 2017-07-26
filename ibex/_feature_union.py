@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import operator
+import functools
 
 import pandas as pd
 from sklearn import base
@@ -82,6 +82,15 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
     @property
     def _transformers(self):
-        return [operator.itemgetter(1)(e) for e in self.transformer_list]
+        return [e[1] for e in self.transformer_list]
 
 _FeatureUnion.__name__ = 'FeatureUnion'
+
+
+for wrap in ['fit', 'transform', 'fit_transform']:
+    try:
+        functools.update_wrapper(
+            getattr(_FeatureUnion, wrap),
+            getattr(pipeline.FeatureUnion, wrap))
+    except AttributeError:
+        pass

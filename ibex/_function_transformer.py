@@ -37,6 +37,13 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         self.set_params(**params)
 
     def fit(self, X, y=None):
+        """
+        Fits the transformer using ``X`` (and possibly ``y``).
+
+        Returns:
+
+            ``self``
+        """
         self.x_columns = X.columns
 
         if self.in_cols is not None:
@@ -56,6 +63,14 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         return self
 
     def fit_transform(self, X, y=None):
+        """
+        Fits the transformer using ``X`` (and possibly ``y``), and transforms, in one
+        step if possible
+
+        Returns:
+
+            Transformed data.
+        """
         if not FrameMixin.is_subclass(self.func) or not hasattr(self.func, 'fit_transform'):
             if self.pass_y:
                 return self.fit(X, y).transform(X, y)
@@ -83,6 +98,12 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         return self.__process_res(Xt, res)
 
     def transform(self, X, y=None):
+        """
+        Returns:
+
+            Transformed data.
+        """
+
         Xt = X[self.x_columns]
 
         in_cols = _process_cols(self.in_cols)
