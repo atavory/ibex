@@ -21,21 +21,24 @@ Suppose we have a :class:`pandas.DataFrame` like this:
     3  1  3  5
     4  2  4  6
 
-and notice that a ```groupby``-``transform`` transformation <https://pandas.pydata.org/pandas-docs/stable/groupby.html>`_,
+We think that, for each row, the mean values of ``'b'`` and ``'c'``, aggregated by ``'a'``, might make a useful feature. In ``pandas``, we could write this as follows:
 
-    >>> pd.concat([df[['a']], df.groupby(df.a).transform(np.mean)], axis=1)
-       a    b    c
-    0  1  1.5  3.5
-    1  3  1.0  3.0
-    2  2  3.0  5.0
-    3  1  1.5  3.5
-    4  2  3.0  5.0
+    >>> df.groupby(df.a).transform(np.mean)
+         b    c
+    0  1.5  3.5
+    1  1.0  3.0
+    2  3.0  5.0
+    3  1.5  3.5
+    4  3.0  5.0
 
-is useful in this case. We now want write a transformer to do this, in order to use it for more general settings (e.g., `cross validation <http://scikit-learn.org/stable/modules/cross_validation.html>`_).
+
+We now want write a transformer to do this, in order to use it for more general settings (e.g., `cross validation <http://scikit-learn.org/stable/modules/cross_validation.html>`_).
 
 
 Writing A New Transformer Step
 ------------------------------
+
+We can write a (slightly more general) estimator, as follows:
 
     >>> from sklearn import base                                                
     >>> import ibex                                                             
@@ -59,29 +62,53 @@ Writing A New Transformer Step
     ...             Xt[[self._group_col]],
     ...             self._agg,
     ...             how='left')
-    ...         return Xt
+    ...         return Xt[[c for c in Xt.columns if c != self._group_col]]
 
 
-:class:`sklearn.base.BaseEstimator`, 
-:class:`sklearn.base.TransformerMixin`, 
-:class:`ibex.FrameMixin`, 
+Note the following general points:
+
+1. We subclass :class:`sklearn.base.BaseEstimator`, as this is an estimator.
+
+2. We subclass :class:`sklearn.base.TransformerMixin`, as, in this case, this is specifically a transformer.
+
+3. We subclass :class:`ibex.FrameMixin`, as this estimator deals with ``pandas`` entities.
+
+4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_cols`; this will ensure that the transformer will "remember" the columns it should see in further calls.   
+
+5. In ``transform``, we first use ``x_cols``. This will verify the columns of ``X``, and also reorder them according to the original order seen in ``fit`` (if needed). 
+
+The rest is logic specific to this transformer. 
+
+* In ``__init__``, the group column and aggregation function are stored. 
+
+* In ``fit``, ``X`` is aggregated by the group column according to the aggregataion function, and the result is recorded. 
+
+* In ``transform``, ``X`` (which is not necessarily the one used in ``fit``) is left-merged with the aggreation result, and then the relevant columns of the result are returned.
+
+| 
+
+We can now use this as a regular step. If we fit it on ``df`` and transform it on the same ``df``, we get the result above:
+
 
     >>> GroupbyAggregator('a').fit(df).transform(df)
-       a    b    c
-    0  1  1.5  3.5
-    1  3  1.0  3.0
-    2  2  3.0  5.0
-    3  1  1.5  3.5
-    4  2  3.0  5.0
+         b    c
+    0  1.5  3.5
+    1  1.0  3.0
+    2  3.0  5.0
+    3  1.5  3.5
+    4  3.0  5.0
 
+
+We can, however, now use it for fitting on one ``DataFrame``, and transforming nother:
 
     >>> from sklearn import model_selection
     >>>
     >>> tr, te = model_selection.train_test_split(df, random_state=3)
     >>> GroupbyAggregator('a').fit(tr).transform(te)
-       a    b    c
-    0  1  0.0  2.0
-    1  2  2.0  4.0
+         b    c
+    0  0.0  2.0
+    1  2.0  4.0
+
 
 
 
