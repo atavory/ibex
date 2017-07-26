@@ -2,6 +2,7 @@
 
 Pipelining
 ==========
+
 A pipeline is a sequential composition of a number of transformers, and a final estimator. Ibex allows pipeline compositions in both the original ``sklearn``  explicit way, as well as a more succinct pipeline-syntax version.
 
 In this chapter we'll use the following Iris dataset:

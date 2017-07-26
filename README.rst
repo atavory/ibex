@@ -4,7 +4,6 @@ Ibex
 
 Ami Tavory, Shahar Azulay
 
-
 .. image:: https://travis-ci.org/atavory/ibex.svg?branch=master  
     :target: https://travis-ci.org/atavory/ibex
 

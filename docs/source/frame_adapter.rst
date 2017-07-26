@@ -1,3 +1,5 @@
+.. adapting:
+
 Adapting Estimators
 ===================
 
