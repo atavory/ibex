@@ -28,15 +28,30 @@ __all__ += ['sklearn']
 def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
     """
     Arguments:
-        func:
-        in_cols:
+
+        func: One of a:
+
+            * ``None``
+            * a callable
+            * a step
+
+        in_cols: One of:
+
+            * ``None``
+            * a string
+            * a list of strings
+
         out_cols:
-        pass_y:
+
+        pass_y: Boolean indicating whether to pass the ``y`` argument to
+
         kw_args:
 
     Returns:
-        :py:class:`sklearn.preprocessing.FunctionTransformer`
+
+        An :py:class:`sklearn.preprocessing.FunctionTransformer` object.
     """
+
     from ibex.sklearn import preprocessing
 
     return preprocessing.FunctionTransformer(func, in_cols, out_cols, pass_y, kw_args)

@@ -21,16 +21,16 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
     Arguments:
 
-    transformer_list: list of (string, transformer) tuples.
-        List of transformer objects to be applied to the data.
-        The first half of each tuple is the name of the transformer.
+        transformer_list: list of (string, transformer) tuples.
+            List of transformer objects to be applied to the data.
+            The first half of each tuple is the name of the transformer.
 
-    n_jobs: int, optional.
-        Number of jobs to run in parallel (default 1).
+        n_jobs: int, optional.
+            Number of jobs to run in parallel (default 1).
 
-    transformer_weights: dict, optional.
-        Multiplicative weights for features per transformer.
-        Keys are transformer names, values the weights.
+        transformer_weights: dict, optional.
+            Multiplicative weights for features per transformer.
+            Keys are transformer names, values the weights.
     """
     def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
         FrameMixin.__init__(self)
