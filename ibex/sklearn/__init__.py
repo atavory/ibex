@@ -1,10 +1,31 @@
 """
-Wrappers for sklearn
+Wrappers for :mod:`sklearn`.
+
+
+This module loads corresponding modules in ``sklearn`` by demand, just
+as ``sklearn`` does. Its contents depend on those of the ``sklearn``
+in your system when it is loaded.
 
 Example:
 
-    >>> from ibex.sklearn import linear_regression # doctest: +SKIP
+    >>> import ibex
 
+    :mod:`sklearn.linear_model` is part of ``sklearn``,
+    therefore :mod:`ibex.sklearn` will have a counterpart.
+
+    >>> 'linear_model' in sklearn.__all__
+    True
+    >>> 'linear_model' in ibex.sklearn.__all__
+    True
+    >>> from ibex.sklearn import linear_model # doctest: +SKIP
+
+    ``foo`` is not part of ``sklearn``,
+    therefore :mod:`ibex.sklearn` will not have a counterpart.
+
+    >>> 'foo' in sklearn.__all__
+    False
+    >>> 'foo' in ibex.sklearn.__all__
+    False
     >>> from ibex.sklearn import foo
     Traceback (most recent call last):
     ...
@@ -17,6 +38,10 @@ import sys
 import imp
 
 import six
+import sklearn
+
+
+__all__ = sklearn.__all__
 
 
 class _NewModuleLoader(object):
@@ -39,7 +64,7 @@ class _NewModuleLoader(object):
 
         code = '''
 """
-Auto-generated ibex wrapper for %s
+Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.%s`.
 """
 
 from __future__ import absolute_import
@@ -81,3 +106,9 @@ class _ModuleFinder(object):
 
 loader = _ModuleFinder()
 loader.install()
+
+
+def load_tests(loader, tests, ignore):
+    import doctest
+    tests.addTests(doctest.DocTestSuite())
+    return tests

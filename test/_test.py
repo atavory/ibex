@@ -476,6 +476,7 @@ class _VerifyDocumentTest(unittest.TestCase):
 
         failed, attempted = 0, 0
         res = doctest.testmod(ibex._frame_mixin, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
+        res = doctest.testmod(ibex.sklearn, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
         failed += res[0]
         attempted += res[1]
         self.assertGreater(attempted, 0)

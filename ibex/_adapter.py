@@ -1,5 +1,3 @@
-# # Auto generted from _adapter.py.jinja2
-
 from __future__ import absolute_import
 
 import inspect
@@ -61,72 +59,71 @@ def frame(step):
             return self.__repr__()
 
         def fit_transform(self, X, *args):
-            return self.__run(super(_Adapter, self).fit_transform, 'fit_transform'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).fit_transform, 'fit_transform', X, *args)
 
         def predict_proba(self, X, *args):
-            return self.__run(super(_Adapter, self).predict_proba, 'predict_proba'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args)
 
         def sample_y(self, X, *args):
-            return self.__run(super(_Adapter, self).sample_y, 'sample_y'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).sample_y, 'sample_y', X, *args)
 
         def score_samples(self, X, *args):
-            return self.__run(super(_Adapter, self).score_samples, 'score_samples'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).score_samples, 'score_samples', X, *args)
 
         def staged_predict_proba(self, X, *args):
-            return self.__run(super(_Adapter, self).staged_predict_proba, 'staged_predict_proba'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).staged_predict_proba, 'staged_predict_proba', X, *args)
 
         def apply(self, X, *args):
-            return self.__run(super(_Adapter, self).apply, 'apply'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).apply, 'apply', X, *args)
 
         def bic(self, X, *args):
-            return self.__run(super(_Adapter, self).bic, 'bic'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).bic, 'bic', X, *args)
 
         def perplexity(self, X, *args):
-            return self.__run(super(_Adapter, self).perplexity, 'perplexity'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).perplexity, 'perplexity', X, *args)
 
         def fit(self, X, *args):
-            return self.__run(super(_Adapter, self).fit, 'fit'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).fit, 'fit', X, *args)
 
         def decision_function(self, X, *args):
-            return self.__run(super(_Adapter, self).decision_function, 'decision_function'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).decision_function, 'decision_function', X, *args)
 
         def aic(self, X, *args):
-            return self.__run(super(_Adapter, self).aic, 'aic'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).aic, 'aic', X, *args)
 
         def partial_fit(self, X, *args):
-            return self.__run(super(_Adapter, self).partial_fit, 'partial_fit'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).partial_fit, 'partial_fit', X, *args)
 
         def predict(self, X, *args):
-            return self.__run(super(_Adapter, self).predict, 'predict'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).predict, 'predict', X, *args)
 
         def radius_neighbors(self, X, *args):
-            return self.__run(super(_Adapter, self).radius_neighbors, 'radius_neighbors'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).radius_neighbors, 'radius_neighbors', X, *args)
 
         def staged_decision_function(self, X, *args):
-            return self.__run(super(_Adapter, self).staged_decision_function, 'staged_decision_function'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).staged_decision_function, 'staged_decision_function', X, *args)
 
         def staged_predict(self, X, *args):
-            return self.__run(super(_Adapter, self).staged_predict, 'staged_predict'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).staged_predict, 'staged_predict', X, *args)
 
         def inverse_transform(self, X, *args):
-            return self.__run(super(_Adapter, self).inverse_transform, 'inverse_transform'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).inverse_transform, 'inverse_transform', X, *args)
 
         def fit_predict(self, X, *args):
-            return self.__run(super(_Adapter, self).fit_predict, 'fit_predict'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).fit_predict, 'fit_predict', X, *args)
 
         def kneighbors(self, X, *args):
-            return self.__run(super(_Adapter, self).kneighbors, 'kneighbors'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).kneighbors, 'kneighbors', X, *args)
 
         def predict_log_proba(self, X, *args):
-            return self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba', X, *args)
 
         def transform(self, X, *args):
-            return self.__run(super(_Adapter, self).transform, 'transform'.startswith('fit'), X, *args)
+            return self.__run(super(_Adapter, self).transform, 'transform', X, *args)
 
-
-        def __run(self, fn, fit, X, *args):
+        def __run(self, fn, name, X, *args):
             # Tmp Ami - why not in function adapter? where are uts?
-            if fit:
+            if name.startswith('fit'):
                 self.x_columns = X.columns
 
             res = fn(self.__x(X), *args)
