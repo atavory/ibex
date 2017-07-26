@@ -126,6 +126,17 @@ def frame(step):
             if name.startswith('fit'):
                 self.x_columns = X.columns
 
+            base_attr = getattr(step, name)
+            if six.PY3:
+                params = list(inspect.signature(base_attr).parameters)
+            else:
+                params = inspect.getargspec(base_attr)[0]
+
+            # Tmp Ami - write a ut for this; remove todo from docs
+            if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
+                if not X.index.equals(args[0].index):
+                    raise ValueError('Indexes do not match')
+
             res = fn(self.__x(X), *args)
             return self.__process_wrapped_call_res(X[self.x_columns], res)
 

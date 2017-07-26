@@ -46,6 +46,7 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         Same signature as any sklearn step.
         """
         Xts = [e.fit_transform(X, y) for e in self._transformers]
+        # Tmp Ami - add checks for indexes' equality. Add ut; add docs
         return pd.concat(
             [pd.DataFrame(Xt, index=X.index) for Xt in Xts],
             axis=1)

@@ -29,7 +29,7 @@ Example:
     >>> from ibex.sklearn import foo
     Traceback (most recent call last):
     ...
-    ImportError: cannot import name 'foo'
+    ImportError: ...foo...
 """
 
 from __future__ import absolute_import
