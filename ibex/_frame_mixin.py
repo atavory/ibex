@@ -29,8 +29,8 @@ class FrameMixin(object):
 
     Example:
 
-		This is a simple, illustrative "identity" transformer,
-		which simply relays its input.
+        This is a simple, illustrative "identity" transformer,
+        which simply relays its input.
 
         >>> from sklearn import base
         >>> import ibex
@@ -59,7 +59,7 @@ class FrameMixin(object):
 
         5. In ``transform``, we first use ``x_columns``. This will verify the columns of ``X``, and also reorder them according to the original order seen in ``fit`` (if needed).
 
-        Suppose we define two :class:`pandas.DataFrame`s, ``X_1`` and ``X_2``, with different columns:
+        Suppose we define two :class:`pandas.DataFrame` objects, ``X_1`` and ``X_2``, with different columns:
 
         >>> import pandas as pd
         >>>
@@ -69,10 +69,10 @@ class FrameMixin(object):
         The following ``fit``-``transform`` combination will work:
 
         >>> Id().fit(X_1).transform(X_1)
-		a  b
-		0  1  3
-		1  2  4
-		2  3  5
+        a  b
+        0  1  3
+        1  2  4
+        2  3  5
 
         The following ``fit``-``transform`` combination will fail:
 
@@ -84,19 +84,19 @@ class FrameMixin(object):
 
         Steps can be piped into each other:
 
-		>>> (Id() | Id()).fit(X_1).transform(X_1)
-		a  b
-		0  1  3
-		1  2  4
-		2  3  5
+        >>> (Id() | Id()).fit(X_1).transform(X_1)
+        a  b
+        0  1  3
+        1  2  4
+        2  3  5
 
         Steps can be added:
 
-		>>> (Id() + Id()).fit(X_1).transform(X_1)
-		a  b  a  b
-		0  1  3  1  3
-		1  2  4  2  4
-		2  3  5  3  5
+        >>> (Id() + Id()).fit(X_1).transform(X_1)
+        a  b  a  b
+        0  1  3  1  3
+        1  2  4  2  4
+        2  3  5  3  5
     """
 
     @property

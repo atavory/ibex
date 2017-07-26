@@ -175,9 +175,6 @@ def frame(step):
         if name.startswith('_'):
             continue
 
-        if not six.callable(func) and not func.__doc__:
-            continue
-
         parfunc = getattr(step, name, None)
         if parfunc and getattr(parfunc, '__doc__', None):
             func.__doc__ = parfunc.__doc__
