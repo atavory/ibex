@@ -2,12 +2,12 @@ API
 ===
 
 
-`ibex`
-------
+``ibex``
+--------
 
 .. automodule:: ibex
 
-`FrameMixin`
+``FrameMixin``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: ibex.FrameMixin
@@ -16,33 +16,33 @@ API
     :show-inheritance:
 
 
-`frame`
+``frame``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: ibex.frame
 
 
-`trans`
+``trans``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autofunction:: ibex.trans
 
 
-`sklearn`
+``sklearn``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: ibex.sklearn
    :members:
 
 
-`preprocessing`
+``preprocessing``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.preprocessing
    :members:
 
 
-`FunctionTransformer`
+``FunctionTransformer``
 ******************************************
 
 .. autoclass:: ibex.sklearn.preprocessing.FunctionTransformer
@@ -51,14 +51,14 @@ API
     :show-inheritance:
 
 
-`pipeline`
+``pipeline``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.pipeline
    :members:
 
 
-`FeatureUnion`
+``FeatureUnion``
 ******************************************
 
 .. autoclass:: ibex.sklearn.pipeline.FeatureUnion

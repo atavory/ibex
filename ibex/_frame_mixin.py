@@ -29,6 +29,9 @@ class FrameMixin(object):
 
     Example:
 
+		This is a simple, illustrative "identity" transformer,
+		which simply relays its input.
+
         >>> from sklearn import base
         >>> import ibex
         >>>
@@ -44,10 +47,26 @@ class FrameMixin(object):
         ...     def transform(self, X):
         ...         return X[self.x_columns] # (5)
 
+        Note the following general points:
+
+        1. We subclass :class:`sklearn.base.BaseEstimator`, as this is an estimator.
+
+        2. We subclass :class:`sklearn.base.TransformerMixin`, as, in this case, this is specifically a transformer.
+
+        3. We subclass :class:`ibex.FrameMixin`, as this estimator deals with ``pandas`` entities.
+
+        4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_columns`; this will ensure that the transformer will "remember" the columns it should see in further calls.
+
+        5. In ``transform``, we first use ``x_columns``. This will verify the columns of ``X``, and also reorder them according to the original order seen in ``fit`` (if needed).
+
+        Suppose we define two :class:`pandas.DataFrame`s, ``X_1`` and ``X_2``, with different columns:
+
         >>> import pandas as pd
         >>>
         >>> X_1 = pd.DataFrame({'a': [1, 2, 3], 'b': [3, 4, 5]})
         >>> X_2 = X_1.rename(columns={'b': 'd'})
+
+        The following ``fit``-``transform`` combination will work:
 
         >>> Id().fit(X_1).transform(X_1)
 		a  b
@@ -55,17 +74,23 @@ class FrameMixin(object):
 		1  2  4
 		2  3  5
 
+        The following ``fit``-``transform`` combination will fail:
+
         >>> try:
         ...     Id().fit(X_1).transform(X_2)
         ... except KeyError:
         ...     print('caught')
         caught
 
+        Steps can be piped into each other:
+
 		>>> (Id() | Id()).fit(X_1).transform(X_1)
 		a  b
 		0  1  3
 		1  2  4
 		2  3  5
+
+        Steps can be added:
 
 		>>> (Id() + Id()).fit(X_1).transform(X_1)
 		a  b  a  b
