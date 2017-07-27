@@ -150,5 +150,4 @@ for wrap in _wrapped:
     try:
         functools.update_wrapper(getattr(_FeatureUnion, wrap), getattr(pipeline.FeatureUnion, wrap))
     except AttributeError:
-        print('wrap failed', wrap)
         pass
