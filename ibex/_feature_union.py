@@ -5,8 +5,28 @@ import functools
 import pandas as pd
 from sklearn import base
 from sklearn import pipeline
+from sklearn.externals import joblib
 
 from ._frame_mixin import FrameMixin
+
+
+
+def _fit(transformer, name, weight, X):
+    res = transformer.transform(X)
+    return res if weight is None else weight * res
+
+
+def _transform(transformer, name, weight, X):
+    res = transformer.transform(X)
+    return res if weight is None else weight * res
+
+
+def _fit_transform(transformer, name, weight, X, y, **fit_params):
+    if hasattr(transformer, 'fit_transform'):
+        res = transformer.fit_transform(X, y, **fit_params)
+    else:
+        res = transformer.fit(X, y, **fit_params).transform(X)
+    return res if weight is None else weight * res
 
 
 # Tmp Ami - take care of weights
@@ -27,10 +47,6 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
         n_jobs: int, optional.
             Number of jobs to run in parallel (default 1).
-
-        transformer_weights: dict, optional.
-            Multiplicative weights for features per transformer.
-            Keys are transformer names, values the weights.
     """
     def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
         FrameMixin.__init__(self)
@@ -40,35 +56,30 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             n_jobs,
             transformer_weights)
 
-    # Tmp Ami - get docstrings from sklearn.
-    def fit_transform(self, X, y=None):
-        """
-        Same signature as any sklearn step.
-        """
-        Xts = [e.fit_transform(X, y) for e in self._transformers]
-        # Tmp Ami - add checks for indexes' equality. Add ut; add docs
-        return pd.concat(
-            [pd.DataFrame(Xt, index=X.index) for Xt in Xts],
-            axis=1)
-
     def fit(self, X, y=None):
         """
         Same signature as any sklearn step.
         """
-        self._feature_union.fit(
-            X,
-            y)
+        self._feature_union.fit(X, y)
 
         return self
+
+    # Tmp Ami - get docstrings from sklearn.
+    def fit_transform(self, X, y=None, **fit_params):
+        """
+        Same signature as any sklearn step.
+        """
+        Xts = joblib.Parallel(n_jobs=self.n_jobs)(
+            joblib.delayed(_fit_transform)(trans, name, w, X, y, **fit_params) for name, trans, w in self._transformers)
+        return pd.concat(Xts, axis=1)
 
     def transform(self, X):
         """
         Same signature as any sklearn step.
         """
-        Xts = [e.transform(X) for e in self._transformers]
-        return pd.concat(
-            [pd.DataFrame(Xt, index=X.index) for Xt in Xts],
-            axis=1)
+        Xts = joblib.Parallel(n_jobs=self.n_jobs)(
+            joblib.delayed(_transform)(trans, name, w, X) for name, trans, w in self._transformers)
+        return pd.concat(Xts, axis=1)
 
     def get_params(self, deep=True):
         return self._feature_union.get_params(deep)
@@ -82,10 +93,15 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
     @property
     def _transformers(self):
-        return [e[1] for e in self.transformer_list]
+        # Tmp Ami
+        get_weight = lambda _: None
+        return [(name, trans, get_weight(name)) for name, trans in self.transformer_list]
+
+    @property
+    def n_jobs(self):
+        return self._feature_union.n_jobs
 
 _FeatureUnion.__name__ = 'FeatureUnion'
-
 
 for wrap in ['fit', 'transform', 'fit_transform']:
     try:
