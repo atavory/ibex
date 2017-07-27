@@ -179,37 +179,6 @@ class FrameMixin(object):
 
         return pipeline.Pipeline(_make_pipeline_steps(combined))
 
-    # Tmp Ami - doc & test
-    def __mult__(self, other):
-        """
-        Multiplies the result of this step to other.
-
-        Arguments:
-            other: Something that can multiply a :class:`pandas.DataFrame`
-
-        Returns:
-            :py:class:`sklearn.preprocessing.FunctionTransformer`
-        """
-
-        from ._function_transformer import _FunctionTransformer
-
-        return _FunctionTransformer(lambda df: other * df)
-
-    def __rmult__(self, other):
-        """
-        Multiplies the result of this step to other.
-
-        Arguments:
-            other: Something that can multiply a :class:`pandas.DataFrame`
-
-        Returns:
-            :py:class:`sklearn.preprocessing.FunctionTransformer`
-        """
-
-        from ._function_transformer import _FunctionTransformer
-
-        return _FunctionTransformer(lambda df: other * df)
-
     def __add__(self, other):
         """
 

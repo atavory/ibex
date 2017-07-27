@@ -14,15 +14,21 @@ def _fit(transformer, name, X):
     return transformer.transform(X)
 
 
-def _transform(transformer, name, X):
-    return transformer.transform(X)
+def _transform(transformer, name, weight, X):
+    res = transformer.transform(X)
+    if weight is not None:
+        res *= weight
+    return res
 
 
-def _fit_transform(transformer, name, X, y, **fit_params):
+def _fit_transform(transformer, name, weight, X, y, **fit_params):
     if hasattr(transformer, 'fit_transform'):
-        return transformer.fit_transform(X, y, **fit_params)
+        res = transformer.fit_transform(X, y, **fit_params)
     else:
-        return transformer.fit(X, y, **fit_params).transform(X)
+        res = transformer.fit(X, y, **fit_params).transform(X)
+    if weight is not None:
+        res *= weight
+    return res
 
 
 # Tmp Ami - take care of weights
@@ -41,6 +47,10 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
         n_jobs: int, optional.
             Number of jobs to run in parallel (default 1).
+
+        transformer_weights: dict, optional
+            Multiplicative weights for features per transformer.
+            Keys are transformer names, values the weights.
 
     Example:
 
@@ -76,12 +86,13 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         1     0.000000    -1.254912     0.666667         -0.3
         2     1.224745     0.062746     1.000000          0.4
     """
-    def __init__(self, transformer_list, n_jobs=1):
+    def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
         FrameMixin.__init__(self)
 
         self._feature_union = pipeline.FeatureUnion(
             transformer_list,
-            n_jobs)
+            n_jobs,
+            transformer_weights)
 
     def fit(self, X, y=None):
         """
@@ -107,7 +118,7 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             ``self``
         """
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_fit_transform)(trans, name, X, y, **fit_params) for name, trans, in self.transformer_list)
+            joblib.delayed(_fit_transform)(trans, name, weight, X, y, **fit_params) for name, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
     def transform(self, X):
@@ -116,16 +127,14 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         to horizontally concatenate the results.
         """
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_transform)(trans, name, X) for name, trans in self.transformer_list)
+            joblib.delayed(_transform)(trans, name, weight, X) for name, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
     def get_feature_names(self):
         return self._feature_union.get_feature_names()
 
     def get_params(self, deep=True):
-        params = self._feature_union.get_params(deep)
-        del params['transformer_weights']
-        return params
+        return self._feature_union.get_params(deep)
 
     def set_params(self, **params):
         return self._feature_union.set_params(**params)
@@ -137,6 +146,13 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     @property
     def n_jobs(self):
         return self._feature_union.n_jobs
+
+    def _iter(self):
+        weights = self._feature_union.transformer_weights
+        if weights is None:
+            weights = {}
+        return ((name, trans, weights.get(name, None)) for name, trans in self.transformer_list)
+
 
 _FeatureUnion.__name__ = 'FeatureUnion'
 
