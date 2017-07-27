@@ -16,7 +16,7 @@ Ami Tavory, Shahar Azulay
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
 
-.. image:: https://img.shields.io/badge/license-BSD--3--Clause-green.svg
+.. image:: https://img.shields.io/badge/license-BSD--3--Clause-brightgreen.svg
     :target: https://raw.githubusercontent.com/atavory/ibex/master/LICENSE.txt
 
 
