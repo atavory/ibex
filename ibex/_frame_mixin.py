@@ -4,6 +4,7 @@ import operator
 import collections
 
 from sklearn import pipeline
+from sklearn import exceptions
 
 
 def _make_pipeline_steps(objs):
@@ -109,17 +110,15 @@ class FrameMixin(object):
         Set this property at fit, and call it in other methods:
 
         """
-        return self.__cols
+        # Tmp Ami - check this
+        try:
+            return self.__cols
+        except AttributeError:
+            raise exceptions.NotFittedError()
 
     @x_columns.setter
     def x_columns(self, columns):
-        try:
-            self.__cols
-        except AttributeError:
-            self.__cols = columns
-
-        if set(columns) != set(self.__cols):
-            raise KeyError()
+        self.__cols = columns
 
     @classmethod
     def is_subclass(cls, step):
