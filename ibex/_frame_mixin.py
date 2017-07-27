@@ -85,6 +85,15 @@ class FrameMixin(object):
         ...     print('caught')
         caught
 
+        The following ``transform`` will fail, as the estimator was not fitted:
+
+        >>> from sklearn import exceptions
+        >>> try:
+        ...     Id().transform(X_2)
+        ... except exceptions.NotFittedError:
+        ...     print('caught')
+        caught
+
         Steps can be piped into each other:
 
         >>> (Id() | Id()).fit(X_1).transform(X_1)
@@ -137,7 +146,7 @@ class FrameMixin(object):
 
     def __or__(self, other):
         """
-        Pipes the result of this stage to other.
+        Pipes the result of this step to other.
 
 
         Arguments:
@@ -169,6 +178,36 @@ class FrameMixin(object):
         combined = others + [self]
 
         return pipeline.Pipeline(_make_pipeline_steps(combined))
+
+    def __mult__(self, other):
+        """
+        Multiplies the result of this step to other.
+
+        Arguments:
+            other: Something that can multiply a :class:`pandas.DataFrame`
+
+        Returns:
+            :py:class:`sklearn.preprocessing.FunctionTransformer`
+        """
+
+        from ._function_transformer import _FunctionTransformer
+
+        return _FunctionTransformer(lambda df: other * df)
+
+    def __rmult__(self, other):
+        """
+        Multiplies the result of this step to other.
+
+        Arguments:
+            other: Something that can multiply a :class:`pandas.DataFrame`
+
+        Returns:
+            :py:class:`sklearn.preprocessing.FunctionTransformer`
+        """
+
+        from ._function_transformer import _FunctionTransformer
+
+        return _FunctionTransformer(lambda df: other * df)
 
     def __add__(self, other):
         """

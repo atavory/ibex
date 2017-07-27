@@ -10,30 +10,24 @@ from sklearn.externals import joblib
 from ._frame_mixin import FrameMixin
 
 
-
-def _fit(transformer, name, weight, X):
-    res = transformer.transform(X)
-    return res if weight is None else weight * res
+def _fit(transformer, name, X):
+    return transformer.transform(X)
 
 
-def _transform(transformer, name, weight, X):
-    res = transformer.transform(X)
-    return res if weight is None else weight * res
+def _transform(transformer, name, X):
+    return transformer.transform(X)
 
 
-def _fit_transform(transformer, name, weight, X, y, **fit_params):
+def _fit_transform(transformer, name, X, y, **fit_params):
     if hasattr(transformer, 'fit_transform'):
-        res = transformer.fit_transform(X, y, **fit_params)
+        return transformer.fit_transform(X, y, **fit_params)
     else:
-        res = transformer.fit(X, y, **fit_params).transform(X)
-    return res if weight is None else weight * res
+        return transformer.fit(X, y, **fit_params).transform(X)
 
 
 # Tmp Ami - take care of weights
-# Tmp Ami - derive from appropriate sklearn mixins
 class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
-    - Pandas version -
     Concatenates results of multiple transformer objects.
     This estimator applies a list of transformer objects in parallel to the
     input data, then concatenates the results. This is useful to combine
@@ -47,18 +41,55 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
         n_jobs: int, optional.
             Number of jobs to run in parallel (default 1).
+
+    Example:
+
+        >>> import pandas as pd
+        >>> X = pd.DataFrame({'a': [1, 2, 3], 'b': [10, -3, 4]})
+
+        >>> from ibex.sklearn import preprocessing as pd_preprocessing
+        >>> from ibex.sklearn import pipeline as pd_pipeline
+
+        >>> trn = pd_pipeline.FeatureUnion([
+        ...     ('std', pd_preprocessing.StandardScaler()),
+        ...     ('asb', pd_preprocessing.MaxAbsScaler())])
+        >>> trn.fit_transform(X)
+                a         b         a    b
+        0 -1.224745  1.192166  0.333333  1.0
+        1  0.000000 -1.254912  0.666667 -0.3
+        2  1.224745  0.062746  1.000000  0.4
+
+        >>> from ibex import trans
+        >>>
+        >>> trn = pd_preprocessing.StandardScaler() + pd_preprocessing.MaxAbsScaler()
+        >>> trn.fit_transform(X)
+                a         b         a    b
+        0 -1.224745  1.192166  0.333333  1.0
+        1  0.000000 -1.254912  0.666667 -0.3
+        2  1.224745  0.062746  1.000000  0.4
+
+        >>> trn = trans(pd_preprocessing.StandardScaler(), out_cols=['std_scale_a', 'std_scale_b'])
+        >>> trn += trans(pd_preprocessing.MaxAbsScaler(), out_cols=['max_scale_a', 'max_scale_b'])
+        >>> trn.fit_transform(X)
+        std_scale_a  std_scale_b  max_scale_a  max_scale_b
+        0    -1.224745     1.192166     0.333333          1.0
+        1     0.000000    -1.254912     0.666667         -0.3
+        2     1.224745     0.062746     1.000000          0.4
     """
-    def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
+    def __init__(self, transformer_list, n_jobs=1):
         FrameMixin.__init__(self)
 
         self._feature_union = pipeline.FeatureUnion(
             transformer_list,
-            n_jobs,
-            transformer_weights)
+            n_jobs)
 
     def fit(self, X, y=None):
         """
-        Same signature as any sklearn step.
+        Fits the transformer using ``X`` (and possibly ``y``).
+
+        Returns:
+
+            ``self``
         """
         self._feature_union.fit(X, y)
 
@@ -67,22 +98,34 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     # Tmp Ami - get docstrings from sklearn.
     def fit_transform(self, X, y=None, **fit_params):
         """
-        Same signature as any sklearn step.
+        Fits the transformer using ``X`` (and possibly ``y``). Transforms
+        ``X`` using the transformers, uses :func:`pandas.concat`
+        to horizontally concatenate the results.
+
+        Returns:
+
+            ``self``
         """
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_fit_transform)(trans, name, w, X, y, **fit_params) for name, trans, w in self._transformers)
+            joblib.delayed(_fit_transform)(trans, name, X, y, **fit_params) for name, trans, in self.transformer_list)
         return pd.concat(Xts, axis=1)
 
     def transform(self, X):
         """
-        Same signature as any sklearn step.
+        Transforms ``X`` using the transformers, uses :func:`pandas.concat`
+        to horizontally concatenate the results.
         """
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_transform)(trans, name, w, X) for name, trans, w in self._transformers)
+            joblib.delayed(_transform)(trans, name, X) for name, trans in self.transformer_list)
         return pd.concat(Xts, axis=1)
 
+    def get_feature_names(self):
+        return self._feature_union.get_feature_names()
+
     def get_params(self, deep=True):
-        return self._feature_union.get_params(deep)
+        params = self._feature_union.get_params(deep)
+        del params['transformer_weights']
+        return params
 
     def set_params(self, **params):
         return self._feature_union.set_params(**params)
@@ -92,21 +135,20 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         return self._feature_union.transformer_list
 
     @property
-    def _transformers(self):
-        # Tmp Ami
-        get_weight = lambda _: None
-        return [(name, trans, get_weight(name)) for name, trans in self.transformer_list]
-
-    @property
     def n_jobs(self):
         return self._feature_union.n_jobs
 
 _FeatureUnion.__name__ = 'FeatureUnion'
 
-for wrap in ['fit', 'transform', 'fit_transform']:
+_wrapped = [
+    'get_feature_names',
+    'get_params',
+    'set_params',
+]
+
+for wrap in _wrapped:
     try:
-        functools.update_wrapper(
-            getattr(_FeatureUnion, wrap),
-            getattr(pipeline.FeatureUnion, wrap))
+        functools.update_wrapper(getattr(_FeatureUnion, wrap), getattr(pipeline.FeatureUnion, wrap))
     except AttributeError:
+        print('wrap failed', wrap)
         pass
