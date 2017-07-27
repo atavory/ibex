@@ -179,6 +179,7 @@ class FrameMixin(object):
 
         return pipeline.Pipeline(_make_pipeline_steps(combined))
 
+    # Tmp Ami - doc & test
     def __mult__(self, other):
         """
         Multiplies the result of this step to other.
