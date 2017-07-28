@@ -54,7 +54,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         if self.func is None:
             return self
 
-        if FrameMixin.is_subclass(self.func):
+        if isinstance(self.func, FrameMixin):
             if self.pass_y:
                 self.func.fit(Xt, y)
             else:
@@ -71,7 +71,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
-        if not FrameMixin.is_subclass(self.func) or not hasattr(self.func, 'fit_transform'):
+        if not isinstance(self.func, FrameMixin) or not hasattr(self.func, 'fit_transform'):
             if self.pass_y:
                 return self.fit(X, y).transform(X, y)
             return self.fit(X).transform(X)
@@ -87,7 +87,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
         if self.func is None:
             res = Xt
-        elif FrameMixin.is_subclass(self.func):
+        elif isinstance(self.func, FrameMixin):
             if self.pass_y:
                 res = self.func.fit_transform(Xt, y)
             else:
@@ -113,7 +113,7 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
         if self.func is None:
             res = Xt
-        elif FrameMixin.is_subclass(self.func):
+        elif isinstance(self.func, FrameMixin):
             if self.pass_y:
                 res = self.func.transform(Xt, y)
             else:

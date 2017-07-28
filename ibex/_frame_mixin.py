@@ -129,21 +129,6 @@ class FrameMixin(object):
     def x_columns(self, columns):
         self.__cols = columns
 
-    @classmethod
-    def is_subclass(cls, step):
-        """
-        Returns:
-            Whether a step is a subclass of Stage.
-
-        Arguments:
-            step: A Stage or a pipeline.
-        """
-        if issubclass(type(step), pipeline.Pipeline):
-            if not step.steps:
-                raise ValueError('Cannot use 0-length pipeline')
-            return cls.is_subclass(step.steps[0][1])
-        return issubclass(type(step), FrameMixin)
-
     def __or__(self, other):
         """
         Pipes the result of this step to other.

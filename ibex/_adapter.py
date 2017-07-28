@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 from sklearn import pipeline
 
-from ._frame_mixin import FrameMixin
-
 
 def make_adapter(step):
+    from ._frame_mixin import FrameMixin
+
 
     class _Adapter(step, FrameMixin):
         def __repr__(self):
@@ -118,8 +118,7 @@ def make_adapter(step):
         # Tmp Ami - should be in base?
         def __x(self, X):
             X = X[self.x_columns]
-            # Tmp Ami - erase is_subclass
-            return X if FrameMixin.is_subclass(step) else X.as_matrix()
+            return X if isinstance(step, FrameMixin) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
             if hasattr(self, '_in_op') and self._in_op:
@@ -145,6 +144,7 @@ def make_adapter(step):
             return base_attr
 
     return _Adapter
+
 
 def frame(step):
     """
