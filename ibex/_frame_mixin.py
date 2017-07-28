@@ -186,7 +186,7 @@ class FrameMixin(object):
             :py:class:`ibex.sklearn.pipeline.FeatureUnion`
         """
 
-        from ._feature_union import _FeatureUnion
+        from ._pipeline import _FeatureUnion
 
         if isinstance(self, _FeatureUnion):
             self_features = [operator.itemgetter(1)(e) for e in self.transformer_list]

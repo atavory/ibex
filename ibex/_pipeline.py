@@ -167,3 +167,67 @@ for wrap in _wrapped:
         functools.update_wrapper(getattr(_FeatureUnion, wrap), getattr(pipeline.FeatureUnion, wrap))
     except AttributeError:
         pass
+
+
+
+class Pipeline(base.BaseEstimator, FrameMixin):
+
+    def __init__(self, steps):
+        self._pipeline = pipeline.Pipeline(steps)
+
+    def get_params(self, deep=True):
+        return self._pipeline.get_params(deep)
+
+    def set_params(self, **kwargs):
+        self._pipeline.set_params(self, **kwargs)
+
+    @property
+    def named_steps(self):
+        return self._pipeline.named_steps
+
+    def fit(self, X, y=None, **fit_params):
+        self._pipeline.fit(X, y, **fit_params)
+        return self
+
+    def fit_transform(self, X, y=None, **fit_params):
+        return self._pipeline.fit_transform(X, y, **fit_params)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def predict(self, X):
+        return self._pipeline.predict(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def fit_predict(self, X, y=None, **fit_params):
+        return self._pipeline.fit_predict(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def predict_proba(self, X):
+        return self._pipeline.predict_proba(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def decision_function(self, X):
+        return self._pipeline.decision_function(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def predict_log_proba(self, X):
+        return self._pipeline.predict_proba(X)
+
+    def transform(self, X):
+        return self._pipeline.transform(X)
+
+    def inverse_transform(self, X):
+        return self._pipeline.inverse_transform(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate='_final_estimator')
+    def score(self, X, y=None):
+        return self._pipeline.score(X, y)
+
+    @property
+    def classes_(self):
+        return self._pipeline.classes_

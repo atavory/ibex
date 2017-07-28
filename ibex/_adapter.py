@@ -84,7 +84,14 @@ def make_adapter(step):
         def transform(self, X, *args):
             return self.__run(super(_Adapter, self).transform, 'transform', X, *args)
 
+        def score(self, X, *args):
+            return self.__run(super(_Adapter, self).score, 'transform', X, *args)
+
         def __run(self, fn, name, X, *args):
+            if hasattr(self, '_in_op') and self._in_op:
+                return fn(X, *args)
+
+                return super(_Adapter, self).decision_function(X, *args)
             # Tmp Ami - why not in function adapter? where are uts?
             if name.startswith('fit'):
                 self.x_columns = X.columns
@@ -100,25 +107,22 @@ def make_adapter(step):
                 if not X.index.equals(args[0].index):
                     raise ValueError('Indexes do not match')
 
-            res = fn(self.__x(X), *args)
-            return self.__process_wrapped_call_res(X[self.x_columns], res)
-
-        def score(self, X, y, sample_weights=None):
-            self._no_output_pd = True
+            self._in_op = True
             try:
-                return step.score(self, X, y, sample_weights)
+                res = fn(self.__x(X), *args)
             finally:
-                self._no_output_pd = False
+                self._in_op = False
+
+            return self.__process_wrapped_call_res(X[self.x_columns], res)
 
         # Tmp Ami - should be in base?
         def __x(self, X):
-            # Tmp Ami - should be in base?
             X = X[self.x_columns]
-            # Tmp Ami - is_subclass or isinstance?
-            return X if FrameMixin.is_subclass(self) else X.as_matrix()
+            # Tmp Ami - erase is_subclass
+            return X if FrameMixin.is_subclass(step) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
-            if hasattr(self, '_no_output_pd') and self._no_output_pd:
+            if hasattr(self, '_in_op') and self._in_op:
                 return res
 
             if isinstance(res, np.ndarray):
