@@ -174,11 +174,10 @@ class _FrameTest(unittest.TestCase):
 
 class _FramePipelineTest(unittest.TestCase):
     def test_pipeline_fit(self):
-        s = pd_linear_model.LinearRegression()
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        p = pd_pipeline.make_pipeline(linear_model.LinearRegression())
+        p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
         self.assertTrue(isinstance(p, FrameMixin))
         pd_p = frame(p)
         pd_p = pd_p.fit(x, y)
@@ -186,7 +185,6 @@ class _FramePipelineTest(unittest.TestCase):
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
-        s = pd_linear_model.LinearRegression()
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 

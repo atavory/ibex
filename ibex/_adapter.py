@@ -85,13 +85,12 @@ def make_adapter(step):
             return self.__run(super(_Adapter, self).transform, 'transform', X, *args)
 
         def score(self, X, *args):
-            return self.__run(super(_Adapter, self).score, 'transform', X, *args)
+            return self.__run(super(_Adapter, self).score, 'score', X, *args)
 
         def __run(self, fn, name, X, *args):
             if hasattr(self, '_in_op') and self._in_op:
                 return fn(X, *args)
 
-                return super(_Adapter, self).decision_function(X, *args)
             # Tmp Ami - why not in function adapter? where are uts?
             if name.startswith('fit'):
                 self.x_columns = X.columns
@@ -178,6 +177,11 @@ def frame(step):
         >>> PDLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
+    from ._frame_mixin import FrameMixin
+
+    if isinstance(step, FrameMixin):
+        return step
+
     if isinstance(step, pipeline.Pipeline):
         return frame(pipeline.Pipeline)(steps=step.steps)
 

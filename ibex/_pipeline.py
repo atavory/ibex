@@ -178,7 +178,7 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
         return self._pipeline.get_params(deep)
 
     def set_params(self, **kwargs):
-        self._pipeline.set_params(**kwargs)
+        return self._pipeline.set_params(**kwargs)
 
     @property
     def named_steps(self):
