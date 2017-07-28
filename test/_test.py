@@ -6,6 +6,7 @@ import doctest
 from sklearn import preprocessing
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
+from ibex.sklearn import pipeline as pd_pipeline
 from sklearn import base
 from ibex.sklearn import decomposition as pd_decomposition
 from sklearn import linear_model
@@ -177,7 +178,8 @@ class _FramePipelineTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        p = pipeline.make_pipeline(linear_model.LinearRegression())
+        p = pd_pipeline.make_pipeline(linear_model.LinearRegression())
+        self.assertTrue(isinstance(p, FrameMixin))
         pd_p = frame(p)
         pd_p = pd_p.fit(x, y)
         y_hat = pd_p.fit(x, y).predict(x)
@@ -188,10 +190,14 @@ class _FramePipelineTest(unittest.TestCase):
         x = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        p = pipeline.make_pipeline(pd_linear_model.LinearRegression())
+        p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
+        self.assertTrue(isinstance(p, FrameMixin))
         pd_p = frame(p)
         y_hat = pd_p.fit(x, y).predict(x)
         self.assertTrue(isinstance(y_hat, pd.Series))
+
+    def test_make_pipeline(self):
+        p = pd_pipeline.make_pipeline(pd_preprocessing.StandardScaler(), pd_linear_model.LinearRegression())
 
 
 class _TransTest(unittest.TestCase):
@@ -474,6 +480,7 @@ class _VerifyDocumentTest(unittest.TestCase):
     def test_module(self):
         import ibex
 
+        # Tmp Ami - sucks
         failed, attempted = 0, 0
         res = doctest.testmod(ibex._frame_mixin, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
         failed += res[0]
@@ -484,9 +491,12 @@ class _VerifyDocumentTest(unittest.TestCase):
         res = doctest.testmod(ibex._feature_union, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
         failed += res[0]
         attempted += res[1]
+        # Tmp Ami
+        #res = doctest.testmod(ibex.sklearn.pipeline, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
+        #failed += res[0]
+        #attempted += res[1]
         self.assertGreater(attempted, 0)
         self.assertEqual(failed, 0)
-
 
 
 if __name__ == '__main__':

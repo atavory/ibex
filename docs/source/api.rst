@@ -32,14 +32,12 @@ API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: ibex.sklearn
-   :members:
 
 
 ``preprocessing``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.preprocessing
-   :members:
 
 
 ``FunctionTransformer``
@@ -55,7 +53,18 @@ API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn.pipeline
-   :members:
+
+
+``make_union``
+******************************************
+
+.. autofunction:: ibex.sklearn.pipeline.make_union
+
+
+``make_pipeline``
+******************************************
+
+.. autofunction:: ibex.sklearn.pipeline.make_pipeline
 
 
 ``FeatureUnion``

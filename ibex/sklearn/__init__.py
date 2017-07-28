@@ -90,6 +90,53 @@ if %d:
     globals()['FunctionTransformer'] = ibex._FunctionTransformer
         ''' % (orig, orig, place_function_transformer)
 
+        if orig == 'pipeline':
+            code += '''
+
+import operator
+
+import six
+
+
+def make_pipeline(*estimators):
+    """
+    Creates a pipeline from estimators.
+
+    Arguments:
+
+        transformers: Iterable of estimators.
+
+    Returns:
+
+        A :class:`sklearn.pipeline.Pipeline` object.
+
+    Example:
+
+        >>> from ibex.sklearn import preprocessing
+        >>> from ibex.sklearn import linear_model
+        >>> from ibex.sklearn import pipeline
+        >>>
+        >>> pipeline.make_pipeline(preprocessing.StandardScaler(), linear_model.LinearRegression())
+
+    """
+    estimators = list(estimators)
+
+    if len(estimators) > 1:
+        return six.moves.reduce(operator.or_, estimators[1: ], estimators[0])
+
+    name = type(estimators[0]).__name__.lower()
+    return Pipeline([(name, estimators[0])])
+
+
+def make_union(*transformers):
+    """
+
+    """
+
+    transformers = list(transformers)
+    return six.moves.reduce(operator.add, transformers[1: ], transformers[0])
+'''
+
         six.exec_(code, mod.__dict__)
 
         return mod

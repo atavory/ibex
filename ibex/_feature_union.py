@@ -31,7 +31,7 @@ def _fit_transform(transformer, name, weight, X, y, **fit_params):
     return res
 
 
-# Tmp Ami - take care of weights
+# Tmp Ami - test weights weights
 class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
     Concatenates results of multiple transformer objects.
