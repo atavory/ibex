@@ -171,8 +171,8 @@ for wrap in _wrapped:
 
 class _Pipeline(base.BaseEstimator, FrameMixin):
 
-    def __init__(self, steps):
-        self._pipeline = pipeline.Pipeline(steps)
+    def __init__(self, steps, *args, **kwargs):
+        self._pipeline = pipeline.Pipeline(steps, *args, **kwargs)
 
     def get_params(self, deep=True):
         return self._pipeline.get_params(deep)
