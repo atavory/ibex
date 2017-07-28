@@ -59,4 +59,9 @@ def make_union(*transformers):
     """
 
     transformers = list(transformers)
-    return six.moves.reduce(operator.add, transformers[1: ], transformers[0])
+
+    if len(transformers) > 1:
+        return six.moves.reduce(operator.add, transformers[1: ], transformers[0])
+
+    name = type(transformers[0]).__name__.lower()
+    return _pd_pipeline.FeatureUnion([(name, transformers[0])])

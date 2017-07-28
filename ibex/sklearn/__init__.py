@@ -75,8 +75,13 @@ from sklearn import base
 import ibex
 
 for name in dir(_orig):
+    # Tmp Ami - here?
     if name == 'FeatureUnion':
         globals()[name] = ibex._FeatureUnion
+        continue
+
+    if name == 'Pipeline':
+        globals()[name] = ibex._Pipeline
         continue
 
     est = getattr(_orig, name)

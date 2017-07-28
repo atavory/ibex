@@ -153,31 +153,35 @@ class FrameMixin(object):
             other: A different step object whose class subclasses this one.
 
         Returns:
-            :py:class:`sklearn.pipeline.Pipeline`
+            :py:class:`ibex.sklearn.pipeline.Pipeline`
         """
 
-        if issubclass(type(other), pipeline.Pipeline):
+        from ._pipeline import _Pipeline
+
+        if isinstance(other, _Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
         combined = [self] + others
 
-        return pipeline.Pipeline(_make_pipeline_steps(combined))
+        return _Pipeline(_make_pipeline_steps(combined))
 
     def __ror__(self, other):
         """
 
         Returns:
-            :py:class:`sklearn.pipeline.Pipeline`
+            :py:class:`ibex.sklearn.pipeline.Pipeline`
         """
 
-        if issubclass(type(other), pipeline.Pipeline):
+        from ._pipeline import _Pipeline
+
+        if isinstance(other, _Pipeline):
             others = [operator.itemgetter(1)(e) for e in other.steps]
         else:
             others = [other]
         combined = others + [self]
 
-        return pipeline.Pipeline(_make_pipeline_steps(combined))
+        return _Pipeline(_make_pipeline_steps(combined))
 
     def __add__(self, other):
         """

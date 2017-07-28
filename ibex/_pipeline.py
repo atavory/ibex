@@ -169,8 +169,7 @@ for wrap in _wrapped:
         pass
 
 
-
-class Pipeline(base.BaseEstimator, FrameMixin):
+class _Pipeline(base.BaseEstimator, FrameMixin):
 
     def __init__(self, steps):
         self._pipeline = pipeline.Pipeline(steps)
@@ -179,11 +178,15 @@ class Pipeline(base.BaseEstimator, FrameMixin):
         return self._pipeline.get_params(deep)
 
     def set_params(self, **kwargs):
-        self._pipeline.set_params(self, **kwargs)
+        self._pipeline.set_params(**kwargs)
 
     @property
     def named_steps(self):
         return self._pipeline.named_steps
+
+    @property
+    def steps(self):
+        return self._pipeline.steps
 
     def fit(self, X, y=None, **fit_params):
         self._pipeline.fit(X, y, **fit_params)
@@ -231,3 +234,5 @@ class Pipeline(base.BaseEstimator, FrameMixin):
     @property
     def classes_(self):
         return self._pipeline.classes_
+
+_Pipeline.__name__ = 'Pipeline'
