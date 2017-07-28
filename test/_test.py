@@ -84,114 +84,115 @@ class _BaseTest(unittest.TestCase):
 
 class _FrameTest(unittest.TestCase):
     def test_fit(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.StandardScaler()
-        self.assertEqual(prd, prd.fit(x, y))
+        self.assertEqual(prd, prd.fit(X, y))
 
     def test_transform_y(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        pd_xt = pd_preprocessing.StandardScaler().fit(x, y).transform(x)
-        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
-        xt = preprocessing.StandardScaler().fit(x, y).transform(x)
-        self.assertFalse(isinstance(xt, pd.DataFrame))
-        np.testing.assert_equal(pd_xt, xt)
+        pd_Xt = pd_preprocessing.StandardScaler().fit(X, y).transform(X)
+        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
+        Xt = preprocessing.StandardScaler().fit(X, y).transform(X)
+        self.assertFalse(isinstance(Xt, pd.DataFrame))
+        np.testing.assert_equal(pd_Xt, Xt)
 
-        pd_xt = pd_preprocessing.StandardScaler().fit_transform(x, y)
-        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
-        xt = preprocessing.StandardScaler().fit_transform(x, y)
-        self.assertFalse(isinstance(xt, pd.DataFrame))
-        np.testing.assert_equal(pd_xt, xt)
+        pd_Xt = pd_preprocessing.StandardScaler().fit_transform(X, y)
+        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
+        Xt = preprocessing.StandardScaler().fit_transform(X, y)
+        self.assertFalse(isinstance(Xt, pd.DataFrame))
+        np.testing.assert_equal(pd_Xt, Xt)
 
     def test_transform_no_y(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
 
-        pd_xt = pd_preprocessing.StandardScaler().fit(x).transform(x)
-        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
-        xt = preprocessing.StandardScaler().fit(x).transform(x)
-        self.assertFalse(isinstance(xt, pd.DataFrame))
-        np.testing.assert_equal(pd_xt, xt)
+        pd_Xt = pd_preprocessing.StandardScaler().fit(X).transform(X)
+        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
+        Xt = preprocessing.StandardScaler().fit(X).transform(X)
+        self.assertFalse(isinstance(Xt, pd.DataFrame))
+        np.testing.assert_equal(pd_Xt, Xt)
 
-        pd_xt = pd_preprocessing.StandardScaler().fit_transform(x)
-        self.assertTrue(isinstance(pd_xt, pd.DataFrame))
-        xt = preprocessing.StandardScaler().fit_transform(x)
-        self.assertFalse(isinstance(xt, pd.DataFrame))
-        np.testing.assert_equal(pd_xt, xt)
+        pd_Xt = pd_preprocessing.StandardScaler().fit_transform(X)
+        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
+        Xt = preprocessing.StandardScaler().fit_transform(X)
+        self.assertFalse(isinstance(Xt, pd.DataFrame))
+        np.testing.assert_equal(pd_Xt, Xt)
 
     def test_fit_predict(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
-        pd_y_hat = pd_linear_model.LinearRegression().fit(x, y).predict(x)
+        pd_y_hat = pd_linear_model.LinearRegression().fit(X, y).predict(X)
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
-        y_hat = linear_model.LinearRegression().fit(x, y).predict(x)
+        y_hat = linear_model.LinearRegression().fit(X, y).predict(X)
         self.assertFalse(isinstance(y_hat, pd.Series))
         np.testing.assert_equal(pd_y_hat, y_hat)
 
     def test_fit_permute_cols(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
 
-        pred = pd_linear_model.LinearRegression().fit(x, y)
+        pred = pd_linear_model.LinearRegression().fit(X, y)
 
-        pd_y_hat = pred.predict(x[['b', 'a']])
+        pd_y_hat = pred.predict(X[['b', 'a']])
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
-        y_hat = linear_model.LinearRegression().fit(x, y).predict(x)
+        y_hat = linear_model.LinearRegression().fit(X, y).predict(X)
         self.assertFalse(isinstance(y_hat, pd.Series))
         np.testing.assert_equal(pd_y_hat, y_hat)
 
     def test_fit_bad_cols(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
 
-        pred = pd_linear_model.LinearRegression().fit(x, y)
+        pred = pd_linear_model.LinearRegression().fit(X, y)
 
-        y_hat = pred.predict(x)
+        y_hat = pred.predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-        x.rename(columns={'a': 'c'}, inplace=True)
+        X.rename(columns={'a': 'c'}, inplace=True)
 
         with self.assertRaises(KeyError):
-            pred.predict(x)
+            pred.predict(X)
 
     def test_object(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
         y = pd.Series([1, 2, 3])
 
-        pred = frame(linear_model.LinearRegression()).fit(x, y)
+        pred = frame(linear_model.LinearRegression()).fit(X, y)
 
-        y_hat = pred.predict(x)
+        y_hat = pred.predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
-        x.rename(columns={'a': 'c'}, inplace=True)
+        X.rename(columns={'a': 'c'}, inplace=True)
 
         with self.assertRaises(KeyError):
-            pred.predict(x)
+            pred.predict(X)
 
 
 class _FramePipelineTest(unittest.TestCase):
     def test_pipeline_fit(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
+        # Tmp Ami - make verify that are framemixins
         p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
         self.assertTrue(isinstance(p, FrameMixin))
         pd_p = frame(p)
-        pd_p = pd_p.fit(x, y)
-        y_hat = pd_p.fit(x, y).predict(x)
+        pd_p = pd_p.fit(X, y)
+        y_hat = pd_p.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipeline_fit_internal_pd_stage(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
         self.assertTrue(isinstance(p, FrameMixin))
         pd_p = frame(p)
-        y_hat = pd_p.fit(x, y).predict(x)
+        y_hat = pd_p.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_make_pipeline(self):
@@ -200,73 +201,73 @@ class _FramePipelineTest(unittest.TestCase):
 
 class _TransTest(unittest.TestCase):
     def test_trans_none(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans().fit(x).transform(x)
+        trans().fit(X).transform(X)
 
         # Tmp Ami
         # with self.assertRaises(KeyError):
-        #   trans().transform(x)
+        #   trans().transform(X)
 
-        trans().fit_transform(x)
+        trans().fit_transform(X)
 
     def test_trans_none_cols(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans(None, 'a').fit(x)
+        trans(None, 'a').fit(X)
 
-        trans(None, ['a']).fit(x)
+        trans(None, ['a']).fit(X)
 
-        trans(None, 'a').fit(x).transform(x)
+        trans(None, 'a').fit(X).transform(X)
 
-        trans(None, ['a']).fit(x).transform(x)
+        trans(None, ['a']).fit(X).transform(X)
 
-        trans(None, 'a').fit_transform(x)
+        trans(None, 'a').fit_transform(X)
 
-        trans(None, ['a']).fit_transform(x)
+        trans(None, ['a']).fit_transform(X)
 
-        trans(None, 'a', 'b').fit(x)
+        trans(None, 'a', 'b').fit(X)
 
-        trans(None, 'b', ['a']).fit(x)
+        trans(None, 'b', ['a']).fit(X)
 
-        trans(None, 'a', 'b').fit(x).transform(x)
+        trans(None, 'a', 'b').fit(X).transform(X)
 
-        trans(None, 'b', ['a']).fit(x).transform(x)
+        trans(None, 'b', ['a']).fit(X).transform(X)
 
-        trans(None, 'a', 'b').fit_transform(x)
+        trans(None, 'a', 'b').fit_transform(X)
 
-        trans(None, 'b', ['a']).fit_transform(x)
+        trans(None, 'b', ['a']).fit_transform(X)
 
     def test_trans_none_bad_cols(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
-        bad_x = pd.DataFrame({'a': [1, 2, 3], 'c': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        bad_X = pd.DataFrame({'a': [1, 2, 3], 'c': [30, 23, 2]})
 
         with self.assertRaises(KeyError):
-            trans(None, 'b').fit(bad_x)
+            trans(None, 'b').fit(bad_X)
 
         with self.assertRaises(KeyError):
-            trans(None, ['b']).fit(bad_x)
+            trans(None, ['b']).fit(bad_X)
 
         with self.assertRaises(KeyError):
-            trans(None, 'b').fit(x).transform(bad_x)
+            trans(None, 'b').fit(X).transform(bad_X)
 
         with self.assertRaises(KeyError):
-            trans(None, ['b']).fit(x).transform(bad_x)
+            trans(None, ['b']).fit(X).transform(bad_X)
 
         with self.assertRaises(KeyError):
-            trans(None, 'b').fit_transform(bad_x)
+            trans(None, 'b').fit_transform(bad_X)
 
         with self.assertRaises(KeyError):
-            trans(None, ['b']).fit_transform(bad_x)
+            trans(None, ['b']).fit_transform(bad_X)
 
     def test_trans_step(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
 
-        trans(pd_preprocessing.StandardScaler()).fit(x).fit(x)
+        trans(pd_preprocessing.StandardScaler()).fit(X).fit(X)
 
-        trans(pd_preprocessing.StandardScaler()).fit(x).transform(x)
+        trans(pd_preprocessing.StandardScaler()).fit(X).transform(X)
 
-        trans(pd_preprocessing.StandardScaler()).fit(x).fit_transform(x)
+        trans(pd_preprocessing.StandardScaler()).fit(X).fit_transform(X)
 
 
 class _IrisTest(unittest.TestCase):
@@ -298,6 +299,18 @@ class _IrisTest(unittest.TestCase):
             clf,
             X=self._iris[self._features],
             y=self._iris['class'])
+
+    def test_predict_proba(self):
+        clf = pd_linear_model.LogisticRegression()
+        clf.fit(self._iris[self._features], self._iris['class'])
+
+        clf.predict_proba(self._iris[self._features])
+
+    def test_predict_log_proba(self):
+        clf = pd_linear_model.LogisticRegression()
+        clf.fit(self._iris[self._features], self._iris['class'])
+
+        clf.predict_log_proba(self._iris[self._features])
 
     def test_pipeline_cv(self):
         clf = pd_preprocessing.StandardScaler() | pd_linear_model.LogisticRegression()
@@ -350,94 +363,94 @@ class _FeatureUnionTest(unittest.TestCase):
         def __init__(self, col=0):
             self.col = col
 
-        def fit_transform(self, x, y):
-            xt = x.iloc[:, self.col]
-            return pd.DataFrame(xt, index=x.index)
+        def fit_transform(self, X, y):
+            Xt = X.iloc[:, self.col]
+            return pd.DataFrame(Xt, index=X.index)
 
-        def fit(self, x, y):
+        def fit(self, X, y):
             return self
 
-        def transform(self, x):
-            xt = x.iloc[:, self.col]
-            return pd.DataFrame(xt, index=x.index)
+        def transform(self, X):
+            Xt = X.iloc[:, self.col]
+            return pd.DataFrame(Xt, index=X.index)
 
     def test_pandas_support(self):
         from ibex.sklearn import pipeline as pd_pipeline
 
-        x = pd.DataFrame(np.random.rand(500, 10), index=range(500))
-        y = x.iloc[:, 0]
+        X = pd.DataFrame(np.random.rand(500, 10), index=range(500))
+        y = X.iloc[:, 0]
 
         trans_list = [
             ('1', self.simple_transformer(col=0)),
             ('2', self.simple_transformer(col=1))]
 
-        xt1 = self.simple_transformer().fit_transform(x, y)
-        self.assertEqual(xt1.shape, (len(x), 1))
+        Xt1 = self.simple_transformer().fit_transform(X, y)
+        self.assertEqual(Xt1.shape, (len(X), 1))
 
         feat_un = pd_pipeline.FeatureUnion(trans_list)
 
-        xt2 = feat_un.fit_transform(x, y)
-        self.assertEqual(xt2.shape, (len(x), 2))
-        self.assertListEqual(list(xt2.index), list(x.index))
+        Xt2 = feat_un.fit_transform(X, y)
+        self.assertEqual(Xt2.shape, (len(X), 2))
+        self.assertListEqual(list(Xt2.index), list(X.index))
 
-        feat_un.fit(x, y)
-        xt3 = feat_un.transform(x)
-        self.assertEqual(xt3.shape, (len(x), 2))
-        self.assertListEqual(list(xt3.index), list(x.index))
+        feat_un.fit(X, y)
+        Xt3 = feat_un.transform(X)
+        self.assertEqual(Xt3.shape, (len(X), 2))
+        self.assertListEqual(list(Xt3.index), list(X.index))
 
 
 class _OperatorsTest(unittest.TestCase):
 
     def test_pipe_fit(self):
-        x = pd.DataFrame({'a': [1, 2, 3]})
+        X = pd.DataFrame({'a': [1, 2, 3]})
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.StandardScaler() | \
             pd_preprocessing.StandardScaler() | \
             pd_linear_model.LinearRegression()
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
         prd = pd_preprocessing.StandardScaler() | \
             (pd_preprocessing.StandardScaler() | \
             pd_linear_model.LinearRegression())
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipe_trans_fit(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
             trans(np.sqrt, 'a') | \
             pd_linear_model.LinearRegression()
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_pipe_add_trans_fit(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
             trans() + trans(np.sqrt, 'a') | \
             pd_linear_model.LinearRegression()
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
     def test_triple_add(self):
-        x = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
+        X = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 3, 4]})
         y = pd.Series([1, 2, 3])
 
         prd = pd_preprocessing.MinMaxScaler() | \
             trans() + trans() + trans() | \
             pd_linear_model.LinearRegression()
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
         prd = pd_preprocessing.MinMaxScaler() | \
             trans() + (trans() + trans()) | \
             pd_linear_model.LinearRegression()
-        y_hat = prd.fit(x, y).predict(x)
+        y_hat = prd.fit(X, y).predict(X)
         self.assertTrue(isinstance(y_hat, pd.Series))
 
 
