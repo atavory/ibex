@@ -36,9 +36,6 @@ except ImportError:
 from ibex import *
 
 
-_doctest_flags = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
-
-
 class _ConceptsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -475,7 +472,7 @@ if False:
             doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
             failed, attempted = 0, 0
             for f_name in doc_f_names:
-                res = doctest.testfile(f_name, module_relative=False, optionflags=_doctest_flags)
+                res = doctest.testfile(f_name, module_relative=False, optionflags=doctest_flags)
                 failed += res[0]
                 attempted += res[1]
             self.assertGreater(attempted, 0)
@@ -484,13 +481,22 @@ if False:
 
 def load_tests(loader, tests, ignore):
     import ibex
-    tests.addTests(doctest.DocTestSuite(__import__('ibex'), optionflags=_doctest_flags))
+
+    doctest_flags = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
+
+    tests.addTests(doctest.DocTestSuite(__import__('ibex'), optionflags=doctest_flags))
     for mod_name in dir(ibex):
         try:
             mod =__import__('ibex.' + mod_name)
         except ImportError:
             continue
-        tests.addTests(doctest.DocTestSuite(mod, optionflags=_doctest_flags))
+        tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+
+    this_dir = os.path.dirname(__file__)
+    doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
+    tests.addTests(
+        doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
+
     return tests
 
 
