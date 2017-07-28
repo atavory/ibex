@@ -100,8 +100,13 @@ class _ModuleFinder(object):
         sys.meta_path[:] = [x for x in sys.meta_path if self != x] + [self]
 
     def find_module(self, full_name, _=None):
-        if full_name.startswith('ibex.sklearn.'):
-            return _NewModuleLoader()
+        if not full_name.startswith('ibex.sklearn.'):
+            return
+
+        if full_name.split('.')[-1].startswith('_'):
+            return
+
+        return _NewModuleLoader()
 
 
 loader = _ModuleFinder()
