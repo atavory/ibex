@@ -50,6 +50,8 @@ def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
     Returns:
 
         An :py:class:`sklearn.preprocessing.FunctionTransformer` object.
+
+    Example:
     """
 
     from ibex.sklearn import preprocessing

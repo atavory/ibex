@@ -153,9 +153,3 @@ class _ModuleFinder(object):
 
 loader = _ModuleFinder()
 loader.install()
-
-
-def load_tests(loader, tests, ignore):
-    import doctest
-    tests.addTests(doctest.DocTestSuite())
-    return tests

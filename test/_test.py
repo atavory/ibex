@@ -36,6 +36,9 @@ except ImportError:
 from ibex import *
 
 
+_doctest_flags = doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
+
+
 class _ConceptsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -471,32 +474,23 @@ class _VerifyDocumentTest(unittest.TestCase):
         doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
         failed, attempted = 0, 0
         for f_name in doc_f_names:
-            res = doctest.testfile(f_name, module_relative=False, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
+            res = doctest.testfile(f_name, module_relative=False, optionflags=_doctest_flags)
             failed += res[0]
             attempted += res[1]
         self.assertGreater(attempted, 0)
         self.assertEqual(failed, 0)
 
-    def test_module(self):
-        import ibex
 
-        # Tmp Ami - sucks
-        failed, attempted = 0, 0
-        res = doctest.testmod(ibex._frame_mixin, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
-        failed += res[0]
-        attempted += res[1]
-        res = doctest.testmod(ibex.sklearn, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
-        failed += res[0]
-        attempted += res[1]
-        res = doctest.testmod(ibex._feature_union, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
-        failed += res[0]
-        attempted += res[1]
-        # Tmp Ami
-        #res = doctest.testmod(ibex.sklearn.pipeline, optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
-        #failed += res[0]
-        #attempted += res[1]
-        self.assertGreater(attempted, 0)
-        self.assertEqual(failed, 0)
+def load_tests(loader, tests, ignore):
+    import ibex
+    tests.addTests(doctest.DocTestSuite(__import__('ibex'), optionflags=_doctest_flags))
+    for mod_name in dir(ibex):
+        try:
+            mod =__import__('ibex.' + mod_name)
+        except ImportError:
+            continue
+        tests.addTests(doctest.DocTestSuite(mod, optionflags=_doctest_flags))
+    return tests
 
 
 if __name__ == '__main__':
