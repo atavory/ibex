@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-import operator
 import collections
 
 from sklearn import pipeline
@@ -133,7 +132,6 @@ class FrameMixin(object):
         """
         Pipes the result of this step to other.
 
-
         Arguments:
             other: A different step object whose class subclasses this one.
 
@@ -143,28 +141,17 @@ class FrameMixin(object):
 
         from ._pipeline import _Pipeline
 
-        if isinstance(other, _Pipeline):
-            others = [operator.itemgetter(1)(e) for e in other.steps]
+        if isinstance(self, _Pipeline):
+            selfs = [e[1] for e in self.steps]
         else:
-            others = [other]
-        combined = [self] + others
-
-        return _Pipeline(_make_pipeline_steps(combined))
-
-    def __ror__(self, other):
-        """
-
-        Returns:
-            :py:class:`ibex.sklearn.pipeline.Pipeline`
-        """
-
-        from ._pipeline import _Pipeline
+            selfs = [self]
 
         if isinstance(other, _Pipeline):
-            others = [operator.itemgetter(1)(e) for e in other.steps]
+            others = [e[1] for e in other.steps]
         else:
             others = [other]
-        combined = others + [self]
+
+        combined = selfs + others
 
         return _Pipeline(_make_pipeline_steps(combined))
 
@@ -178,12 +165,12 @@ class FrameMixin(object):
         from ._pipeline import _FeatureUnion
 
         if isinstance(self, _FeatureUnion):
-            self_features = [operator.itemgetter(1)(e) for e in self.transformer_list]
+            self_features = [e[1] for e in self.transformer_list]
         else:
             self_features = [self]
 
         if isinstance(other, _FeatureUnion):
-            other_features = [operator.itemgetter(1)(e) for e in other.transformer_list]
+            other_features = [e[1] for e in other.transformer_list]
         else:
             other_features = [other]
 
