@@ -465,20 +465,6 @@ class _ExamplesTest(unittest.TestCase):
             ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
 
 
-if False:
-    class _VerifyDocumentTest(unittest.TestCase):
-        def test_rst(self):
-            this_dir = os.path.dirname(__file__)
-            doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
-            failed, attempted = 0, 0
-            for f_name in doc_f_names:
-                res = doctest.testfile(f_name, module_relative=False, optionflags=doctest_flags)
-                failed += res[0]
-                attempted += res[1]
-            self.assertGreater(attempted, 0)
-            self.assertEqual(failed, 0)
-
-
 def load_tests(loader, tests, ignore):
     import ibex
 
@@ -491,6 +477,11 @@ def load_tests(loader, tests, ignore):
         except ImportError:
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+    mod =__import__('ibex.sklearn._pipeline')
+    tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+
+    from ibex.sklearn import _pipeline
+    tests.addTests(doctest.DocTestSuite(_pipeline, optionflags=doctest_flags))
 
     this_dir = os.path.dirname(__file__)
     doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
