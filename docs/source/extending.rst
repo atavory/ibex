@@ -106,8 +106,8 @@ We can, however, now use it for fitting on one ``DataFrame``, and transforming a
     >>> tr, te = model_selection.train_test_split(df, random_state=3)
     >>> GroupbyAggregator('a').fit(tr).transform(te)
          b    c
-    0  0.0  2.0
-    1  2.0  4.0
+    0  0...  2...
+    1  2...  4...
 
 
 
