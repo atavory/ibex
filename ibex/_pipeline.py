@@ -193,7 +193,8 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
         return self
 
     def fit_transform(self, X, y=None, **fit_params):
-        return self._pipeline.fit_transform(X, y, **fit_params)
+        self._pipeline.fit_transform(X, y, **fit_params)
+        return self
 
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
@@ -203,7 +204,8 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
     def fit_predict(self, X, y=None, **fit_params):
-        return self._pipeline.fit_predict(X)
+        self._pipeline.fit_predict(X)
+        return self
 
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
