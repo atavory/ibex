@@ -67,16 +67,23 @@ Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.%s`.
 
 from __future__ import absolute_import
 
+import inspect
+
 from sklearn import %s as _orig
 from sklearn import base
 
 import ibex
 
 for name in dir(_orig):
+    if name.startswith('_'):
+        continue
     est = getattr(_orig, name)
     try:
-        globals()[name] = ibex.frame(est) if issubclass(est, base.BaseEstimator) else est
-    except TypeError:
+        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
+            globals()[name] = ibex.frame(est)
+        else:
+            globals()[name] = est
+    except TypeError as e:
         pass
         ''' % (orig, orig)
 
@@ -106,4 +113,6 @@ loader.install()
 from ._pipeline import _update_module
 _update_module()
 from ._preprocessing import _update_module
+_update_module()
+from ._model_selection import _update_module
 _update_module()

@@ -476,6 +476,25 @@ class _ExamplesTest(unittest.TestCase):
             ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
 
 
+class _ModelSelectionTest(unittest.TestCase):
+    def test_cross_val_predict(self):
+        from ibex.sklearn import model_selection as pd_model_selection
+
+        n = 100
+        df = pd.DataFrame({
+                'x': range(n),
+                'y': range(n),
+            },
+            index=['i%d' % i for i in range(n)])
+
+        y_hat = pd_model_selection.cross_val_predict(
+            pd_linear_model.LinearRegression(),
+            df[['x']],
+            df['y'])
+        self.assertIsInstance(y_hat, pd.Series)
+        self.assertEquals(len(y_hat), len(df))
+
+
 def load_tests(loader, tests, ignore):
     import ibex
 

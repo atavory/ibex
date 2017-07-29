@@ -68,7 +68,7 @@ def make_union(*transformers):
 
 
 def _update_module():
-    import ibex 
+    import ibex
     from ibex.sklearn import pipeline as _pd_pipeline
 
     _pd_pipeline.make_pipeline = make_pipeline
