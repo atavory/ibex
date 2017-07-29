@@ -106,7 +106,7 @@ def make_adapter(step):
                 if not X.index.equals(args[0].index):
                     raise ValueError('Indexes do not match')
 
-            self._in_op = True
+            self._ibex_in_op = True
             try:
                 res = fn(self.__x(X), *args)
             finally:
