@@ -75,3 +75,14 @@ API
     :special-members:
     :show-inheritance:
 
+
+``model_selection``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ibex.sklearn.model_selection
+
+
+``cross_val_predict``
+******************************************
+
+.. autofunction:: ibex.sklearn.model_selection.cross_val_predict

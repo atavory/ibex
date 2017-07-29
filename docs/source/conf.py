@@ -310,5 +310,6 @@ intersphinx_mapping = {
     'sklearn': ('http://scikit-learn.org/stable', None),
     'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'seaborn': ('https://github.com/seaborn/seaborn.github.io/', None),
 }
 

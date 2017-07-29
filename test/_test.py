@@ -507,6 +507,8 @@ def load_tests(loader, tests, ignore):
         except ImportError:
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+    mod =__import__('ibex.sklearn._model_selection')
+    tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
     mod =__import__('ibex.sklearn._pipeline')
     tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
 

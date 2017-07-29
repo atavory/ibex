@@ -11,3 +11,6 @@ ted
 None
 subobjects
 Iterable
+iterable
+cv
+multiclass

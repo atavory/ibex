@@ -110,9 +110,9 @@ loader = _ModuleFinder()
 loader.install()
 
 
+from ._model_selection import _update_module
+_update_module()
 from ._pipeline import _update_module
 _update_module()
 from ._preprocessing import _update_module
-_update_module()
-from ._model_selection import _update_module
 _update_module()
