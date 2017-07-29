@@ -218,7 +218,7 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
     def predict_log_proba(self, X):
-        return self._pipeline.predict_proba(X)
+        return self._pipeline.predict_log_proba(X)
 
     def transform(self, X):
         return self._pipeline.transform(X)

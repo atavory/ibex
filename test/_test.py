@@ -359,7 +359,7 @@ class _IrisTest(unittest.TestCase):
 
 class _FeatureUnionTest(unittest.TestCase):
 
-    class simple_transformer(object):
+    class SimpleTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         def __init__(self, col=0):
             self.col = col
 
@@ -374,6 +374,10 @@ class _FeatureUnionTest(unittest.TestCase):
             Xt = X.iloc[:, self.col]
             return pd.DataFrame(Xt, index=X.index)
 
+    def test_make_union(self):
+        pd_pipeline.make_union(self.SimpleTransformer())
+        pd_pipeline.make_union(self.SimpleTransformer(), self.SimpleTransformer())
+
     def test_pandas_support(self):
         from ibex.sklearn import pipeline as pd_pipeline
 
@@ -381,10 +385,10 @@ class _FeatureUnionTest(unittest.TestCase):
         y = X.iloc[:, 0]
 
         trans_list = [
-            ('1', self.simple_transformer(col=0)),
-            ('2', self.simple_transformer(col=1))]
+            ('1', self.SimpleTransformer(col=0)),
+            ('2', self.SimpleTransformer(col=1))]
 
-        Xt1 = self.simple_transformer().fit_transform(X, y)
+        Xt1 = self.SimpleTransformer().fit_transform(X, y)
         self.assertEqual(Xt1.shape, (len(X), 1))
 
         feat_un = pd_pipeline.FeatureUnion(trans_list)

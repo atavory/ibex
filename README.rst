@@ -72,14 +72,7 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 
 
 
-    >>> try:
-    ...     from sklearn.model_selection import GridSearchCV
-    ... except ImportError:
-    ...     from sklearn.grid_search import GridSearchCV
-    >>> param_grid = dict(
-    ...     featureunion__pca__n_components=[1, 2, 3],
-    ...     featureunion__selectkbest__k=[1, 2],
-    ...     svc__C=[0.1, 1, 10])
+    >>> from sklearn.model_selection import GridSearchCV
     >>> GridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class'])
     GridSearchCV(cv=None, error_score='raise',
            estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
