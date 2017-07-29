@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import collections
 
 from sklearn import pipeline
-from sklearn import exceptions
 
 
 def _make_pipeline_steps(objs):
@@ -118,10 +117,11 @@ class FrameMixin(object):
         Set this property at fit, and call it in other methods:
 
         """
-        # Tmp Ami - check this
         try:
             return self.__cols
         except AttributeError:
+            from sklearn import exceptions
+
             raise exceptions.NotFittedError()
 
     @x_columns.setter

@@ -27,7 +27,7 @@ def make_pipeline(*estimators):
         >>> from ibex.sklearn import pipeline
         >>>
         >>> pipeline.make_pipeline(preprocessing.StandardScaler(), linear_model.LinearRegression())
-        Pipeline(steps=[...]...)
+        Pipeline(...
     """
     estimators = list(estimators)
 

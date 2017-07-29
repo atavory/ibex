@@ -79,6 +79,10 @@ for name in dir(_orig):
     if name == 'FeatureUnion':
         globals()[name] = ibex._FeatureUnion
         continue
+    # Tmp Ami - here?
+    if name == 'Pipeline':
+        globals()[name] = ibex._Pipeline
+        continue
 
     if name == 'Pipeline':
         globals()[name] = ibex._Pipeline
@@ -86,10 +90,9 @@ for name in dir(_orig):
 
     est = getattr(_orig, name)
     try:
-        if issubclass(est, base.BaseEstimator):
-            globals()[name] = ibex.frame(est)
+        globals()[name] = ibex.frame(est) if issubclass(est, base.BaseEstimator) else est
     except TypeError:
-        continue
+        pass
 
 if %d:
     globals()['FunctionTransformer'] = ibex._FunctionTransformer
