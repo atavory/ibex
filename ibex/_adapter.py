@@ -88,7 +88,7 @@ def make_adapter(step):
             return self.__run(super(_Adapter, self).score, 'score', X, *args)
 
         def __run(self, fn, name, X, *args):
-            if hasattr(self, '_in_op') and self._in_op:
+            if hasattr(self, '_ibex_in_op'):
                 return fn(X, *args)
 
             # Tmp Ami - why not in function adapter? where are uts?
@@ -110,7 +110,7 @@ def make_adapter(step):
             try:
                 res = fn(self.__x(X), *args)
             finally:
-                self._in_op = False
+                delattr(self, '_ibex_in_op')
 
             return self.__process_wrapped_call_res(X[self.x_columns], res)
 
@@ -120,7 +120,7 @@ def make_adapter(step):
             return X if isinstance(step, FrameMixin) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
-            if hasattr(self, '_in_op') and self._in_op:
+            if hasattr(self, '_ibex_in_op'):
                 return res
 
             if isinstance(res, np.ndarray):
