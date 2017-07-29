@@ -60,8 +60,6 @@ class _NewModuleLoader(object):
         mod.__loader__ = self
         mod.__package__ = '.'.join(full_name.split('.')[:-1])
 
-        place_function_transformer = full_name == 'ibex.sklearn.preprocessing'
-
         code = '''
 """
 Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.%s`.
@@ -75,28 +73,12 @@ from sklearn import base
 import ibex
 
 for name in dir(_orig):
-    # Tmp Ami - here?
-    if name == 'FeatureUnion':
-        globals()[name] = ibex._FeatureUnion
-        continue
-    # Tmp Ami - here?
-    if name == 'Pipeline':
-        globals()[name] = ibex._Pipeline
-        continue
-
-    if name == 'Pipeline':
-        globals()[name] = ibex._Pipeline
-        continue
-
     est = getattr(_orig, name)
     try:
         globals()[name] = ibex.frame(est) if issubclass(est, base.BaseEstimator) else est
     except TypeError:
         pass
-
-if %d:
-    globals()['FunctionTransformer'] = ibex._FunctionTransformer
-        ''' % (orig, orig, place_function_transformer)
+        ''' % (orig, orig)
 
         six.exec_(code, mod.__dict__)
 
@@ -121,12 +103,7 @@ loader = _ModuleFinder()
 loader.install()
 
 
-from ibex.sklearn import pipeline as _pd_pipeline
-
-from ._pipeline import make_pipeline as _pd_make_pipeline
-_pd_pipeline.make_pipeline = _pd_make_pipeline
-
-from ._pipeline import make_union as _pd_make_union
-_pd_pipeline.make_union = _pd_make_union
-
-
+from ._pipeline import _update_module
+_update_module()
+from ._preprocessing import _update_module
+_update_module()

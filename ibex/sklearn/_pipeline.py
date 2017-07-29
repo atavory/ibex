@@ -65,3 +65,20 @@ def make_union(*transformers):
 
     name = type(transformers[0]).__name__.lower()
     return _pd_pipeline.FeatureUnion([(name, transformers[0])])
+
+
+def _update_module():
+    import ibex 
+    from ibex.sklearn import pipeline as _pd_pipeline
+
+    _pd_pipeline.make_pipeline = make_pipeline
+    _pd_pipeline.make_union = make_union
+
+    _pd_pipeline.Pipeline = ibex._pipeline._Pipeline
+    _pd_pipeline.FeatureUnion = ibex._pipeline._FeatureUnion
+
+
+
+
+
+
