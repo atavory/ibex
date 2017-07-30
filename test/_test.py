@@ -15,10 +15,8 @@ from sklearn import ensemble
 from ibex.sklearn import ensemble as pd_ensemble
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
-try:
-    from sklearn.model_selection import GridSearchCV
-except ImportError:
-    from sklearn.grid_search import GridSearchCV
+# Tmp Ami - think about older sklearn versions
+from ibex.sklearn._model_selection import GridSearchCV as PDGridSearchCV
 try:
     from sklearn.model_selection import cross_val_score
 except ImportError:
@@ -333,7 +331,7 @@ class _IrisTest(unittest.TestCase):
             featureunion__selectkbest__k=[1, 2],
             svc__C=[0.1, 1, 10])
 
-        grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=10)
+        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
         grid_search.fit(self._iris[self._features], self._iris['class'])
         grid_search.best_estimator_
 

@@ -1,13 +1,22 @@
 from __future__ import absolute_import
 
 
+import inspect
+
 import numpy as np
 import pandas as pd
+from sklearn import base
 
 import ibex
 
 
-def _make_cv_params(estimator, orig_X, orig_y):
+def _make_cv_params(estimator, orig_X, orig_y=None):
+    def get_set_params(est):
+        args, _, _, _ = inspect.getargspec(getattr(estimator, '__init__'))
+        orig_args = est.get_params()
+        args = {arg: orig_args[arg] for arg in args if arg in orig_args}
+        return args
+
     class _Est(type(estimator)):
         def fit(self, X, y=None, **fit_params):
             inds = X[:, 0]
@@ -19,19 +28,46 @@ def _make_cv_params(estimator, orig_X, orig_y):
             X = orig_X.ix[inds]
             return super(_Est, self).predict(X).values
 
+        def transform(self, X):
+            ff
+
+        def fit_transform(self, X, y=None, *fit_params):
+            ff
+
+        def score(self, X, y):
+            inds = X[:, 0]
+            X, y = orig_X.ix[inds], orig_y.ix[inds]
+            return super(_Est, self).score(X, y)
+
+        def fit_transform(self):
+            gg
+
+        @property
+        def _orig_estimator(self):
+            est = base.clone(estimator)
+            return est.set_params(**get_set_params(self))
+
+
     n = len(orig_X)
     X_ = np.arange(n).reshape((n, 1))
     y_ = None if orig_y is None else np.arange(n)
 
-    return _Est(), X_, y_
+    return _Est(**get_set_params(estimator)), X_, y_
 
 
-def cross_val_predict(estimator, X, y=None, groups=None, cv=None, n_jobs=1,
-                      verbose=0, fit_params=None, pre_dispatch='2*n_jobs',
-                      method='predict'):
+def cross_val_predict(
+        estimator,
+        X,
+        y=None,
+        groups=None,
+        cv=None,
+        n_jobs=1,
+        verbose=0,
+        fit_params=None,
+        pre_dispatch='2*n_jobs',
+        method='predict'):
     """
-    Generate cross-validated estimates for each input data point
-    Read more in the :ref:`User Guide <cross_validation>`.
+    Generate cross-validated estimates for each input data point.
 
     Arguments:
 
@@ -124,6 +160,58 @@ def cross_val_predict(estimator, X, y=None, groups=None, cv=None, n_jobs=1,
         return pd.Series(y_hat, index=y.index)
     else:
         return pd.DataFrame(y_hat, index=y.index)
+
+
+class BaseSearchCV(base.BaseEstimator, ibex.FrameMixin):
+    def __init__(self, estimator):
+        self._estimator = estimator
+
+
+class GridSearchCV(BaseSearchCV):
+    def __init__(
+            self,
+            estimator,
+            param_grid,
+            scoring=None,
+            fit_params=None,
+            n_jobs=1,
+            iid=True,
+            refit=True,
+            cv=None,
+            verbose=0,
+            pre_dispatch='2*n_jobs',
+            error_score='raise',
+            return_train_score=True):
+
+        from sklearn import model_selection
+
+        BaseSearchCV.__init__(self, estimator)
+
+        self._cv = model_selection.GridSearchCV(
+            estimator,
+            param_grid,
+            scoring,
+            fit_params,
+            n_jobs,
+            iid,
+            refit,
+            cv,
+            verbose,
+            pre_dispatch,
+            error_score,
+            return_train_score)
+
+    def fit(self, X, y=None, groups=None):
+        params = self._cv.get_params()
+        est, X_, y_ = _make_cv_params(self._estimator, X, y)
+        params.update({'estimator': est})
+        self._cv.set_params(**params)
+        self._cv.fit(X_, y=y_, groups=groups)
+        return self
+
+    @property
+    def best_estimator_(self):
+        return self._cv.best_estimator_._orig_estimator
 
 
 def _update_module():

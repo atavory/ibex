@@ -137,7 +137,8 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         return self._feature_union.get_params(deep)
 
     def set_params(self, **params):
-        return self._feature_union.set_params(**params)
+        self._feature_union.set_params(**params)
+        return self
 
     @property
     def transformer_list(self):
@@ -178,7 +179,8 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
         return self._pipeline.get_params(deep)
 
     def set_params(self, **kwargs):
-        return self._pipeline.set_params(**kwargs)
+        self._pipeline.set_params(**kwargs)
+        return self
 
     @property
     def named_steps(self):
@@ -193,8 +195,7 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
         return self
 
     def fit_transform(self, X, y=None, **fit_params):
-        self._pipeline.fit_transform(X, y, **fit_params)
-        return self
+        return self._pipeline.fit_transform(X, y, **fit_params)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
@@ -204,8 +205,7 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
     def fit_predict(self, X, y=None, **fit_params):
-        self._pipeline.fit_predict(X)
-        return self
+        return self._pipeline.fit_predict(X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
