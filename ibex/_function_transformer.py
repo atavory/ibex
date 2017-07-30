@@ -1,10 +1,11 @@
 from __future__ import absolute_import
 
+from six import string_types
 import pandas as pd
 from sklearn import base
-from six import string_types
 
 from ._frame_mixin import FrameMixin
+from ._utils import verify_x_type, verify_y_type
 
 
 __all__ = []
@@ -44,6 +45,9 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             ``self``
         """
+        verify_x_type(X)
+        verify_y_type(y)
+
         self.x_columns = X.columns
 
         if self.in_cols is not None:
@@ -71,6 +75,9 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
+        verify_x_type(X)
+        verify_y_type(y)
+
         if not isinstance(self.func, FrameMixin) or not hasattr(self.func, 'fit_transform'):
             if self.pass_y:
                 return self.fit(X, y).transform(X, y)
@@ -103,6 +110,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
+        verify_x_type(X)
+        verify_y_type(y)
 
         Xt = X[self.x_columns]
 

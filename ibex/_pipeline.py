@@ -8,6 +8,7 @@ from sklearn import pipeline
 from sklearn.externals import joblib
 
 from ._frame_mixin import FrameMixin
+from ._utils import verify_x_type, verify_y_type
 
 
 def _fit(transformer, name, X):
@@ -102,6 +103,9 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
             ``self``
         """
+        verify_x_type(X)
+        verify_y_type(y)
+
         self._feature_union.fit(X, y)
 
         return self
@@ -117,6 +121,9 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
             ``self``
         """
+        verify_x_type(X)
+        verify_y_type(y)
+
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_fit_transform)(trans, name, weight, X, y, **fit_params) for name, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
@@ -126,6 +133,8 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         Transforms ``X`` using the transformers, uses :func:`pandas.concat`
         to horizontally concatenate the results.
         """
+        verify_x_type(X)
+
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_transform)(trans, name, weight, X) for name, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
