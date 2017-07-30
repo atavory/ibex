@@ -490,22 +490,6 @@ class _SKLearnTest(unittest.TestCase):
         print(linear_model.LinearRegression())
 
 
-# Tmp Ami
-if False:
-	class _ExamplesTest(unittest.TestCase):
-		def test_notebooks(self):
-			if not _nbconvert:
-				return
-			return
-			for f_name in os.path.join(glob(_this_dir)):
-				with open(notebook_filename) as f:
-					nb = nbformat.read(f, as_version=4)
-
-				ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
-
-				ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
-
-
 class _ModelSelectionTest(unittest.TestCase):
     def test_cross_val_predict(self):
         from ibex.sklearn import model_selection as pd_model_selection
@@ -525,13 +509,15 @@ class _ModelSelectionTest(unittest.TestCase):
         self.assertEquals(len(y_hat), len(df))
 
 
-class _ExamplesTest(unittest.TestCase):
-        def test_nbs(self):
-            nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
-            nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
-            for n in nb_f_names:
-                cmd = 'jupyter nbconvert --to notebook --execute %s' % n
-                subprocess.check_call(cmd.split(' '))
+# Tmp Ami
+if False:
+    class _ExamplesTest(unittest.TestCase):
+            def test_nbs(self):
+                nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+                nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+                for n in nb_f_names:
+                    cmd = 'jupyter nbconvert --to notebook --execute %s' % n
+                    subprocess.check_call(cmd.split(' '))
 
 
 def load_tests(loader, tests, ignore):
