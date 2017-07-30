@@ -23,18 +23,18 @@ def _verify_y_type(y):
         raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
 
 
-def _fit(transformer, name, X):
+def _fit(transformer, X):
     return transformer.transform(X)
 
 
-def _transform(transformer, name, weight, X):
+def _transform(transformer, weight, X):
     res = transformer.transform(X)
     if weight is not None:
         res *= weight
     return res
 
 
-def _fit_transform(transformer, name, weight, X, y, **fit_params):
+def _fit_transform(transformer, weight, X, y, **fit_params):
     if hasattr(transformer, 'fit_transform'):
         res = transformer.fit_transform(X, y, **fit_params)
     else:
@@ -137,7 +137,7 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         _verify_y_type(y)
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_fit_transform)(trans, name, weight, X, y, **fit_params) for name, trans, weight in self._iter())
+            joblib.delayed(_fit_transform)(trans, weight, X, y, **fit_params) for _, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
     def transform(self, X):
@@ -148,7 +148,7 @@ class _FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         _verify_x_type(X)
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_transform)(trans, name, weight, X) for name, trans, weight in self._iter())
+            joblib.delayed(_transform)(trans, weight, X) for _, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
     def get_feature_names(self):
@@ -226,7 +226,7 @@ class _Pipeline(base.BaseEstimator, FrameMixin):
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')
     def fit_predict(self, X, y=None, **fit_params):
-        return self._pipeline.fit_predict(X)
+        return self._pipeline.fit_predict(X, y, **fit_params)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate='_final_estimator')

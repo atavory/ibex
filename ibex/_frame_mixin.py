@@ -2,8 +2,6 @@ from __future__ import absolute_import
 
 import collections
 
-from sklearn import pipeline
-
 
 def _make_pipeline_steps(objs):
     names = [type(o).__name__.lower() for o in objs]

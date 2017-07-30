@@ -115,7 +115,7 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
             return res
 
         @property
-        def _orig_estimator(self):
+        def orig_estimator(self):
             est = base.clone(estimator)
             return est.set_params(**get_set_params(self))
 
@@ -285,7 +285,7 @@ class GridSearchCV(BaseSearchCV):
 
     @property
     def best_estimator_(self):
-        return self._cv.best_estimator_._orig_estimator
+        return self._cv.best_estimator_.orig_estimator
 
 
 def _update_module():

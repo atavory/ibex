@@ -45,7 +45,7 @@ As noted above, Ibex wraps the estimator classes it finds in the module:
     Ibex does not modify the code of ``sklearn`` in any way. It is absolutely possibly to ``import`` and use both ``sklearn`` and ``ibex.sklearn`` simultaneously.
 
 
-Differences from ``sklearn``
+Differences From ``sklearn``
 ----------------------------
 
 Since :class:`pandas.DataFrame` and :class:`pandas.Series` are not identical to :class:`numpy.array` s (which is the reason to use the former), some changes are made in ``ibex.sklearn`` relative to the corresponding elements in ``sklearn``. :mod:`ibex.sklearn`` in 
