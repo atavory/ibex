@@ -5,7 +5,8 @@ import operator
 
 import six
 
-from ibex.sklearn import pipeline as _pd_pipeline
+from .._pipeline import _Pipeline as PDPipeline
+from .._pipeline import _FeatureUnion as PDFeatureUnion
 
 
 def make_pipeline(*estimators):
@@ -32,10 +33,10 @@ def make_pipeline(*estimators):
     estimators = list(estimators)
 
     if len(estimators) > 1:
-        return six.moves.reduce(operator.or_, estimators[1: ], estimators[0])
+        return six.moves.reduce(operator.or_, estimators[1:], estimators[0])
 
     name = type(estimators[0]).__name__.lower()
-    return _pd_pipeline.Pipeline([(name, estimators[0])])
+    return PDPipeline([(name, estimators[0])])
 
 
 def make_union(*transformers):
@@ -61,24 +62,17 @@ def make_union(*transformers):
     transformers = list(transformers)
 
     if len(transformers) > 1:
-        return six.moves.reduce(operator.add, transformers[1: ], transformers[0])
+        return six.moves.reduce(operator.add, transformers[1:], transformers[0])
 
     name = type(transformers[0]).__name__.lower()
-    return _pd_pipeline.FeatureUnion([(name, transformers[0])])
+    return PDFeatureUnion([(name, transformers[0])])
 
 
 def _update_module():
-    import ibex
     from ibex.sklearn import pipeline as _pd_pipeline
 
     _pd_pipeline.make_pipeline = make_pipeline
     _pd_pipeline.make_union = make_union
 
-    _pd_pipeline.Pipeline = ibex._pipeline._Pipeline
-    _pd_pipeline.FeatureUnion = ibex._pipeline._FeatureUnion
-
-
-
-
-
-
+    _pd_pipeline.Pipeline = PDPipeline
+    _pd_pipeline.FeatureUnion = PDFeatureUnion

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import base
 
-import ibex
+from .._frame_mixin import FrameMixin
 
 
 def make_xy_estimator(estimator, orig_X, orig_y=None):
@@ -234,7 +234,7 @@ def cross_val_predict(
         return pd.DataFrame(y_hat, index=y.index)
 
 
-class BaseSearchCV(base.BaseEstimator, ibex.FrameMixin):
+class BaseSearchCV(base.BaseEstimator, FrameMixin):
     def __init__(self, estimator):
         self._estimator = estimator
 
