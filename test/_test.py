@@ -2,6 +2,7 @@ import unittest
 import os
 from glob import glob
 import doctest
+import subprocess
 
 from sklearn import preprocessing
 from ibex.sklearn import preprocessing as pd_preprocessing
@@ -32,6 +33,9 @@ except ImportError:
     _nbconvert = False
 
 from ibex import *
+
+
+_this_dir = os.path.dirname(__file__)
 
 
 class _ConceptsTest(unittest.TestCase):
@@ -355,6 +359,28 @@ class _IrisTest(unittest.TestCase):
         clf.bic(self._iris[self._features])
 
 
+class _DigitsTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        digits = datasets.load_digits()
+        cls._features = ['f%d' % i for i in range(digits['data'].shape[1])]
+        cls._digits = pd.DataFrame(
+            np.c_[digits['data'], digits['target']],
+            columns=cls._features+['digit'])
+        cls._digits = cls._digits.sample(frac=0.1).reset_index()
+
+    def test_cv(self):
+        clf = pd_decomposition.PCA() | pd_linear_model.LogisticRegression()
+
+        n_components = [20, 40, 64]
+        Cs = np.logspace(-4, 4, 3)
+
+        estimator = PDGridSearchCV(
+            clf,
+            {'pca__n_components': [20, 40, 64], 'logisticregression__C': np.logspace(-4, 4, 3)})
+
+        estimator.fit(self._digits[self._features], self._digits.digit)
+
 class _FeatureUnionTest(unittest.TestCase):
 
     class SimpleTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
@@ -469,7 +495,7 @@ class _ExamplesTest(unittest.TestCase):
         if not _nbconvert:
             return
         return
-        for f_name in os.path.join(glob(os.path.dirname(__file__))):
+        for f_name in os.path.join(glob(_this_dir)):
             with open(notebook_filename) as f:
                 nb = nbformat.read(f, as_version=4)
 
@@ -497,6 +523,15 @@ class _ModelSelectionTest(unittest.TestCase):
         self.assertEquals(len(y_hat), len(df))
 
 
+class _ExamplesTest(unittest.TestCase):
+        def test_nbs(self):
+            nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+            nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+            for n in nb_f_names:
+                cmd = 'jupyter nbconvert --to notebook --execute %s' % n
+                subprocess.check_call(cmd.split(' '))
+
+
 def load_tests(loader, tests, ignore):
     import ibex
 
@@ -517,8 +552,7 @@ def load_tests(loader, tests, ignore):
     from ibex.sklearn import _pipeline
     tests.addTests(doctest.DocTestSuite(_pipeline, optionflags=doctest_flags))
 
-    this_dir = os.path.dirname(__file__)
-    doc_f_names = list(glob(os.path.join(this_dir, '../docs/source/*.rst')))
+    doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
