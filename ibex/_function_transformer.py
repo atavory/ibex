@@ -5,7 +5,21 @@ import pandas as pd
 from sklearn import base
 
 from ._frame_mixin import FrameMixin
-from ._utils import verify_x_type, verify_y_type
+# Tmp Ami
+# from ._utils import verify_x_type, verify_y_type
+
+
+def _verify_x_type(X):
+    if not isinstance(X, pd.DataFrame):
+        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
+
+
+def _verify_y_type(y):
+    if y is None:
+        return
+
+    if not isinstance(y, (pd.DataFrame, pd.Series)):
+        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
 
 
 __all__ = []
@@ -45,8 +59,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             ``self``
         """
-        verify_x_type(X)
-        verify_y_type(y)
+        _verify_x_type(X)
+        _verify_y_type(y)
 
         self.x_columns = X.columns
 
@@ -75,8 +89,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
-        verify_x_type(X)
-        verify_y_type(y)
+        _verify_x_type(X)
+        _verify_y_type(y)
 
         if not isinstance(self.func, FrameMixin) or not hasattr(self.func, 'fit_transform'):
             if self.pass_y:
@@ -110,8 +124,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
-        verify_x_type(X)
-        verify_y_type(y)
+        _verify_x_type(X)
+        _verify_y_type(y)
 
         Xt = X[self.x_columns]
 
