@@ -18,7 +18,7 @@ therefore :mod:`ibex.sklearn` will have a counterpart.
     True
     >>> 'linear_model' in ibex.sklearn.__all__
     True
-    >>> from ibex.sklearn import linear_model as pd_linear_model # doctest: +SKIP
+    >>> from ibex.sklearn import linear_model as pd_linear_model 
 
 ``foo`` is not part of ``sklearn``,
 therefore :mod:`ibex.sklearn` will not have a counterpart.
@@ -36,8 +36,9 @@ As noted above, Ibex wraps the estimator classes it finds in the module:
 
     >>> from sklearn import linear_model 
     >>> linear_model.LinearRegression()
-    >>> from ibex.sklearn import linear_model as pd_linear_model # doctest: +SKIP
+    LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
     >>> pd_linear_model.LinearRegression()
+    Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
 
 .. tip::
 
