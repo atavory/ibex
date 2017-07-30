@@ -288,7 +288,7 @@ class GridSearchCV(BaseSearchCV):
         return self._cv.best_estimator_.orig_estimator
 
 
-def _update_module():
+def update_module():
     import ibex
     from ibex.sklearn import model_selection as pd_model_selection
 

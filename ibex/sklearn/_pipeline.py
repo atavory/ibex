@@ -68,7 +68,7 @@ def make_union(*transformers):
     return PDFeatureUnion([(name, transformers[0])])
 
 
-def _update_module():
+def update_module():
     from ibex.sklearn import pipeline as _pd_pipeline
 
     _pd_pipeline.make_pipeline = make_pipeline
