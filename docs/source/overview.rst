@@ -6,6 +6,7 @@ Ibex library aims for two (somewhat independent) goals:
 The first one is providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
 
 .. uml::
+    :caption: Relation of Ibex to some other packages in the scientific python stack.
 
     package "Plotting" {
         [seaborn]
