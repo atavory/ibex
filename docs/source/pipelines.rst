@@ -1,4 +1,4 @@
-.. pipeline:
+.. _pipeline:
 
 Pipelining
 ==========

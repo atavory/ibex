@@ -1,6 +1,5 @@
 Overview
 =========
-
 Goals
 -----
 
@@ -50,9 +49,10 @@ Ibex has a very small interface. The core library has a single public class and 
 :py:class:`ibex.FrameMixin` is a mixin class providing both some utilities for :mod:`pandas` support for higher-up classes, as well as pipeline and feature operators. It is described in :ref:`adapting`. :py:func:`ibex.frame` is a function taking an
 `estimator conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_ (either an object or a class), and returning a ``pandas``-aware estimator (correspondingly, an object or a class). If estimators are already wrapped (which is the case for all of ``sklearn``), it is not necessary to be concerned with these at all.
 
-:py:func:`ibex.trans` is a utility function that creates an estimator applying a regular Python function, or a different estimator, to a :class:`pandas.DataFrame`, optionally specifying the input and output columns. 
+:py:func:`ibex.trans` is a utility function that creates an estimator applying a regular Python function, or a different estimator, to a :class:`pandas.DataFrame`, optionally specifying the input and output columns. Again, you do not need to use it if you are just planning on using ``sklearn`` estimators.
 
-Ibex (mostly automatically) wraps all of :py:mod:`sklearn` in :py:mod:`ibex.sklearn`.
+Ibex (mostly automatically) wraps all of :py:mod:`sklearn` in :py:mod:`ibex.sklearn`. In almost all cases (except those noted explicitly), the wrapping has a direct correspondence with ``sklearn``. 
+
 
 Documentation Structure
 -----------------------

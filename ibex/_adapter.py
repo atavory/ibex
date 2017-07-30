@@ -91,6 +91,9 @@ def make_adapter(step):
             if hasattr(self, '_ibex_in_op'):
                 return fn(X, *args)
 
+            if not isinstance(X, pd.DataFrame):
+                raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
+
             # Tmp Ami - why not in function adapter? where are uts?
             if name.startswith('fit'):
                 self.x_columns = X.columns
@@ -103,6 +106,9 @@ def make_adapter(step):
 
             # Tmp Ami - write a ut for this; remove todo from docs
             if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
+                if not isinstance(args[0], (pd.DataFrame, pd.Series)):
+                    raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
+
                 if not X.index.equals(args[0].index):
                     raise ValueError('Indexes do not match')
 
@@ -159,18 +165,17 @@ def frame(step):
     Example:
 
         >>> from sklearn import linear_model
-        >>> import ibex
-        >>>
+        >>> from ibex import frame
 
         We can use ``frame`` to adapt an object:
 
-        >>> prd = ibex.frame(linear_model.LinearRegression())
+        >>> prd = frame(linear_model.LinearRegression())
         >>> prd
         Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
 
         We can use ``frame`` to adapt a class:
 
-        >>> PDLinearRegression = ibex.frame(linear_model.LinearRegression)
+        >>> PDLinearRegression = frame(linear_model.LinearRegression)
         >>> PDLinearRegression()
         Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
 

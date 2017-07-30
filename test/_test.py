@@ -535,13 +535,13 @@ def load_tests(loader, tests, ignore):
     mod =__import__('ibex.sklearn._model_selection')
     tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
     mod =__import__('ibex.sklearn._pipeline')
-    tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+    test = tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
 
     from ibex.sklearn import _pipeline
     tests.addTests(doctest.DocTestSuite(_pipeline, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
-    tests.addTests(
+    test = tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
     return tests
