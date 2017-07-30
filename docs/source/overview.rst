@@ -1,6 +1,10 @@
 Overview
 =========
 
+Ibex library aims for two (somewhat independent) goals:
+
+The first one is providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
+
 .. uml::
 
     package "Plotting" {
@@ -27,6 +31,7 @@ Overview
     [ibex] ..-> [sklearn] : implemented over
 
 
+* allowing easier, and more succinct ways of combining estimators, features, and pipelines
 
 :py:class:`ibex.FrameMixin`
 
