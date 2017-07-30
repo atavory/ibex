@@ -40,6 +40,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
+    'sphinxcontrib.plantuml',
 ]
 
 spelling_word_list_filename='spelling_wordlist.txt'
