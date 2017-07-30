@@ -1,7 +1,11 @@
 .. _adapting:
 
-Adapting Estimators
+Low-Level Interface
 ===================
+
+This chapter describes a low level-class, :class:`ibex.FrameMixin`, indicating 
+
+and :func:`ibex.frame`.
 
 .. tip::
 

@@ -54,6 +54,9 @@ Ibex has a very small interface. The core library has a single public class and 
 
 Ibex (mostly automatically) wraps all of :py:mod:`sklearn` in :py:mod:`ibex.sklearn`.
 
+Documentation Structure
+-----------------------
+
 :py:mod:`sklearn.preprocessing`
 
 :py:mod:`ibex.sklearn.preprocessing`
