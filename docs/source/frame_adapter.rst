@@ -65,3 +65,12 @@ As can be seen above, though, the string and representation is modified, to sign
     >>> linear_model.LinearRegression()
     LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
 
+|
+|
+
+Of course, the imposition to decorate every class (not to mention object) via ``frame``, can become annoying.
+
+.. image:: _static/got_frame.jpeg
+
+If a library is used often enough, it might pay to wrap it once. Ibex does this (nearly completely) automatically for :mod:`sklearn` (see :ref:`sklearn`).
+
