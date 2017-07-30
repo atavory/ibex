@@ -60,11 +60,6 @@ Once an estimator has been ``fit``-ed, the order of columns of further inputs no
 The ``step`` will reorder the ``DataFrame`` to the same order of columns seen by ``fit``.
 
 
-.. todo::
-
-    For methods that take both ``X`` and ``y``, check the indexes match.
-
-
 .. _verification_and_processing_output:
 
 Output Processing
