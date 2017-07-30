@@ -490,18 +490,20 @@ class _SKLearnTest(unittest.TestCase):
         print(linear_model.LinearRegression())
 
 
-class _ExamplesTest(unittest.TestCase):
-    def test_notebooks(self):
-        if not _nbconvert:
-            return
-        return
-        for f_name in os.path.join(glob(_this_dir)):
-            with open(notebook_filename) as f:
-                nb = nbformat.read(f, as_version=4)
+# Tmp Ami
+if False:
+	class _ExamplesTest(unittest.TestCase):
+		def test_notebooks(self):
+			if not _nbconvert:
+				return
+			return
+			for f_name in os.path.join(glob(_this_dir)):
+				with open(notebook_filename) as f:
+					nb = nbformat.read(f, as_version=4)
 
-            ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
+				ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
 
-            ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
+				ep.preprocess(nb, {'metadata': {'path': 'notebooks/'}})
 
 
 class _ModelSelectionTest(unittest.TestCase):
