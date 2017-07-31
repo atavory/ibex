@@ -517,9 +517,10 @@ class _ExamplesTest(unittest.TestCase):
                 cmd = 'jupyter nbconvert --to notebook --execute %s' % n
                 try:
                     subprocess.check_call(cmd.split(' '))
-                except CalledProcessError as exc:
+                except Error as exc:
                     print(exc.output)
                     raise
+
 
 def load_tests(loader, tests, ignore):
     import ibex
