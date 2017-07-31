@@ -6,7 +6,6 @@ import inspect
 from sklearn import model_selection as _orig
 from sklearn import base
 import pandas as pd
-from sklearn import base
 
 import ibex
 from .._base import FrameMixin

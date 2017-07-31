@@ -5,10 +5,6 @@ import inspect
 
 from sklearn import preprocessing as _orig
 from sklearn import base
-import six
-import numpy as np
-import pandas as pd
-from sklearn import base
 
 import ibex
 from .._function_transformer import FunctionTransformer as PDFunctionTransformer
