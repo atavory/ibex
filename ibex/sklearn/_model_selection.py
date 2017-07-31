@@ -1,6 +1,4 @@
 from __future__ import absolute_import
-
-
 import inspect
 
 from sklearn import model_selection as _orig
@@ -10,19 +8,6 @@ import pandas as pd
 import ibex
 from .._base import FrameMixin
 from .._xy_estimator import make_xy_estimator
-
-
-for name in dir(_orig):
-    if name.startswith('_'):
-        continue
-    est = getattr(_orig, name)
-    try:
-        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
-            globals()[name] = ibex.frame(est)
-        else:
-            globals()[name] = est
-    except TypeError as e:
-        pass
 
 
 def cross_val_predict(
@@ -184,3 +169,12 @@ class GridSearchCV(BaseSearchCV):
     @property
     def best_estimator_(self):
         return self._cv.best_estimator_.orig_estimator
+
+
+def update_module(name, module):
+    if name != 'model_selection':
+        return
+
+    setattr(module, 'cross_val_predict', cross_val_predict)
+    setattr(module, 'BaseSearchCV', BaseSearchCV)
+    setattr(module, 'GridSearchCV', GridSearchCV)

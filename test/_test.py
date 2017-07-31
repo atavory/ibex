@@ -539,12 +539,13 @@ def load_tests(loader, tests, ignore):
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
     # Tmp Ami
-    mod =__import__('ibex.sklearn.model_selection')
-    tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-    mod =__import__('ibex.sklearn.pipeline')
-    test = tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-    from ibex.sklearn import pipeline
-    tests.addTests(doctest.DocTestSuite(pipeline, optionflags=doctest_flags))
+    if False:
+        mod =__import__('ibex.sklearn.model_selection')
+        tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+        mod =__import__('ibex.sklearn.pipeline')
+        test = tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
+        from ibex.sklearn import pipeline
+        tests.addTests(doctest.DocTestSuite(pipeline, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     doc_f_names += [os.path.join(_this_dir, '../README.rst')]

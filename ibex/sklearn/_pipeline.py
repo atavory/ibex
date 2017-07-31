@@ -15,21 +15,7 @@ from .._base import Pipeline as PDPipeline
 from .._base import FeatureUnion as PDFeatureUnion
 
 
-# Tmp Ami - this should be in a common file
-for name in dir(_orig):
-    if name.startswith('_'):
-        continue
-    est = getattr(_orig, name)
-    try:
-        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
-            globals()[name] = ibex.frame(est)
-        else:
-            globals()[name] = est
-    except TypeError as e:
-        pass
-
-
-def make_pipeline(*estimators):
+def pd_make_pipeline(*estimators):
     """
     Creates a pipeline from estimators.
 
@@ -59,7 +45,7 @@ def make_pipeline(*estimators):
     return PDPipeline([(name, estimators[0])])
 
 
-def make_union(*transformers):
+def pd_make_union(*transformers):
     """
     Creates a union from transformers.
 
@@ -88,5 +74,11 @@ def make_union(*transformers):
     return PDFeatureUnion([(name, transformers[0])])
 
 
-globals()['Pipeline'] = PDPipeline
-globals()['FeatureUnion'] = PDFeatureUnion
+def update_module(name, module):
+    if name != 'pipeline':
+        return
+
+    setattr(module, 'Pipeline', PDPipeline)
+    setattr(module, 'FeatureUnion', PDFeatureUnion)
+    setattr(module, 'make_pipeline', pd_make_pipeline)
+    setattr(module, 'make_union', pd_make_union)
