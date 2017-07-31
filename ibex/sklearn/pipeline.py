@@ -2,11 +2,31 @@ from __future__ import absolute_import
 
 
 import operator
+import inspect
 
+from sklearn import pipeline as _orig
+from sklearn import base
 import six
+import numpy as np
+import pandas as pd
 
+import ibex
 from .._base import Pipeline as PDPipeline
 from .._base import FeatureUnion as PDFeatureUnion
+
+
+# Tmp Ami - this should be in a common file
+for name in dir(_orig):
+    if name.startswith('_'):
+        continue
+    est = getattr(_orig, name)
+    try:
+        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
+            globals()[name] = ibex.frame(est)
+        else:
+            globals()[name] = est
+    except TypeError as e:
+        pass
 
 
 def make_pipeline(*estimators):
@@ -68,11 +88,5 @@ def make_union(*transformers):
     return PDFeatureUnion([(name, transformers[0])])
 
 
-def update_module():
-    from ibex.sklearn import pipeline as _pd_pipeline
-
-    _pd_pipeline.make_pipeline = make_pipeline
-    _pd_pipeline.make_union = make_union
-
-    _pd_pipeline.Pipeline = PDPipeline
-    _pd_pipeline.FeatureUnion = PDFeatureUnion
+globals()['Pipeline'] = PDPipeline
+globals()['FeatureUnion'] = PDFeatureUnion

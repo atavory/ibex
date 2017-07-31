@@ -16,8 +16,7 @@ from sklearn import ensemble
 from ibex.sklearn import ensemble as pd_ensemble
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
-# Tmp Ami - think about older sklearn versions
-from ibex.sklearn._model_selection import GridSearchCV as PDGridSearchCV
+from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
 try:
     from sklearn.model_selection import cross_val_score
 except ImportError:
@@ -381,6 +380,7 @@ class _DigitsTest(unittest.TestCase):
 
         estimator.fit(self._digits[self._features], self._digits.digit)
 
+
 class _FeatureUnionTest(unittest.TestCase):
 
     class SimpleTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
@@ -532,13 +532,13 @@ def load_tests(loader, tests, ignore):
         except ImportError:
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-    mod =__import__('ibex.sklearn._model_selection')
+    # Tmp Ami
+    mod =__import__('ibex.sklearn.model_selection')
     tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-    mod =__import__('ibex.sklearn._pipeline')
+    mod =__import__('ibex.sklearn.pipeline')
     test = tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-
-    from ibex.sklearn import _pipeline
-    tests.addTests(doctest.DocTestSuite(_pipeline, optionflags=doctest_flags))
+    from ibex.sklearn import pipeline
+    tests.addTests(doctest.DocTestSuite(pipeline, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     # Tmp Ami
