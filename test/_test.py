@@ -515,8 +515,11 @@ class _ExamplesTest(unittest.TestCase):
             nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
             for n in nb_f_names:
                 cmd = 'jupyter nbconvert --to notebook --execute %s' % n
-                subprocess.check_call(cmd.split(' '))
-
+                try:
+                    subprocess.check_call(cmd.split(' '))
+                except CalledProcessError as exc:
+                    print(exc.output)
+                    raise
 
 def load_tests(loader, tests, ignore):
     import ibex
