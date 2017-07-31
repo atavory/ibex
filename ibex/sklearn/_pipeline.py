@@ -5,8 +5,8 @@ import operator
 
 import six
 
-from .._pipeline import _Pipeline as PDPipeline
-from .._pipeline import _FeatureUnion as PDFeatureUnion
+from .._base import Pipeline as PDPipeline
+from .._base import FeatureUnion as PDFeatureUnion
 
 
 def make_pipeline(*estimators):

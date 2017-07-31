@@ -23,7 +23,7 @@ def _verify_y_type(y):
 
 
 def make_adapter(step):
-    from ._frame_mixin import FrameMixin
+    from ._base import FrameMixin
 
 
     class _Adapter(step, FrameMixin):
@@ -194,7 +194,7 @@ def frame(step):
         >>> PDLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
-    from ._frame_mixin import FrameMixin
+    from ._base import FrameMixin
 
     if isinstance(step, FrameMixin):
         return step

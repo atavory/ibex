@@ -3,10 +3,8 @@ Pandas adapters for sklearn-type estimators
 """
 
 
-from ._frame_mixin import FrameMixin
+from ._base import *
 from ._adapter import frame
-from ._pipeline import _FeatureUnion
-from ._pipeline import _Pipeline
 from ._function_transformer import _FunctionTransformer
 import sklearn
 

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import base
 
-from .._frame_mixin import FrameMixin
+from .._base import FrameMixin
 
 
 def make_xy_estimator(estimator, orig_X, orig_y=None):

@@ -4,7 +4,7 @@ from six import string_types
 import pandas as pd
 from sklearn import base
 
-from ._frame_mixin import FrameMixin
+from ._base import FrameMixin
 # Tmp Ami
 # from ._utils import verify_x_type, verify_y_type
 
