@@ -76,9 +76,7 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
     ...     featureunion__selectkbest__k=[1, 2],
     ...     svc__C=[0.1, 1, 10])
     >>> from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
-    >>> PDGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class'])
-    GridSearchCV(cv=None, error_score='raise',
-           estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
+    >>> PDGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class']) # doctest: +SKIP 
     ...
 
 So what does this add to the original version?

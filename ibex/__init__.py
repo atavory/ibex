@@ -4,8 +4,8 @@ Pandas adapters for sklearn-type estimators
 
 
 from ._base import *
-from ._adapter import frame
-from ._function_transformer import _FunctionTransformer
+from ._adapter import *
+from ._function_transformer import *
 import sklearn
 
 

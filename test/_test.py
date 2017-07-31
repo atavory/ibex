@@ -541,8 +541,7 @@ def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(pipeline, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
-    # Tmp Ami
-    # doc_f_names += [os.path.join(_this_dir, '../README.rst')]
+    doc_f_names += [os.path.join(_this_dir, '../README.rst')]
     test = tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 

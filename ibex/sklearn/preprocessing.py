@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn import base
 
 import ibex
-from .._function_transformer import _FunctionTransformer as PDFunctionTransformer
+from .._function_transformer import FunctionTransformer as PDFunctionTransformer
 
 
 for name in dir(_orig):

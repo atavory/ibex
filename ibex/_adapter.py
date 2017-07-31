@@ -8,18 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import pipeline
 
-# from ._utils import verify_x_type, verify_y_type
-def _verify_x_type(X):
-    if not isinstance(X, pd.DataFrame):
-        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
-
-
-def _verify_y_type(y):
-    if y is None:
-        return
-
-    if not isinstance(y, (pd.DataFrame, pd.Series)):
-        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
+from ._verify_args import *
 
 
 def make_adapter(step):
@@ -105,7 +94,7 @@ def make_adapter(step):
                 return fn(X, *args)
 
             if not isinstance(X, pd.DataFrame):
-                _verify_x_type(X)
+                verify_x_type(X)
 
             # Tmp Ami - why not in function adapter? where are uts?
             if name.startswith('fit'):
@@ -119,7 +108,7 @@ def make_adapter(step):
 
             # Tmp Ami - write a ut for this; remove todo from docs
             if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
-                _verify_y_type(args[0])
+                verify_y_type(args[0])
 
                 if not X.index.equals(args[0].index):
                     raise ValueError('Indexes do not match')

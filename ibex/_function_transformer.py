@@ -5,21 +5,7 @@ import pandas as pd
 from sklearn import base
 
 from ._base import FrameMixin
-# Tmp Ami
-# from ._utils import verify_x_type, verify_y_type
-
-
-def _verify_x_type(X):
-    if not isinstance(X, pd.DataFrame):
-        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
-
-
-def _verify_y_type(y):
-    if y is None:
-        return
-
-    if not isinstance(y, (pd.DataFrame, pd.Series)):
-        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
+from ._verify_args import *
 
 
 __all__ = []
@@ -33,7 +19,7 @@ def _process_cols(cols):
 
 
 # Tmp Ami - add kw_args, inverse shit
-class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
+class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
     Transforms them functions.
     """
@@ -59,8 +45,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             ``self``
         """
-        _verify_x_type(X)
-        _verify_y_type(y)
+        verify_x_type(X)
+        verify_y_type(y)
 
         self.x_columns = X.columns
 
@@ -89,8 +75,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
-        _verify_x_type(X)
-        _verify_y_type(y)
+        verify_x_type(X)
+        verify_y_type(y)
 
         if not isinstance(self.func, FrameMixin) or not hasattr(self.func, 'fit_transform'):
             if self.pass_y:
@@ -124,8 +110,8 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
 
             Transformed data.
         """
-        _verify_x_type(X)
-        _verify_y_type(y)
+        verify_x_type(X)
+        verify_y_type(y)
 
         Xt = X[self.x_columns]
 
@@ -159,8 +145,6 @@ class _FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin
         res = res.copy()
         res.columns = res_cols
         return res
-
-_FunctionTransformer.__name__ = 'FunctionTransformer'
 
 
 

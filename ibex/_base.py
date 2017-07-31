@@ -10,21 +10,10 @@ from sklearn import pipeline
 from sklearn import exceptions
 from sklearn.externals import joblib
 
+from ._verify_args import *
+
 
 __all__ = []
-
-
-def _verify_x_type(X):
-    if not isinstance(X, pd.DataFrame):
-        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
-
-
-def _verify_y_type(y):
-    if y is None:
-        return
-
-    if not isinstance(y, (pd.DataFrame, pd.Series)):
-        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
 
 
 def _make_pipeline_steps(objs):
@@ -289,8 +278,8 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
             ``self``
         """
-        _verify_x_type(X)
-        _verify_y_type(y)
+        verify_x_type(X)
+        verify_y_type(y)
 
         self._feature_union.fit(X, y)
 
@@ -307,8 +296,8 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
             ``self``
         """
-        _verify_x_type(X)
-        _verify_y_type(y)
+        verify_x_type(X)
+        verify_y_type(y)
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_fit_transform)(trans, weight, X, y, **fit_params) for _, trans, weight in self._iter())
@@ -319,7 +308,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         Transforms ``X`` using the transformers, uses :func:`pandas.concat`
         to horizontally concatenate the results.
         """
-        _verify_x_type(X)
+        verify_x_type(X)
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_transform)(trans, weight, X) for _, trans, weight in self._iter())
