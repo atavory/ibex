@@ -77,6 +77,9 @@ from sklearn import %s as _orig
 from sklearn import base
 
 import ibex
+from ibex.sklearn._pipeline import update_module as _pipeline_update_module
+from ibex.sklearn._model_selection import update_module as _model_selection_update_module
+from ibex.sklearn._preprocessing import update_module as _preprocessing_update_module
 
 for name in dir(_orig):
     if name.startswith('_'):

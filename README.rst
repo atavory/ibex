@@ -55,28 +55,32 @@ We first load the Iris dataset into a pandas ``DataFrame``.
 
 Now, we import the relevant steps. Note that, in this example, we import them from `ibex.sklearn` rather than `sklearn`.
 
-	>>> from ibex.sklearn.svm import SVC
-	>>> from ibex.sklearn.feature_selection import SelectKBest
-	>>> from ibex.sklearn.decomposition import PCA
+	>>> from ibex.sklearn.svm import SVC as PDSVC
+	>>> from ibex.sklearn.feature_selection import SelectKBest as PDSelectKBest
+	>>> from ibex.sklearn.decomposition import PCA as PDPCA
 
 (Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.):w
 
 Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 
 * horizontally concatenates a 2-component PCA ``DataFrame``, and the best-feature ``DataFrame``, to a resulting ``DataFrame``  
-* then, passes the result to a support-vector machine classifier outputting a pandas series
+* then, passes the result to a support-vector machine classifier outputting a pandas series:
 
 
+	>>> clf = PDPCA(n_components=2) + PDSelectKBest(k=1) | PDSVC(kernel="linear")
 
-	>>> clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
+``clf`` is now a ``pandas``-ware classifier, but otherwise can be used pretty much like all ``sklearn`` estimator. For example,  
 
-
-
-    >>> from sklearn.model_selection import GridSearchCV
-    >>> GridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class'])
+    >>> param_grid = dict(
+    ...     featureunion__pca__n_components=[1, 2, 3],
+    ...     featureunion__selectkbest__k=[1, 2],
+    ...     svc__C=[0.1, 1, 10])
+    >>> from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
+    >>> PDGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class'])
     GridSearchCV(cv=None, error_score='raise',
            estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
     ...
 
 `verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_
 
+`Multiple-Row Features In The Movielens Dataset` <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_
