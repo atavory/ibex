@@ -5,9 +5,9 @@ import collections
 import functools
 
 import pandas as pd
-import sklearn
 from sklearn import base
 from sklearn import pipeline
+from sklearn import exceptions
 from sklearn.externals import joblib
 
 
@@ -142,8 +142,6 @@ class FrameMixin(object):
         try:
             return self.__cols
         except AttributeError:
-            from sklearn import exceptions
-
             raise exceptions.NotFittedError()
 
     @x_columns.setter
