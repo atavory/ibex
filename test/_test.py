@@ -517,7 +517,7 @@ class _ExamplesTest(unittest.TestCase):
                 cmd = 'jupyter nbconvert --to notebook --execute %s' % n
                 try:
                     subprocess.check_call(cmd.split(' '))
-                except Error as exc:
+                except Exception as exc:
                     print(exc.output)
                     raise
 
