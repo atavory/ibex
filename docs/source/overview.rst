@@ -10,14 +10,19 @@ The first, primary goal, is providing `pandas <http://pandas.pydata.org/>`_ adap
 .. uml::
     :caption: Relation of Ibex to some other packages in the scientific python stack.
 
+    skinparam monochrome true
+    skinparam packageBorderColor lightgrey
+    skinparam shadowing false
+
     package "Plotting" {
         [seaborn]
+        [plotly]
         [matplotlib]
     }
 
     package "Machine Learning" {
         [sklearn]
-        [ibex]
+        [**ibex**]
     }
 
     package "Data Structures" {
@@ -29,9 +34,10 @@ The first, primary goal, is providing `pandas <http://pandas.pydata.org/>`_ adap
     [matplotlib] -> [numpy] : interfaced by
     [pandas] ..> [numpy] : implemented over
     [seaborn] -> [pandas] : interfaced by
+    [plotly] -> [pandas] : interfaced by
     [seaborn] ..-> [matplotlib] : implemented over
-    [ibex] -> [pandas] : interfaced by
-    [ibex] ..-> [sklearn] : implemented over
+    [**ibex**] -> [pandas] : interfaced by
+    [**ibex**] ..-> [sklearn] : implemented over
 
 
 Consider the preceding UML figure. :mod:`numpy` is a (highly efficient) low-level data structure (strictly speaking, it is more of a buffer interface). both :mod:`matplotlib` and :mod:`sklearn` provide a ``numpy`` interface. Subsequently, :mod:`pandas` provided a higher-level interface to ``numpy``, and some plotting libraries, e.g., :mod:`seaborn` provide a ``pandas`` interface to plotting, while being implemented by ``matplotlib``, but . Similarly, the first aim of Ibex is to provide a ``pandas`` interface to machine learning, while being implemented by ``sklearn``.
