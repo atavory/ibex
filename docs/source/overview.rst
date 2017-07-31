@@ -11,8 +11,12 @@ The first, primary goal, is providing `pandas <http://pandas.pydata.org/>`_ adap
     :caption: Relation of Ibex to some other packages in the scientific python stack.
 
     skinparam monochrome true
-    skinparam packageBorderColor lightgrey
     skinparam shadowing false
+
+    skinparam package {
+        FontColor #777777
+        BorderColor lightgrey
+    }
 
     package "Plotting" {
         [seaborn]

@@ -509,15 +509,13 @@ class _ModelSelectionTest(unittest.TestCase):
         self.assertEquals(len(y_hat), len(df))
 
 
-# Tmp Ami
-if False:
-    class _ExamplesTest(unittest.TestCase):
-            def test_nbs(self):
-                nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
-                nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
-                for n in nb_f_names:
-                    cmd = 'jupyter nbconvert --to notebook --execute %s' % n
-                    subprocess.check_call(cmd.split(' '))
+class _ExamplesTest(unittest.TestCase):
+        def test_nbs(self):
+            nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+            nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+            for n in nb_f_names:
+                cmd = 'jupyter nbconvert --to notebook --execute %s' % n
+                subprocess.check_call(cmd.split(' '))
 
 
 def load_tests(loader, tests, ignore):
