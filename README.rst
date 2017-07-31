@@ -81,6 +81,12 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
            estimator=Pipeline(steps=[('featureunion', FeatureUnion(n_jobs=1,
     ...
 
-`verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_
+So what does this add to the original version?
 
-`Multiple-Row Features In The Movielens Dataset` <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_
+#. The estimators perform `verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
+
+#. It allows `writing Pandas-munging estimators <http://ibex.readthedocs.io/en/latest/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_).
+
+#. Using ``DataFrame`` metadata, it allows writing more complex meta-learning algorithms, such as stacking and nested labeled and stratified cross validation.
+
+#. The pipeline syntax is succinct and clear (see `Motivation For Shorter Combinations <http://ibex.readthedocs.io/en/latest/pipeline_motivation.html>`_).

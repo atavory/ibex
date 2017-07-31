@@ -15,7 +15,7 @@ Examples
 
     This is a version of the :mod:`sklearn` example `Pipelining: chaining a PCA and a logistic regression <http://scikit-learn.org/stable/auto_examples/plot_digits_pipe.html#sphx-glr-auto-examples-plot-digits-pipe-py>`_. It illustrates the use of pipelines. 
 
-`Multiple-Row Features In The Movielens Dataset` <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_
+`Multiple-Row Features In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_
 
     This shows how to use :mod:`pandas`-munging estimators.
 
