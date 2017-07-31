@@ -4,6 +4,7 @@ from glob import glob
 import doctest
 import subprocess
 
+import six
 from sklearn import preprocessing
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
