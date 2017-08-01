@@ -93,6 +93,9 @@ def cross_val_predict(
         ...     pd_linear_model.LinearRegression(),
         ...     df[['x']],
         ...     df['y'])
+
+        >>> dsfkjflsdjflj
+
     """
 
     from sklearn import model_selection

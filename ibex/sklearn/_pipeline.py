@@ -34,7 +34,8 @@ def pd_make_pipeline(*estimators):
         >>> from ibex.sklearn import pipeline
         >>>
         >>> pipeline.make_pipeline(preprocessing.StandardScaler(), linear_model.LinearRegression())
-        Pipeline(...
+        Pipeline(...)
+
     """
     estimators = list(estimators)
 
@@ -62,7 +63,10 @@ def pd_make_union(*transformers):
         >>> from ibex.sklearn import preprocessing as pd_preprocessing
         >>> from ibex.sklearn import pipeline as pd_pipeline
 
-        >>> trn = pd_pipeline.make_union(pd_preprocessing.StandardScaler(), pd_preprocessing.MaxAbsScaler())
+        >>> trn = pd_pipeline.make_union(
+        ...     pd_preprocessing.StandardScaler(),
+        ...     pd_preprocessing.MaxAbsScaler())
+
     """
 
     transformers = list(transformers)

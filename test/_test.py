@@ -538,18 +538,13 @@ def load_tests(loader, tests, ignore):
         except ImportError:
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-    # Tmp Ami
-    if False:
-        mod =__import__('ibex.sklearn.model_selection')
-        tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-        mod =__import__('ibex.sklearn.pipeline')
-        test = tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
-        from ibex.sklearn import pipeline
-        tests.addTests(doctest.DocTestSuite(pipeline, optionflags=doctest_flags))
+
+    for f_name in glob(os.path.join(_this_dir, '../ibex/sklearn/_*.py')):
+        tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     doc_f_names += [os.path.join(_this_dir, '../README.rst')]
-    test = tests.addTests(
+    tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
     return tests

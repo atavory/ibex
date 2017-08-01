@@ -8,6 +8,7 @@ in your system when it is loaded.
 
 Example:
 
+    >>> import sklearn
     >>> import ibex
 
     :mod:`sklearn.linear_model` is part of ``sklearn``,
@@ -26,13 +27,17 @@ Example:
     False
     >>> 'foo' in ibex.sklearn.__all__
     False
-    >>> from ibex.sklearn import foo
-    Traceback (most recent call last):
-    ...
-    ImportError: ...foo...
+    >>> try:
+    ...     from ibex.sklearn import foo
+    ... except ImportError:
+    ...     print('caught')
+    caught
+
 """
 
+
 from __future__ import absolute_import
+
 
 import sys
 import imp

@@ -59,7 +59,7 @@ Now, we import the relevant steps. Note that, in this example, we import them fr
 	>>> from ibex.sklearn.feature_selection import SelectKBest as PDSelectKBest
 	>>> from ibex.sklearn.decomposition import PCA as PDPCA
 
-(Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.):w
+(Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.)
 
 Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 
