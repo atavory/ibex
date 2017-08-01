@@ -2,15 +2,9 @@ from __future__ import absolute_import
 
 
 import operator
-import inspect
 
-from sklearn import pipeline as _orig
-from sklearn import base
 import six
-import numpy as np
-import pandas as pd
 
-import ibex
 from .._base import Pipeline as PDPipeline
 from .._base import FeatureUnion as PDFeatureUnion
 

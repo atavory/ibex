@@ -10,7 +10,7 @@ from sklearn import pipeline
 from sklearn import exceptions
 from sklearn.externals import joblib
 
-from ._verify_args import *
+from ._verify_args import verify_x_type, verify_y_type
 
 
 __all__ = []
@@ -182,6 +182,7 @@ class FrameMixin(object):
         combined = self_features + other_features
 
         return FeatureUnion(_make_pipeline_steps(combined))
+
 
 __all__ += ['FrameMixin']
 
@@ -421,6 +422,5 @@ class Pipeline(base.BaseEstimator, FrameMixin):
     def classes_(self):
         return self._pipeline.classes_
 
+
 __all__ += ['Pipeline']
-
-
