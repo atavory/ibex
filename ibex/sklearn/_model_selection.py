@@ -1,11 +1,10 @@
 from __future__ import absolute_import
-import inspect
+
 
 from sklearn import model_selection as _orig
 from sklearn import base
 import pandas as pd
 
-import ibex
 from .._base import FrameMixin
 from .._xy_estimator import make_xy_estimator
 
@@ -95,21 +94,19 @@ def cross_val_predict(
         ...     pd_linear_model.LinearRegression(),
         ...     df[['x']],
         ...     df['y'])
-		i0     ...
-		i1     ...
-		i2     ...
-		i3     ...
-		i4     ...
-		i5     ...
-		...
+        i0     ...
+        i1     ...
+        i2     ...
+        i3     ...
+        i4     ...
+        i5     ...
+        ...
 
     """
 
-    from sklearn import model_selection
-
     est, X_, y_ = make_xy_estimator(estimator, X, y)
 
-    y_hat = model_selection.cross_val_predict(
+    y_hat = _orig.cross_val_predict(
         est,
         X_,
         y_,
@@ -133,8 +130,6 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
 
 
 class GridSearchCV(BaseSearchCV):
-    import ibex
-
     def __init__(
             self,
             estimator,
@@ -150,11 +145,9 @@ class GridSearchCV(BaseSearchCV):
             error_score='raise',
             return_train_score=True):
 
-        from sklearn import model_selection
-
         BaseSearchCV.__init__(self, estimator)
 
-        self._cv = model_selection.GridSearchCV(
+        self._cv = _orig.GridSearchCV(
             estimator,
             param_grid,
             scoring,
@@ -178,7 +171,7 @@ class GridSearchCV(BaseSearchCV):
 
     @property
     def best_estimator_(self):
-        return self._cv.best_estimator_.orig_estimator
+        return self._cv.best_estimator_._origestimator
 
 
 def update_module(name, module):

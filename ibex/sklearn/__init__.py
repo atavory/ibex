@@ -104,12 +104,9 @@ class _NewModuleLoader(object):
 
         six.exec_(code, mod.__dict__)
 
-        from ._model_selection import update_module
-        update_module(orig, mod)
-        from ._pipeline import update_module
-        update_module(orig, mod)
-        from ._preprocessing import update_module
-        update_module(orig, mod)
+        _model_selection_update_module(orig, mod)
+        _pipeline_update_module(orig, mod)
+        _preprocessing_update_module(orig, mod)
 
         return mod
 
