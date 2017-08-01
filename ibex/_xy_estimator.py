@@ -7,7 +7,6 @@ import six
 import numpy as np
 from sklearn import base
 
-
 def make_xy_estimator(estimator, orig_X, orig_y=None):
     def get_set_params(est):
         base_attr = getattr(estimator, '__init__')

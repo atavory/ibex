@@ -171,7 +171,7 @@ class GridSearchCV(BaseSearchCV):
 
     @property
     def best_estimator_(self):
-        return self._cv.best_estimator_._origestimator
+        return self._cv.best_estimator_.orig_estimator
 
 
 def update_module(name, module):
