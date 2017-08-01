@@ -27,10 +27,8 @@ therefore :mod:`ibex.sklearn` will not have a counterpart.
     False
     >>> 'foo' in ibex.sklearn.__all__
     False
-    >>> from ibex.sklearn import foo as pd_foo
-    Traceback (most recent call last):
-    ...
-    ImportError: ...foo...
+    >>> # Next line won't work!
+    >>> from ibex.sklearn import foo # doctest: +SKIP 
 
 As noted above, Ibex wraps the estimator classes it finds in the module:
 

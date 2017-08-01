@@ -41,6 +41,7 @@ from __future__ import absolute_import
 
 import sys
 import imp
+import string
 
 import six
 import sklearn
@@ -51,6 +52,36 @@ from ._preprocessing import update_module as _preprocessing_update_module
 
 
 __all__ = sklearn.__all__
+
+
+_code = string.Template('''
+"""
+Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.$mod_name`.
+"""
+
+
+from __future__ import absolute_import
+
+
+import inspect
+
+from sklearn import $mod_name as _orig
+from sklearn import base
+
+import ibex
+
+
+for name in dir(_orig):
+    if name.startswith('_'):
+        continue
+    est = getattr(_orig, name)
+    try:
+        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
+            globals()[name] = ibex.frame(est)
+        else:
+            globals()[name] = est
+    except TypeError as e:
+        pass''')
 
 
 class _NewModuleLoader(object):
@@ -69,35 +100,7 @@ class _NewModuleLoader(object):
         mod.__loader__ = self
         mod.__package__ = '.'.join(full_name.split('.')[:-1])
 
-        code = '''
-"""
-Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.%s`.
-"""
-
-
-from __future__ import absolute_import
-
-
-import inspect
-
-from sklearn import %s as _orig
-from sklearn import base
-
-import ibex
-
-
-for name in dir(_orig):
-    if name.startswith('_'):
-        continue
-    est = getattr(_orig, name)
-    try:
-        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
-            globals()[name] = ibex.frame(est)
-        else:
-            globals()[name] = est
-    except TypeError as e:
-        pass
-        ''' % (orig, orig)
+        code = _code.substitute({'mod_name': orig})
 
         six.exec_(code, mod.__dict__)
 
