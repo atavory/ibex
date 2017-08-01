@@ -38,6 +38,10 @@ from ibex import *
 _this_dir = os.path.dirname(__file__)
 
 
+_cheap = os.getenv('IBEX_CHEAP_TESTS_ONLY')
+_cheap = _cheap is not None and bool(int(_cheap))
+
+
 class _ConceptsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -336,6 +340,8 @@ class _IrisTest(unittest.TestCase):
             svc__C=[0.1, 1, 10])
 
         grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
+        if _cheap:
+            return
         grid_search.fit(self._iris[self._features], self._iris['class'])
         grid_search.best_estimator_
 
@@ -379,6 +385,8 @@ class _DigitsTest(unittest.TestCase):
             clf,
             {'pca__n_components': [20, 40, 64], 'logisticregression__C': np.logspace(-4, 4, 3)})
 
+        if _cheap:
+            return
         estimator.fit(self._digits[self._features], self._digits.digit)
 
 
@@ -511,19 +519,20 @@ class _ModelSelectionTest(unittest.TestCase):
 
 
 class _ExamplesTest(unittest.TestCase):
-        def test_nbs(self):
-            nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
-            nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
-            for n in nb_f_names:
-                cmd = 'jupyter nbconvert --to notebook --execute %s' % n
-                try:
-                    subprocess.check_call(cmd.split(' '))
-                except Exception as exc:
-                    print(exc.output)
-                    # Tmp Ami - add flags for this
-                    # Python2.7 fails on travis, for some reason
-                    if six.PY3:
-                        raise
+    def test_nbs(self):
+        if _cheap:
+            return
+        nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+        nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+        for n in nb_f_names:
+            cmd = 'jupyter nbconvert --execute %s' % n
+            try:
+                subprocess.check_call(cmd.split(' '))
+            except Exception as exc:
+                print(cmd, exc)
+                # Python2.7 fails on travis, for some reason
+                if six.PY3:
+                    raise
 
 
 def load_tests(loader, tests, ignore):

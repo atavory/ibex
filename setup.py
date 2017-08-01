@@ -21,7 +21,9 @@ class _TestCommand(Command):
 
     def run(self):
         run_str = "%s -m unittest discover test *test.py" % ('python' if _py2 else 'python3')
-        subprocess.check_call(run_str.split(' '))
+        subprocess.check_call(
+            run_str.split(' '),
+            env={'IBEX_CHEAP_TESTS_ONLY': '1' if int(os.getenv('IBEX_CHEAP_TESTS_ONLY')) else '0'})
 
 
 class _DocumentCommand(Command):
