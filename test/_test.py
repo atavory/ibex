@@ -525,7 +525,7 @@ class _ExamplesTest(unittest.TestCase):
         nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
         nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
         for n in nb_f_names:
-            cmd = 'jupytern nbconvert --execute %s' % n
+            cmd = 'jupyter nbconvert --execute %s' % n
             try:
                 subprocess.check_call(cmd.split(' '))
             except Exception as exc:
