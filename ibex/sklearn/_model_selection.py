@@ -128,6 +128,209 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
     def __init__(self, estimator):
         self._estimator = estimator
 
+    def score(self, X, y=None):
+        """Returns the score on the given data, if the estimator has been refit.
+
+        This uses the score defined by ``scoring`` where provided, and the
+        ``best_estimator_.score`` method otherwise.
+
+        Parameters
+        ----------
+        X : array-like, shape = [n_samples, n_features]
+            Input data, where n_samples is the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples] or [n_samples, n_output], optional
+            Target relative to X for classification or regression;
+            None for unsupervised learning.
+
+        Returns
+        -------
+        score : float
+        """
+        self._check_is_fitted('score')
+        if self.scorer_ is None:
+            raise ValueError("No score function explicitly defined, "
+                             "and the estimator doesn't provide one %s"
+                             % self.best_estimator_)
+        score = self.scorer_[self.refit] if self.multimetric_ else self.scorer_
+        return score(self.best_estimator_, X, y)
+
+    def _check_is_fitted(self, method_name):
+        if not self.refit:
+            raise NotFittedError('This %s instance was initialized '
+                                 'with refit=False. %s is '
+                                 'available only after refitting on the best '
+                                 'parameters. You can refit an estimator '
+                                 'manually using the ``best_parameters_`` '
+                                 'attribute'
+                                 % (type(self).__name__, method_name))
+        else:
+            check_is_fitted(self, 'best_estimator_')
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def predict(self, X):
+        """Call predict on the estimator with the best found parameters.
+
+        Only available if ``refit=True`` and the underlying estimator supports
+        ``predict``.
+
+        Parameters
+        -----------
+        X : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        return self.best_estimator.orig_estimator.predict(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def predict_proba(self, X):
+        """Call predict_proba on the estimator with the best found parameters.
+
+        Only available if ``refit=True`` and the underlying estimator supports
+        ``predict_proba``.
+
+        Parameters
+        -----------
+        X : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        self._check_is_fitted('predict_proba')
+        return self.best_estimator_.predict_proba(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def predict_log_proba(self, X):
+        """Call predict_log_proba on the estimator with the best found parameters.
+
+        Only available if ``refit=True`` and the underlying estimator supports
+        ``predict_log_proba``.
+
+        Parameters
+        -----------
+        X : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        self._check_is_fitted('predict_log_proba')
+        return self.best_estimator_.predict_log_proba(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def decision_function(self, X):
+        """Call decision_function on the estimator with the best found parameters.
+
+        Only available if ``refit=True`` and the underlying estimator supports
+        ``decision_function``.
+
+        Parameters
+        -----------
+        X : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        self._check_is_fitted('decision_function')
+        return self.best_estimator_.decision_function(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def transform(self, X):
+        """Call transform on the estimator with the best found parameters.
+
+        Only available if the underlying estimator supports ``transform`` and
+        ``refit=True``.
+
+        Parameters
+        -----------
+        X : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        self._check_is_fitted('transform')
+        return self.best_estimator_.transform(X)
+
+    # Tmp Ami
+    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    def inverse_transform(self, Xt):
+        """Call inverse_transform on the estimator with the best found params.
+
+        Only available if the underlying estimator implements
+        ``inverse_transform`` and ``refit=True``.
+
+        Parameters
+        -----------
+        Xt : indexable, length n_samples
+            Must fulfill the input assumptions of the
+            underlying estimator.
+
+        """
+        self._check_is_fitted('inverse_transform')
+        return self.best_estimator_.inverse_transform(Xt)
+
+    @property
+    def classes_(self):
+        self._check_is_fitted("classes_")
+        return self.best_estimator_.classes_
+
+    def fit(self, X, y=None, groups=None, **fit_params):
+        """Run fit with all sets of parameters.
+
+        Parameters
+        ----------
+
+        X : array-like, shape = [n_samples, n_features]
+            Training vector, where n_samples is the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples] or [n_samples, n_output], optional
+            Target relative to X for classification or regression;
+            None for unsupervised learning.
+
+        groups : array-like, with shape (n_samples,), optional
+            Group labels for the samples used while splitting the dataset into
+            train/test set.
+
+        **fit_params : dict of string -> object
+            Parameters passed to the ``fit`` method of the estimator
+        """
+
+        self._fit(X, y, groups, **fit_params)
+        return self
+
+    @property
+    def grid_scores_(self):
+        check_is_fitted(self, 'cv_results_')
+        if self.multimetric_:
+            raise AttributeError("grid_scores_ attribute is not available for"
+                                 " multi-metric evaluation.")
+        warnings.warn(
+            "The grid_scores_ attribute was deprecated in version 0.18"
+            " in favor of the more elaborate cv_results_ attribute."
+            " The grid_scores_ attribute will not be available from 0.20",
+            DeprecationWarning)
+
+        grid_scores = list()
+
+        for i, (params, mean, std) in enumerate(zip(
+                self.cv_results_['params'],
+                self.cv_results_['mean_test_score'],
+                self.cv_results_['std_test_score'])):
+            scores = np.array(list(self.cv_results_['split%d_test_score'
+                                                    % s][i]
+                                   for s in range(self.n_splits_)),
+                              dtype=np.float64)
+            grid_scores.append(_CVScoreTuple(params, mean, scores))
+
+        return grid_scores
+
     @property
     def best_estimator_(self):
         return self._cv.best_estimator_.orig_estimator

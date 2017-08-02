@@ -1,8 +1,8 @@
+[run]
+
+branch = True
+
 [report]
 
 include = 
-    */ibex/*
-
-omit =
-    */*test.py
-    */sklearn/__init__.py
+    */site-packages/*/ibex/*
