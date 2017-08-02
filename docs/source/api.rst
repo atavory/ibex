@@ -36,6 +36,12 @@ API
 .. automodule:: ibex.sklearn
 
 
+.. autoclass:: ibex.sklearn.linear_model.LinearRegression
+    :members:
+
+ ff
+
+
 ``preprocessing``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
