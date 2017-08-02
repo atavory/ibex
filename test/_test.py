@@ -6,6 +6,7 @@ import subprocess
 
 import six
 from sklearn import preprocessing
+from ibex.sklearn import exceptions
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
 from ibex.sklearn import pipeline as pd_pipeline
@@ -211,9 +212,8 @@ class _TransTest(unittest.TestCase):
 
         trans().fit(X).transform(X)
 
-        # Tmp Ami
-        # with self.assertRaises(KeyError):
-        #   trans().transform(X)
+        with self.assertRaises(exceptions.NotFittedError):
+            trans().transform(X)
 
         trans().fit_transform(X)
 
@@ -274,6 +274,7 @@ class _TransTest(unittest.TestCase):
         trans(pd_preprocessing.StandardScaler()).fit(X).transform(X)
 
         trans(pd_preprocessing.StandardScaler()).fit(X).fit_transform(X)
+        trans(pd_preprocessing.StandardScaler()).fit(X).fit_transform(X, X.a)
 
 
 class _IrisTest(unittest.TestCase):

@@ -150,15 +150,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
         -------
         score : float
         """
-        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
-
-        self._check_is_fitted('score')
-        if self.scorer_ is None:
-            raise ValueError("No score function explicitly defined, "
-                             "and the estimator doesn't provide one %s"
-                             % self.best_estimator_)
-        score = self.scorer_[self.refit] if self.multimetric_ else self.scorer_
-        return score(self.best_estimator_, X, y)
+        return self.__run('score', X, y)
 
     def _check_is_fitted(self, method_name):
         if not self._cv.refit:
@@ -204,8 +196,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        self._check_is_fitted('predict_proba')
-        return self.best_estimator_.predict_proba(X)
+        return self.__run('predict_proba', X, y)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
@@ -222,8 +213,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        self._check_is_fitted('predict_log_proba')
-        return self.best_estimator_.predict_log_proba(X)
+        return self.__run('predict_log_proba', X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
@@ -240,8 +230,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        self._check_is_fitted('decision_function')
-        return self.best_estimator_.decision_function(X)
+        return self.__run('decision_function', X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
@@ -258,8 +247,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        self._check_is_fitted('transform')
-        return self.best_estimator_.transform(X)
+        return self.__run('transform', X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
@@ -276,8 +264,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        self._check_is_fitted('inverse_transform')
-        return self.best_estimator_.inverse_transform(Xt)
+        return self.__run('transform', Xt)
 
     @property
     def classes_(self):
@@ -315,29 +302,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
 
     @property
     def grid_scores_(self):
-        check_is_fitted(self, 'cv_results_')
-        if self.multimetric_:
-            raise AttributeError("grid_scores_ attribute is not available for"
-                                 " multi-metric evaluation.")
-        warnings.warn(
-            "The grid_scores_ attribute was deprecated in version 0.18"
-            " in favor of the more elaborate cv_results_ attribute."
-            " The grid_scores_ attribute will not be available from 0.20",
-            DeprecationWarning)
-
-        grid_scores = list()
-
-        for i, (params, mean, std) in enumerate(zip(
-                self.cv_results_['params'],
-                self.cv_results_['mean_test_score'],
-                self.cv_results_['std_test_score'])):
-            scores = np.array(list(self.cv_results_['split%d_test_score'
-                                                    % s][i]
-                                   for s in range(self.n_splits_)),
-                              dtype=np.float64)
-            grid_scores.append(_CVScoreTuple(params, mean, scores))
-
-        return grid_scores
+        return self._cv.grid_scores_()
 
     @property
     def best_estimator_(self):
