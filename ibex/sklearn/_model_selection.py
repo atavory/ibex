@@ -3,6 +3,8 @@ from __future__ import absolute_import
 
 from sklearn import model_selection as _orig
 from sklearn import base
+from sklearn import exceptions
+from sklearn.utils.validation import check_is_fitted
 import pandas as pd
 
 from .._base import FrameMixin
@@ -148,6 +150,8 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
         -------
         score : float
         """
+        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
+
         self._check_is_fitted('score')
         if self.scorer_ is None:
             raise ValueError("No score function explicitly defined, "
@@ -157,14 +161,14 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
         return score(self.best_estimator_, X, y)
 
     def _check_is_fitted(self, method_name):
-        if not self.refit:
-            raise NotFittedError('This %s instance was initialized '
-                                 'with refit=False. %s is '
-                                 'available only after refitting on the best '
-                                 'parameters. You can refit an estimator '
-                                 'manually using the ``best_parameters_`` '
-                                 'attribute'
-                                 % (type(self).__name__, method_name))
+        if not self._cv.refit:
+            raise exceptions.NotFittedError(
+                'This %s instance was initialized '
+                'with refit=False. %s is '
+                'available only after refitting on the best '
+                'parameters. You can refit an estimator '
+                'manually using the ``best_parameters_`` '
+                'attribute' % (type(self).__name__, method_name))
         else:
             check_is_fitted(self, 'best_estimator_')
 
@@ -183,7 +187,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        return self.best_estimator.orig_estimator.predict(X)
+        return self.__run('predict', X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
@@ -302,7 +306,11 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             Parameters passed to the ``fit`` method of the estimator
         """
 
-        self._fit(X, y, groups, **fit_params)
+        params = self._cv.get_params()
+        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
+        params.update({'estimator': est})
+        self._cv.set_params(**params)
+        self._cv.fit(X_, y=y_, groups=groups)
         return self
 
     @property
@@ -334,6 +342,10 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
     @property
     def best_estimator_(self):
         return self._cv.best_estimator_.orig_estimator
+
+    def __run(self, name, X, *args):
+        self._check_is_fitted(name)
+        return getattr(self.best_estimator_, name)(X, *args)
 
 
 class GridSearchCV(BaseSearchCV):
@@ -367,14 +379,6 @@ class GridSearchCV(BaseSearchCV):
             pre_dispatch,
             error_score,
             return_train_score)
-
-    def fit(self, X, y=None, groups=None):
-        params = self._cv.get_params()
-        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
-        params.update({'estimator': est})
-        self._cv.set_params(**params)
-        self._cv.fit(X_, y=y_, groups=groups)
-        return self
 
 
 class RandomizedSearchCV(BaseSearchCV):
@@ -410,14 +414,6 @@ class RandomizedSearchCV(BaseSearchCV):
             random_state,
             error_score,
             return_train_score)
-
-    def fit(self, X, y=None, groups=None):
-        params = self._cv.get_params()
-        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
-        params.update({'estimator': est})
-        self._cv.set_params(**params)
-        self._cv.fit(X_, y=y_, groups=groups)
-        return self
 
 
 def update_module(name, module):

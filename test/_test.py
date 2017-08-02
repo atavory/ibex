@@ -497,6 +497,14 @@ class _SKLearnTest(unittest.TestCase):
 
 
 class _ModelSelectionTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        iris = datasets.load_iris()
+        cls._features = iris['feature_names']
+        cls._iris = pd.DataFrame(
+            np.c_[iris['data'], iris['target']],
+            columns=cls._features+['class'])
+
     def test_cross_val_predict(self):
         from ibex.sklearn import model_selection as pd_model_selection
 
@@ -513,6 +521,23 @@ class _ModelSelectionTest(unittest.TestCase):
             df['y'])
         self.assertIsInstance(y_hat, pd.Series)
         self.assertEqual(len(y_hat), len(df))
+
+    def test_grid_search_fit_predict(self):
+        from ibex.sklearn.svm import SVC
+        from ibex.sklearn.decomposition import PCA
+        from ibex.sklearn.feature_selection import SelectKBest
+
+        clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
+
+        param_grid = dict(
+            featureunion__pca__n_components=[1, 2, 3],
+            featureunion__selectkbest__k=[1, 2],
+            svc__C=[0.1, 1, 10])
+
+        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
+        if _level < 1:
+            return
+        grid_search.fit(self._iris[self._features], self._iris['class']).predict(self._iris[self._features])
 
 
 class _ExamplesTest(unittest.TestCase):
