@@ -20,7 +20,7 @@ The first, primary goal, is providing `pandas <http://pandas.pydata.org/>`_ adap
 
     package "Plotting" {
         [seaborn]
-        [plotly]
+        [bokeh]
         [matplotlib]
     }
 
@@ -38,7 +38,7 @@ The first, primary goal, is providing `pandas <http://pandas.pydata.org/>`_ adap
     [matplotlib] -> [numpy] : interfaced by
     [pandas] ..> [numpy] : implemented over
     [seaborn] -> [pandas] : interfaced by
-    [plotly] -> [pandas] : interfaced by
+    [bokeh] -> [pandas] : interfaced by
     [seaborn] ..-> [matplotlib] : implemented over
     [**ibex**] -> [pandas] : interfaced by
     [**ibex**] ..-> [sklearn] : implemented over
