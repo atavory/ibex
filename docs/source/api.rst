@@ -36,10 +36,10 @@ API
 .. automodule:: ibex.sklearn
 
 
+Here is a sample estimator:
+
 .. autoclass:: ibex.sklearn.linear_model.LinearRegression
     :members:
-
- ffgggghhh
 
 
 ``preprocessing``
