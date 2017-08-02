@@ -39,7 +39,7 @@ API
 .. autoclass:: ibex.sklearn.linear_model.LinearRegression
     :members:
 
- ff
+ ffgggghhh
 
 
 ``preprocessing``
