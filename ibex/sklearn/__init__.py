@@ -104,10 +104,9 @@ class _NewModuleLoader(object):
 
         six.exec_(code, mod.__dict__)
 
-        # Tmp Ami
-        #_model_selection_update_module(orig, mod)
-        #_pipeline_update_module(orig, mod)
-        #_preprocessing_update_module(orig, mod)
+        _model_selection_update_module(orig, mod)
+        _pipeline_update_module(orig, mod)
+        _preprocessing_update_module(orig, mod)
 
         return mod
 
