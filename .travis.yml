@@ -24,7 +24,7 @@ install:
   - python setup.py install
 
 script: 
-  - python test/_test.py
+  - if [ "$TRAVIS_EVENT_TYPE" = "cron" ] ; then IBEX_TEST_LEVEL=2 python test/_test.py ; else python test/_test.py ; fi
   - coverage run test/_test.py
 
 after_success:
