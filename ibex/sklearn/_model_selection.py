@@ -175,9 +175,12 @@ class GridSearchCV(BaseSearchCV):
 
 
 def update_module(name, module):
-    if name != 'model_selection':
-        return
+    attribs = {
+        'cross_val_predict': cross_val_predict,
+        'BaseSearchCV': BaseSearchCV,
+        'GridSearchCV': GridSearchCV,
+    }
 
-    setattr(module, 'cross_val_predict', cross_val_predict)
-    setattr(module, 'BaseSearchCV', BaseSearchCV)
-    setattr(module, 'GridSearchCV', GridSearchCV)
+    for attrib in attribs:
+        if name == 'model_selection' or attrib in dir(module):
+            setattr(module, attrib, attribs[attrib])
