@@ -1,8 +1,6 @@
 import os
 import sys
-import distutils
 from setuptools import setup, Command
-from distutils.core import setup
 import subprocess
 
 
@@ -21,9 +19,10 @@ class _TestCommand(Command):
 
     def run(self):
         run_str = "%s -m unittest discover test *test.py" % ('python' if _py2 else 'python3')
+        cheap = os.getenv('IBEX_CHEAP_TESTS_ONLY')
         subprocess.check_call(
             run_str.split(' '),
-            env={'IBEX_CHEAP_TESTS_ONLY': '1' if int(os.getenv('IBEX_CHEAP_TESTS_ONLY')) else '0'})
+            env={'IBEX_CHEAP_TESTS_ONLY': '1' if cheap and int(cheap) else '0'})
 
 
 class _DocumentCommand(Command):
@@ -46,7 +45,7 @@ class _DocumentCommand(Command):
 setup(
     name='ibex',
     version='0.1.0',
-    author='Ami Tavory, Shahar Azulay',
+    author='Ami Tavory, Shahar Azulay, Tali Raveh-Sadka',
     author_email='atavory at gmail',
     url='https://github.com/atavory/ibex',
     packages=[
@@ -79,7 +78,3 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis',
     ],
 )
-
-
-
-

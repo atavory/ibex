@@ -378,9 +378,6 @@ class _DigitsTest(unittest.TestCase):
     def test_cv(self):
         clf = pd_decomposition.PCA() | pd_linear_model.LogisticRegression()
 
-        n_components = [20, 40, 64]
-        Cs = np.logspace(-4, 4, 3)
-
         estimator = PDGridSearchCV(
             clf,
             {'pca__n_components': [20, 40, 64], 'logisticregression__C': np.logspace(-4, 4, 3)})
@@ -515,7 +512,7 @@ class _ModelSelectionTest(unittest.TestCase):
             df[['x']],
             df['y'])
         self.assertIsInstance(y_hat, pd.Series)
-        self.assertEquals(len(y_hat), len(df))
+        self.assertEqual(len(y_hat), len(df))
 
 
 class _ExamplesTest(unittest.TestCase):
