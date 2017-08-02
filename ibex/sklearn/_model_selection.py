@@ -128,6 +128,10 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
     def __init__(self, estimator):
         self._estimator = estimator
 
+    @property
+    def best_estimator_(self):
+        return self._cv.best_estimator_.orig_estimator
+
 
 class GridSearchCV(BaseSearchCV):
     def __init__(
@@ -169,9 +173,48 @@ class GridSearchCV(BaseSearchCV):
         self._cv.fit(X_, y=y_, groups=groups)
         return self
 
-    @property
-    def best_estimator_(self):
-        return self._cv.best_estimator_.orig_estimator
+
+class RandomizedSearchCV(BaseSearchCV):
+    def __init__(
+            self,
+            estimator,
+            param_distributions,
+            n_iter=10,
+            scoring=None,
+            fit_params=None,
+            n_jobs=1,
+            iid=True,
+            refit=True,
+            cv=None,
+            verbose=0,
+            pre_dispatch='2*n_jobs',
+            random_state=None,
+            error_score='raise',
+            return_train_score=True):
+
+        self._cv = _orig.GridSearchCV(
+            estimator,
+            param_distributions,
+            n_iter,
+            scoring,
+            fit_params,
+            n_jobs,
+            iid,
+            refit,
+            cv,
+            verbose,
+            pre_dispatch,
+            random_state,
+            error_score,
+            return_train_score)
+
+    def fit(self, X, y=None, groups=None):
+        params = self._cv.get_params()
+        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
+        params.update({'estimator': est})
+        self._cv.set_params(**params)
+        self._cv.fit(X_, y=y_, groups=groups)
+        return self
 
 
 def update_module(name, module):
@@ -179,6 +222,7 @@ def update_module(name, module):
         'cross_val_predict': cross_val_predict,
         'BaseSearchCV': BaseSearchCV,
         'GridSearchCV': GridSearchCV,
+        'RandomizedSearchCV': RandomizedSearchCV,
     }
 
     for attrib in attribs:
