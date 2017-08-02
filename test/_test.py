@@ -38,8 +38,8 @@ from ibex import *
 _this_dir = os.path.dirname(__file__)
 
 
-_cheap = os.getenv('IBEX_CHEAP_TESTS_ONLY')
-_cheap = _cheap is not None and bool(int(_cheap))
+_level = os.getenv('IBEX_TEST_LEVEL')
+_level = 0 if _level is None else int(_level)
 
 
 class _ConceptsTest(unittest.TestCase):
@@ -340,7 +340,7 @@ class _IrisTest(unittest.TestCase):
             svc__C=[0.1, 1, 10])
 
         grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
-        if _cheap:
+        if _level < 1:
             return
         grid_search.fit(self._iris[self._features], self._iris['class'])
         grid_search.best_estimator_
@@ -382,7 +382,7 @@ class _DigitsTest(unittest.TestCase):
             clf,
             {'pca__n_components': [20, 40, 64], 'logisticregression__C': np.logspace(-4, 4, 3)})
 
-        if _cheap:
+        if _level < 1:
             return
         estimator.fit(self._digits[self._features], self._digits.digit)
 
@@ -517,7 +517,7 @@ class _ModelSelectionTest(unittest.TestCase):
 
 class _ExamplesTest(unittest.TestCase):
     def test_nbs(self):
-        if _cheap:
+        if _level < 2:
             return
         nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
         nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
