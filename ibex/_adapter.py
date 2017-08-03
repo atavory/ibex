@@ -16,6 +16,10 @@ from ._utils import update_method_wrapper, update_class_wrapper
 __all__ = []
 
 
+def _from_pickle(stuff):
+    return None
+
+
 def make_adapter(step):
     from ._base import FrameMixin
 
@@ -156,6 +160,9 @@ def make_adapter(step):
             if name == 'feature_importances_':
                 return pd.Series(base_attr, index=self.x_columns)
             return base_attr
+
+        def __reduce__(self):
+            return (_from_pickle, (23, ))
 
     return _Adapter
 

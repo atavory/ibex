@@ -4,6 +4,7 @@ from glob import glob
 import doctest
 import subprocess
 import json
+import pickle
 
 import six
 from sklearn import preprocessing
@@ -25,6 +26,7 @@ try:
 except ImportError:
     from sklearn.cross_validation import cross_val_score
 from sklearn import datasets
+from sklearn.externals import joblib
 import pandas as pd
 import numpy as np
 try:
@@ -585,6 +587,17 @@ class _ExamplesTest(unittest.TestCase):
                 # Python2.7 fails on travis, for some reason
                 if six.PY3:
                     raise
+
+
+class _PickleTest(unittest.TestCase):
+    def test_direct_single(self):
+        pickle.loads(
+            pickle.dumps(pd_decomposition.PCA()))
+        ff
+
+    def test_direct_pipe(self):
+        pickle.dumps(pd_decomposition.PCA() | pd_linear_model.LinearRegression())
+        gg
 
 
 def load_tests(loader, tests, ignore):
