@@ -3,6 +3,7 @@ import os
 from glob import glob
 import doctest
 import subprocess
+import json
 
 import six
 from sklearn import preprocessing
@@ -543,14 +544,21 @@ class _ModelSelectionTest(unittest.TestCase):
 
 class _ExamplesTest(unittest.TestCase):
     def test_nbs(self):
-        if _level < 2:
-            return
         nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
         nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
         for n in nb_f_names:
-            cmd = 'jupyter nbconvert --execute %s' % n
+
+            with (open(n, encoding='utf-8') if six.PY3 else open(n)) as f:
+                cnt = json.loads(f.read(), encoding='utf-8')
+            metadata = cnt['metadata']
+            if 'ibex_test_level' not in metadata:
+                raise KeyError('ibex_test_level missing from metadata of ' + n)
+            if _level < int(metadata['ibex_test_level']):
+                continue
+
+            cmd = 'jupyter-nbconvert --execute %s' % n
             try:
-                subprocess.check_call(cmd.split(' '))
+                self.assertEqual(os.system(cmd), 0)
             except Exception as exc:
                 print(cmd, exc)
                 # Python2.7 fails on travis, for some reason
