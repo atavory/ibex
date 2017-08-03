@@ -33,8 +33,6 @@ The full documentation at |read_the_docs_ibex|_ defines these matters in detail,
 
 
 .. |read_the_docs_ibex| image:: https://github.com/atavory/ibex/blob/master/docs/source/_static/read_the_docs.png
-    :scale: 20%
-
 .. _read_the_docs_ibex: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 

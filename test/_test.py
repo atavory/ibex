@@ -44,6 +44,25 @@ _level = os.getenv('IBEX_TEST_LEVEL')
 _level = 0 if _level is None else int(_level)
 
 
+def _load_iris():
+    iris = datasets.load_iris()
+    features = iris['feature_names']
+    iris = pd.DataFrame(
+        np.c_[iris['data'], iris['target']],
+        columns=features+['class'])
+    return iris, features
+
+
+def _load_digits():
+    digits = datasets.load_digits()
+    features = ['f%d' % i for i in range(digits['data'].shape[1])]
+    digits = pd.DataFrame(
+        np.c_[digits['data'], digits['target']],
+        columns=features+['digit'])
+    digits = digits.sample(frac=0.1).reset_index()
+    return digits, features
+
+
 class _ConceptsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -279,60 +298,66 @@ class _TransTest(unittest.TestCase):
 
 
 class _IrisTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        iris = datasets.load_iris()
-        cls._features = iris['feature_names']
-        cls._iris = pd.DataFrame(
-            np.c_[iris['data'], iris['target']],
-            columns=cls._features+['class'])
-
     def test_fit_transform(self):
+        iris, features = _load_iris()
+
         decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
 
-        tr = decomp.fit_transform(self._iris)
+        tr = decomp.fit_transform(iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_fit_plus_transform(self):
+        iris, features = _load_iris()
+
         decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
 
-        tr = decomp.fit(self._iris).transform(self._iris)
+        tr = decomp.fit(iris).transform(iris)
         self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
 
     def test_logistic_regression_cv(self):
+        iris, features = _load_iris()
+
         clf = pd_linear_model.LogisticRegression()
-        clf.fit(self._iris[self._features], self._iris['class'])
+        clf.fit(iris[features], iris['class'])
 
         res = cross_val_score(
             clf,
-            X=self._iris[self._features],
-            y=self._iris['class'])
+            X=iris[features],
+            y=iris['class'])
 
     def test_predict_proba(self):
-        clf = pd_linear_model.LogisticRegression()
-        clf.fit(self._iris[self._features], self._iris['class'])
+        iris, features = _load_iris()
 
-        clf.predict_proba(self._iris[self._features])
+        clf = pd_linear_model.LogisticRegression()
+        clf.fit(iris[features], iris['class'])
+
+        clf.predict_proba(iris[features])
 
     def test_predict_log_proba(self):
-        clf = pd_linear_model.LogisticRegression()
-        clf.fit(self._iris[self._features], self._iris['class'])
+        iris, features = _load_iris()
 
-        clf.predict_log_proba(self._iris[self._features])
+        clf = pd_linear_model.LogisticRegression()
+        clf.fit(iris[features], iris['class'])
+
+        clf.predict_log_proba(iris[features])
 
     def test_pipeline_cv(self):
+        iris, features = _load_iris()
+
         clf = pd_preprocessing.StandardScaler() | pd_linear_model.LogisticRegression()
-        clf.fit(self._iris[self._features], self._iris['class'])
+        clf.fit(iris[features], iris['class'])
 
         res = cross_val_score(
             clf,
-            X=self._iris[self._features],
-            y=self._iris['class'])
+            X=iris[features],
+            y=iris['class'])
 
     def test_pipeline_feature_union_grid_search_cv(self):
         from ibex.sklearn.svm import SVC
         from ibex.sklearn.decomposition import PCA
         from ibex.sklearn.feature_selection import SelectKBest
+
+        iris, features = _load_iris()
 
         clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
@@ -344,40 +369,39 @@ class _IrisTest(unittest.TestCase):
         grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
         if _level < 1:
             return
-        grid_search.fit(self._iris[self._features], self._iris['class'])
+        grid_search.fit(iris[features], iris['class'])
         grid_search.best_estimator_
 
     def test_staged_predict(self):
+        iris, features = _load_iris()
+
         clf = pd_ensemble.GradientBoostingRegressor()
-        clf.fit(self._iris[self._features], self._iris['class'])
-        clf.staged_predict(self._iris[self._features])
+        clf.fit(iris[features], iris['class'])
+        clf.staged_predict(iris[features])
 
     def test_feature_importances(self):
+        iris, features = _load_iris()
+
         clf = pd_ensemble.GradientBoostingRegressor()
         with self.assertRaises(AttributeError):
             clf.feature_importances_
-        clf.fit(self._iris[self._features], self._iris['class'])
+        clf.fit(iris[features], iris['class'])
         self.assertTrue(isinstance(clf.feature_importances_, pd.Series))
 
         # Tmp Ami
     def _test_aic_bic(self):
+        iris, features = _load_iris()
+
         clf = pd_mixture.GaussianMixture()
-        clf.fit(self._iris[self._features], self._iris['class'])
-        clf.aic(self._iris[self._features])
-        clf.bic(self._iris[self._features])
+        clf.fit(iris[features], iris['class'])
+        clf.aic(iris[features])
+        clf.bic(iris[features])
 
 
 class _DigitsTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        digits = datasets.load_digits()
-        cls._features = ['f%d' % i for i in range(digits['data'].shape[1])]
-        cls._digits = pd.DataFrame(
-            np.c_[digits['data'], digits['target']],
-            columns=cls._features+['digit'])
-        cls._digits = cls._digits.sample(frac=0.1).reset_index()
-
     def test_cv(self):
+        digits, features = _load_digits()
+
         clf = pd_decomposition.PCA() | pd_linear_model.LogisticRegression()
 
         estimator = PDGridSearchCV(
@@ -386,7 +410,7 @@ class _DigitsTest(unittest.TestCase):
 
         if _level < 1:
             return
-        estimator.fit(self._digits[self._features], self._digits.digit)
+        estimator.fit(digits[features], digits.digit)
 
 
 class _FeatureUnionTest(unittest.TestCase):
@@ -499,16 +523,10 @@ class _SKLearnTest(unittest.TestCase):
 
 
 class _ModelSelectionTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        iris = datasets.load_iris()
-        cls._features = iris['feature_names']
-        cls._iris = pd.DataFrame(
-            np.c_[iris['data'], iris['target']],
-            columns=cls._features+['class'])
-
     def test_cross_val_predict(self):
         from ibex.sklearn import model_selection as pd_model_selection
+
+        iris, features = _load_iris()
 
         n = 100
         df = pd.DataFrame({
@@ -529,6 +547,8 @@ class _ModelSelectionTest(unittest.TestCase):
         from ibex.sklearn.decomposition import PCA
         from ibex.sklearn.feature_selection import SelectKBest
 
+        iris, features = _load_iris()
+
         clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
         param_grid = dict(
@@ -539,7 +559,7 @@ class _ModelSelectionTest(unittest.TestCase):
         grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
         if _level < 1:
             return
-        grid_search.fit(self._iris[self._features], self._iris['class']).predict(self._iris[self._features])
+        grid_search.fit(iris[features], iris['class']).predict(iris[features])
 
 
 class _ExamplesTest(unittest.TestCase):
