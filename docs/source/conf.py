@@ -243,8 +243,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ibex.tex', u'frame\\_learn Documentation',
-     u'Ami Tavory and Shahar Azulay', 'manual'),
+    (master_doc, 'ibex.tex', u'Ibex',
+     u'Ami Tavory, Shahar Azulay, Tali Raveh-Sadka', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
