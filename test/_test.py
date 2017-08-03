@@ -591,13 +591,12 @@ class _ExamplesTest(unittest.TestCase):
 
 class _PickleTest(unittest.TestCase):
     def test_direct_single(self):
-        pickle.loads(
-            pickle.dumps(pd_decomposition.PCA()))
-        ff
+        trn = pd_decomposition.PCA()
+        unpickled_trn = pickle.loads(pickle.dumps(trn))
 
     def test_direct_pipe(self):
-        pickle.dumps(pd_decomposition.PCA() | pd_linear_model.LinearRegression())
-        gg
+        clf = pd_decomposition.PCA() | pd_linear_model.LinearRegression()
+        unpickled_clf = pickle.loads(pickle.dumps(clf))
 
 
 def load_tests(loader, tests, ignore):

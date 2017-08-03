@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import functools
 import inspect
+import pickle
 
 import six
 import numpy as np
@@ -17,7 +18,8 @@ __all__ = []
 
 
 def _from_pickle(stuff):
-    return None
+    s = pickle.loads(stuff)
+    return frame(s)
 
 
 def make_adapter(step):
@@ -117,7 +119,6 @@ def make_adapter(step):
                 params = list(inspect.signature(base_attr).parameters)
             else:
                 params = inspect.getargspec(base_attr)[0]
-
             # Tmp Ami - write a ut for this; remove todo from docs
             if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
                 verify_y_type(args[0])
@@ -162,7 +163,9 @@ def make_adapter(step):
             return base_attr
 
         def __reduce__(self):
-            return (_from_pickle, (23, ))
+            params = self.get_params(deep=True)
+            s = step(*params)
+            return (_from_pickle, (pickle.dumps(s), ))
 
     return _Adapter
 
@@ -248,7 +251,6 @@ def frame(step):
         'kneighbors',
         'predict_log_proba',
         'transform',
-
     ]
     for wrap in wrapped:
         if not hasattr(step, wrap) and hasattr(_Adapter, wrap):
