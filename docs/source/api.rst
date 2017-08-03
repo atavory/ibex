@@ -36,10 +36,23 @@ API
 .. automodule:: ibex.sklearn
 
 
-Here is a sample estimator:
+Overview
+^^^^^^^^
+
+Transformer Example
+******************************************
+
+.. autoclass:: ibex.sklearn.decomposition.PCA
+    :members:
+    :special-members:
+
+
+Regressor Example
+******************************************
 
 .. autoclass:: ibex.sklearn.linear_model.LinearRegression
     :members:
+    :special-members:
 
 
 ``preprocessing``

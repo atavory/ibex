@@ -10,6 +10,10 @@ import pandas as pd
 from sklearn import pipeline
 
 from ._verify_args import *
+from ._utils import update_method_wrapper, update_class_wrapper
+
+
+__all__ = []
 
 
 def make_adapter(step):
@@ -49,6 +53,9 @@ def make_adapter(step):
             return self.__run(super(_Adapter, self).perplexity, 'perplexity', X, *args)
 
         def fit(self, X, *args):
+            """
+            Shmippy shmoppoo
+            """
             return self.__run(super(_Adapter, self).fit, 'fit', X, *args)
 
         def decision_function(self, X, *args):
@@ -199,6 +206,8 @@ def frame(step):
 
     _Adapter = make_adapter(step)
 
+    update_class_wrapper(_Adapter, step)
+
     _Adapter.__name__ = step.__name__
 
     for name, func in vars(_Adapter).items():
@@ -214,6 +223,7 @@ def frame(step):
         'predict_proba',
         'sample_y',
         'score_samples',
+        'score',
         'staged_predict_proba',
         'apply',
         'bic',
@@ -238,8 +248,11 @@ def frame(step):
             delattr(_Adapter, wrap)
         elif six.callable(getattr(_Adapter, wrap)):
             try:
-                functools.update_wrapper(getattr(_Adapter, wrap), getattr(step, wrap))
+                update_method_wrapper(_Adapter, step, wrap)
             except AttributeError:
                 pass
 
     return _Adapter
+
+
+__all__ += ['frame']
