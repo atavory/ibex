@@ -29,7 +29,13 @@ This library aims for two (somewhat independent) goals:
 (You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different 
 approach.)
 
-The `full documentation at readthedocs <http://ibex.readthedocs.io/en/latest/?badge=latest>`_ defines these matters in detail, but the library has an extremely-small `interface <http://ibex.readthedocs.io/en/latest/overview.html>`_.
+The full documentation at |read_the_docs_ibex|_ defines these matters in detail, but the library has an extremely-small `interface <http://ibex.readthedocs.io/en/latest/overview.html>`_.
+
+
+.. |read_the_docs_ibex| image:: https://media.readthedocs.com/corporate/img/header-logo.png
+    :scale: 20%
+
+.. _read_the_docs_ibex: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 
 TL;DR
