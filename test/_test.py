@@ -576,7 +576,7 @@ class _ExamplesTest(unittest.TestCase):
             if _level < int(metadata['ibex_test_level']):
                 continue
 
-            cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s' % (n, n)
+            cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s --ExecutePreprocessor.timeout=7200' % (n, n)
 
             try:
                 self.assertEqual(os.system(cmd), 0)
