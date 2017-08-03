@@ -576,7 +576,8 @@ class _ExamplesTest(unittest.TestCase):
             if _level < int(metadata['ibex_test_level']):
                 continue
 
-            cmd = 'jupyter-nbconvert --execute %s' % n
+            cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s' % (n, n)
+
             try:
                 self.assertEqual(os.system(cmd), 0)
             except Exception as exc:
