@@ -1,5 +1,6 @@
 import functools
 
+import six
 import pandas as pd
 
 
@@ -32,7 +33,8 @@ def verify_y_type(y):
 
 
 def update_class_wrapper(new_class, orig_class):
-    new_class.__doc__ = _wrap_msg + orig_class.__doc__
+    if six.PY3:
+        new_class.__doc__ = _wrap_msg + orig_class.__doc__
 
 
 def update_method_wrapper(new_class, orig_class, method_name):
