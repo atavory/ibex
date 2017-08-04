@@ -2,9 +2,9 @@ import unittest
 import os
 from glob import glob
 import doctest
-import subprocess
 import json
 import pickle
+import inspect
 
 import six
 from sklearn import preprocessing
@@ -20,6 +20,8 @@ from sklearn import ensemble
 from ibex.sklearn import ensemble as pd_ensemble
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
+from sklearn import decomposition
+from ibex.sklearn import decomposition as pd_decomposition
 from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
 try:
     from sklearn.model_selection import cross_val_score
