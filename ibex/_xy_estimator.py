@@ -8,8 +8,8 @@ import numpy as np
 from sklearn import base
 
 
-def _from_pickle(est, params):
-    return frame(est)(**params)
+def _from_pickle(est, X, y):
+    return make_xy_estimator(est, X, y)[0]
 
 
 def make_xy_estimator(estimator, orig_X, orig_y=None):
@@ -116,7 +116,7 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
             return res
 
         def __reduce__(self):
-            return (_from_pickle, (est, self.get_params(deep=True), ))
+            return (_from_pickle, (estimator, orig_X, orig_y))
 
         @property
         def orig_estimator(self):
@@ -126,6 +126,6 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
 
     n = len(orig_X)
     X_ = np.arange(n).reshape((n, 1))
-    y_ = None if orig_y is None else np.arange(n)
+    y_ = None if orig_y is None else orig_y.values
 
     return _Adapter(**get_set_params(estimator)), X_, y_

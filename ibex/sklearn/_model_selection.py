@@ -196,7 +196,7 @@ class BaseSearchCV(base.BaseEstimator, FrameMixin):
             underlying estimator.
 
         """
-        return self.__run('predict_proba', X, y)
+        return self.__run('predict_proba', X)
 
     # Tmp Ami
     # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
