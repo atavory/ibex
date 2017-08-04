@@ -7,6 +7,11 @@ import six
 import numpy as np
 from sklearn import base
 
+
+def _from_pickle(est, params):
+    return frame(est)(**params)
+
+
 def make_xy_estimator(estimator, orig_X, orig_y=None):
     def get_set_params(est):
         base_attr = getattr(estimator, '__init__')
@@ -109,6 +114,9 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
                 delattr(self, '_ibex_in_op')
 
             return res
+
+        def __reduce__(self):
+            return (_from_pickle, (est, self.get_params(deep=True), ))
 
         @property
         def orig_estimator(self):

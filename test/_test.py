@@ -591,8 +591,14 @@ class _ExamplesTest(unittest.TestCase):
 
 class _PickleTest(unittest.TestCase):
     def test_direct_single(self):
+        iris, features = _load_iris()
+
         trn = pd_decomposition.PCA()
         unpickled_trn = pickle.loads(pickle.dumps(trn))
+
+        pca_unpickled = unpickled_trn.fit_transform(iris[features])
+        pca = trn.fit_transform(iris[features])
+        self.assertTrue(pca_unpickled.equals(pca))
 
     def test_direct_pipe(self):
         clf = pd_decomposition.PCA() | pd_linear_model.LinearRegression()

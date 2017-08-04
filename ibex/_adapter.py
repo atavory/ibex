@@ -1,34 +1,31 @@
 from __future__ import absolute_import
 
 
-import functools
 import inspect
-import pickle
 
 import six
 import numpy as np
 import pandas as pd
 from sklearn import pipeline
 
-from ._verify_args import *
+from ._verify_args import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
 
 
 __all__ = []
 
 
-def _from_pickle(stuff):
-    s = pickle.loads(stuff)
-    return frame(s)
+def _from_pickle(est, params):
+    return frame(est)(**params)
 
 
-def make_adapter(step):
+def make_adapter(est):
     from ._base import FrameMixin
 
 
-    class _Adapter(step, FrameMixin):
+    class _Adapter(est, FrameMixin):
         def __repr__(self):
-            parts = step.__repr__(self).split('(', 1)
+            parts = est.__repr__(self).split('(', 1)
             return 'Adapter[' + parts[0] + '](' + parts[1]
 
         def __str__(self):
@@ -114,7 +111,7 @@ def make_adapter(step):
             if name.startswith('fit'):
                 self.x_columns = X.columns
 
-            base_attr = getattr(step, name)
+            base_attr = getattr(est, name)
             if six.PY3:
                 params = list(inspect.signature(base_attr).parameters)
             else:
@@ -137,7 +134,7 @@ def make_adapter(step):
         # Tmp Ami - should be in base?
         def __x(self, X):
             X = X[self.x_columns]
-            return X if isinstance(step, FrameMixin) else X.as_matrix()
+            return X if isinstance(est, FrameMixin) else X.as_matrix()
 
         def __process_wrapped_call_res(self, X, res):
             if hasattr(self, '_ibex_in_op'):
@@ -163,22 +160,20 @@ def make_adapter(step):
             return base_attr
 
         def __reduce__(self):
-            params = self.get_params(deep=True)
-            s = step(*params)
-            return (_from_pickle, (pickle.dumps(s), ))
+            return (_from_pickle, (est, self.get_params(deep=True), ))
 
     return _Adapter
 
 
-def frame(step):
+def frame(est):
     """
     Arguments:
-        step: either a step class or a step object. The class (or class of the
+        est: either an estimator class or an estimator object. The class (or class of the
             object) should subclass :py:class:`ibex.sklearn.base.BaseEstimator`.
 
     Returns:
-        If ``step`` is a class, returns a class; if ``step`` is an object,
-            returns an object. Note that the result will subclass ``step``
+        If ``est`` is a class, returns a class; if ``est`` is an object,
+            returns an object. Note that the result will subclass ``est``
             and :py:class:`ibex.FrameMixin`
 
     Example:
@@ -203,28 +198,30 @@ def frame(step):
     """
     from ._base import FrameMixin
 
-    if isinstance(step, FrameMixin):
-        return step
 
-    if isinstance(step, pipeline.Pipeline):
-        return frame(pipeline.Pipeline)(steps=step.steps)
+    if isinstance(est, FrameMixin):
+        return est
 
-    if not inspect.isclass(step):
-        params = step.get_params()
-        f = frame(type(step))(**params)
+    # Tmp Ami - what about feature union?
+    if isinstance(est, pipeline.Pipeline):
+        return frame(pipeline.Pipeline)(ests=est.ests)
+
+    if not inspect.isclass(est):
+        params = est.get_params()
+        f = frame(type(est))(**params)
         return f
 
-    _Adapter = make_adapter(step)
+    _Adapter = make_adapter(est)
 
-    update_class_wrapper(_Adapter, step)
+    update_class_wrapper(_Adapter, est)
 
-    _Adapter.__name__ = step.__name__
+    _Adapter.__name__ = est.__name__
 
     for name, func in vars(_Adapter).items():
         if name.startswith('_'):
             continue
 
-        parfunc = getattr(step, name, None)
+        parfunc = getattr(est, name, None)
         if parfunc and getattr(parfunc, '__doc__', None):
             func.__doc__ = parfunc.__doc__
 
@@ -253,11 +250,11 @@ def frame(step):
         'transform',
     ]
     for wrap in wrapped:
-        if not hasattr(step, wrap) and hasattr(_Adapter, wrap):
+        if not hasattr(est, wrap) and hasattr(_Adapter, wrap):
             delattr(_Adapter, wrap)
         elif six.callable(getattr(_Adapter, wrap)):
             try:
-                update_method_wrapper(_Adapter, step, wrap)
+                update_method_wrapper(_Adapter, est, wrap)
             except AttributeError:
                 pass
 
