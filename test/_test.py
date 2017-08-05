@@ -6,6 +6,7 @@ import json
 import pickle
 
 import six
+import numpy as np
 from sklearn import preprocessing
 from ibex.sklearn import exceptions
 from ibex.sklearn import preprocessing as pd_preprocessing
@@ -77,6 +78,21 @@ def _generate_fit_test(X, y, est, pd_est):
     def test(self):
         pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
+        with self.assertRaises(TypeError):
+            pd_est.fit(X.as_matrix(), y.values)
+    return test
+
+
+def _generate_predict_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'predict'),
+            hasattr(pd_est, 'predict'))
+        if not hasattr(est, 'predict'):
+            return
+        pd_y_hat = pd_est.fit(X, y).predict(X)
+        y_hat = est.fit(X.as_matrix(), y.values).predict(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
     return test
 
 
@@ -100,6 +116,7 @@ for dataset in zip(_dataset_names, _Xs, _ys):
         name = dataset_name + '_' + type(est).__name__.lower()
         setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
         setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_predict_' + name, _generate_predict_test(X, y, est, pd_est))
 
 
 class _ConceptsTest(unittest.TestCase):
