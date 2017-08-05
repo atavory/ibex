@@ -11,7 +11,6 @@ from sklearn import exceptions
 from sklearn.externals import joblib
 from sklearn.utils.metaestimators import if_delegate_has_method
 
-from ._utils import wrapped_fn_names
 from ._verify_args import verify_x_type, verify_y_type
 
 
@@ -355,6 +354,9 @@ for wrap in _wrapped:
         functools.update_wrapper(getattr(FeatureUnion, wrap), getattr(pipeline.FeatureUnion, wrap))
     except AttributeError:
         pass
+
+
+__all__ += ['Pipeline']
 
 
 class Pipeline(base.BaseEstimator, FrameMixin):

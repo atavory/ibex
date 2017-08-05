@@ -110,16 +110,19 @@ def make_adapter(est):
                 self.x_columns = X.columns
 
             base_attr = getattr(est, name)
-            if six.PY3:
-                params = list(inspect.signature(base_attr).parameters)
-            else:
-                params = inspect.getargspec(base_attr)[0]
-            # Tmp Ami - write a ut for this; remove todo from docs
-            if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
-                verify_y_type(args[0])
+            try:
+                if six.PY3:
+                    params = list(inspect.signature(base_attr).parameters)
+                else:
+                    params = inspect.getargspec(base_attr)[0]
+                # Tmp Ami - write a ut for this; remove todo from docs
+                if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
+                    verify_y_type(args[0])
 
-                if not X.index.equals(args[0].index):
-                    raise ValueError('Indexes do not match')
+                    if not X.index.equals(args[0].index):
+                        raise ValueError('Indexes do not match')
+            except TypeError:
+                pass
 
             self._ibex_in_op = True
             try:

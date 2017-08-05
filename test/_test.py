@@ -121,7 +121,8 @@ def _generate_predict_proba_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
             hasattr(est, 'predict_proba'),
-            hasattr(pd_est, 'predict_proba'))
+            hasattr(pd_est, 'predict_proba'),
+            (est, pd_est))
         if not hasattr(est, 'predict_proba'):
             return
         pd_y_hat = pd_est.fit(X, y).predict_proba(X)
@@ -238,24 +239,42 @@ _estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(
     pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)))
+# Tmp Ami - fails without probability=True
+_estimators.append(
+    pipeline.make_pipeline(
+        feature_selection.SelectKBest(k=1),
+        svm.SVC(kernel="linear", random_state=42, probability=True)))
+_pd_estimators.append(
+    pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True))
+param_grid = dict(
+    C=[0.1, 1, 10])
+_estimators.append(
+    GridSearchCV(
+        svm.SVC(kernel="linear", random_state=42, probability=True),
+        param_grid=param_grid,
+        verbose=0))
+_pd_estimators.append(
+    PDGridSearchCV(
+        pd_svm.SVC(kernel="linear", random_state=42, probability=True),
+        param_grid=param_grid,
+        verbose=0))
 # Tmp Ami
 if False:
     param_grid = dict(
-        featureunion__pca__n_components=[1, 2, 3],
-        featureunion__selectkbest__k=[1, 2],
+        selectkbest__k=[1, 2],
         svc__C=[0.1, 1, 10])
     _estimators.append(
         GridSearchCV(
             pipeline.make_pipeline(
-                pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
-                svm.SVC(kernel="linear")),
+                feature_selection.SelectKBest(k=1),
+                svm.SVC(kernel="linear", random_state=42, probability=True)),
             param_grid=param_grid,
             verbose=0))
     _pd_estimators.append(
-            PDGridSearchCV(
-                pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear"),
-                param_grid=param_grid,
-                verbose=0))
+        PDGridSearchCV(
+            pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True),
+            param_grid=param_grid,
+            verbose=0))
 
 
 test_i = 0
@@ -632,46 +651,45 @@ class _OperatorsTest(unittest.TestCase):
         print(linear_model.LinearRegression())
 
 
-# Tmp Ami
-if False:
-    class _ModelSelectionTest(unittest.TestCase):
-        def test_cross_val_predict(self):
-            from ibex.sklearn import model_selection as pd_model_selection
+class _ModelSelectionTest(unittest.TestCase):
+    def test_cross_val_predict(self):
+        from ibex.sklearn import model_selection as pd_model_selection
 
-            iris, features = _load_iris()
+        iris, features = _load_iris()
 
-            n = 100
-            df = pd.DataFrame({
-                    'x': range(n),
-                    'y': range(n),
-                },
-                index=['i%d' % i for i in range(n)])
+        n = 100
+        df = pd.DataFrame({
+                'x': range(n),
+                'y': range(n),
+            },
+            index=['i%d' % i for i in range(n)])
 
-            y_hat = pd_model_selection.cross_val_predict(
-                pd_linear_model.LinearRegression(),
-                df[['x']],
-                df['y'])
-            self.assertIsInstance(y_hat, pd.Series)
-            self.assertEqual(len(y_hat), len(df))
+        y_hat = pd_model_selection.cross_val_predict(
+            pd_linear_model.LinearRegression(),
+            df[['x']],
+            df['y'])
+        self.assertIsInstance(y_hat, pd.Series)
+        self.assertEqual(len(y_hat), len(df))
 
-        def test_grid_search_fit_predict(self):
-            from ibex.sklearn.svm import SVC
-            from ibex.sklearn.decomposition import PCA
-            from ibex.sklearn.feature_selection import SelectKBest
+    # Tmp Ami
+    def _test_grid_search_fit_predict(self):
+        from ibex.sklearn.svm import SVC
+        from ibex.sklearn.decomposition import PCA
+        from ibex.sklearn.feature_selection import SelectKBest
 
-            iris, features = _load_iris()
+        iris, features = _load_iris()
 
-            clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
+        clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
 
-            param_grid = dict(
-                featureunion__pca__n_components=[1, 2, 3],
-                featureunion__selectkbest__k=[1, 2],
-                svc__C=[0.1, 1, 10])
+        param_grid = dict(
+            featureunion__pca__n_components=[1, 2, 3],
+            featureunion__selectkbest__k=[1, 2],
+            svc__C=[0.1, 1, 10])
 
-            grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=0)
-            if _level < 1:
-                return
-            grid_search.fit(iris[features], iris['class']).predict(iris[features])
+        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=0)
+        if _level < 1:
+            return
+        grid_search.fit(iris[features], iris['class']).predict(iris[features])
 
 
 class _NBsTest(unittest.TestCase):

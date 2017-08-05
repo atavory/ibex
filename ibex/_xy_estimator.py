@@ -5,14 +5,17 @@ import inspect
 
 import six
 import numpy as np
+import pandas as pd
 from sklearn import base
 
 
 def _from_pickle(est, X, y):
-    return make_xy_estimator(est, X, y)[0]
+    return make_xy_estimator(est, ind)[0]
 
 
-def make_xy_estimator(estimator, orig_X, orig_y=None):
+def make_estimator(estimator, ind):
+    ind = ind.copy()
+
     def get_set_params(est):
         base_attr = getattr(estimator, '__init__')
         if six.PY3:
@@ -94,7 +97,8 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
             if hasattr(self, '_ibex_in_op'):
                 return fn(X, *args)
 
-            inds = X[:, 0]
+            op_ind = ind[X[:, 0]]
+            X_ = pd.DataFrame(X[:, 1:], index=op_ind)
 
             base_attr = getattr(type(estimator), name)
             if six.PY3:
@@ -103,29 +107,40 @@ def make_xy_estimator(estimator, orig_X, orig_y=None):
                 params = inspect.getargspec(base_attr)[0]
 
             # Tmp Ami - write a ut for this; remove todo from docs
+            # Tmp Ami - refactor this; it appears in _Adapter
             if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
                 args = list(args)[:]
-                args[0] = orig_y.ix[inds]
+                args[0] = pd.Series(args[0], index=op_ind)
 
             self._ibex_in_op = True
             try:
-                res = fn(orig_X.ix[inds], *args)
+                res = fn(X_, *args)
             finally:
                 delattr(self, '_ibex_in_op')
 
-            return res
+            return self.__process_wrapped_call_res(res)
 
         def __reduce__(self):
-            return (_from_pickle, (estimator, orig_X, orig_y))
+            return (_from_pickle, (estimator, ind))
 
         @property
         def orig_estimator(self):
             est = base.clone(estimator)
             return est.set_params(**get_set_params(self))
 
+        def __process_wrapped_call_res(self, res):
+            if isinstance(res, pd.Series):
+                return res.as_matrix()
 
-    n = len(orig_X)
-    X_ = np.arange(n).reshape((n, 1))
-    y_ = None if orig_y is None else orig_y.values
+            if isinstance(res, pd.DataFrame):
+                return res.values
 
-    return _Adapter(**get_set_params(estimator)), X_, y_
+            return res
+
+    return _Adapter(**get_set_params(estimator))
+
+
+def make_xy(X, y):
+    X_ = np.c_[range(len(X)), X.as_matrix()]
+    y_ = y.values if y is not None else None
+    return X_, y_

@@ -8,7 +8,7 @@ from sklearn.utils.validation import check_is_fitted
 import pandas as pd
 
 from .._base import FrameMixin
-from .._xy_estimator import make_xy_estimator
+from .._xy_estimator import make_estimator, make_xy
 
 
 def cross_val_predict(
@@ -106,8 +106,8 @@ def cross_val_predict(
 
     """
 
-    est, X_, y_ = make_xy_estimator(estimator, X, y)
-
+    est = make_estimator(estimator, X.index)
+    X_, y_ = make_xy(X, y)
     y_hat = _orig.cross_val_predict(
         est,
         X_,
@@ -294,10 +294,11 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
 
         params = self._cv.get_params()
-        est, X_, y_ = make_xy_estimator(self._estimator, X, y)
-        params.update({'estimator': est})
+        # est, X_, y_ = make_xy_estimator(self._estimator, X, y)
+        params.update({'estimator': self._estimator})
         self._cv.set_params(**params)
-        self._cv.fit(X_, y=y_, groups=groups)
+        self._cv.fit(X, y=y, groups=groups)
+        print(self._cv.best_estimator_)
         return self
 
     @property
@@ -306,7 +307,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
 
     @property
     def best_estimator_(self):
-        return self._cv.best_estimator_.orig_estimator
+        return self._cv.best_estimator_
 
     def __run(self, name, X, *args):
         self._check_is_fitted(name)
