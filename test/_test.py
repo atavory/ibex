@@ -5,6 +5,7 @@ import doctest
 import json
 import pickle
 import inspect
+import functools
 
 import six
 import ddt
@@ -60,13 +61,6 @@ def _load_digits():
         columns=features+['digit'])
     digits = digits.sample(frac=0.1).reset_index()
     return digits, features
-
-
-@ddt.ddt
-class _EstimatorTest(unittest.TestCase):
-    @ddt.data([1, 2])
-    def test_ddt(self, value):
-        print(value)
 
 
 class _ConceptsTest(unittest.TestCase):
@@ -568,7 +562,17 @@ class _ModelSelectionTest(unittest.TestCase):
         grid_search.fit(iris[features], iris['class']).predict(iris[features])
 
 
-class _ExamplesTest(unittest.TestCase):
+class _NBsTest(unittest.TestCase):
+    pass
+
+
+def test_nb(name):
+    nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+    nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+    for n in nb_f_names:
+        pass
+
+if False:
     def test_nbs(self):
         nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
         nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
