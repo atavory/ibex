@@ -18,6 +18,8 @@ from sklearn import linear_model
 from ibex.sklearn import linear_model as pd_linear_model
 from sklearn import ensemble
 from ibex.sklearn import ensemble as pd_ensemble
+from sklearn import feature_selection
+from ibex.sklearn import feature_selection as pd_feature_selection
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
 from sklearn import decomposition
@@ -212,6 +214,8 @@ _estimators.append(pipeline.make_pipeline(decomposition.PCA(), linear_model.Line
 _pd_estimators.append(pd_decomposition.PCA() | pd_linear_model.LinearRegression())
 _estimators.append(linear_model.LogisticRegression())
 _pd_estimators.append(pd_linear_model.LogisticRegression())
+_estimators.append(pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
 
 for estimators in zip(_estimators, _pd_estimators):
     est, pd_est = estimators
@@ -242,29 +246,6 @@ class _BaseTest(unittest.TestCase):
 
 
 class _FrameTest(unittest.TestCase):
-    def test_fit(self):
-        X = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
-        prd = pd_preprocessing.StandardScaler()
-        self.assertEqual(prd, prd.fit(X, y))
-
-    def test_transform_y(self):
-        X = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
-        pd_Xt = pd_preprocessing.StandardScaler().fit(X, y).transform(X)
-        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
-        Xt = preprocessing.StandardScaler().fit(X, y).transform(X)
-        self.assertFalse(isinstance(Xt, pd.DataFrame))
-        np.testing.assert_equal(pd_Xt, Xt)
-
-        pd_Xt = pd_preprocessing.StandardScaler().fit_transform(X, y)
-        self.assertTrue(isinstance(pd_Xt, pd.DataFrame))
-        Xt = preprocessing.StandardScaler().fit_transform(X, y)
-        self.assertFalse(isinstance(Xt, pd.DataFrame))
-        np.testing.assert_equal(pd_Xt, Xt)
-
     def test_transform_no_y(self):
         X = pd.DataFrame({'a': [1, 2, 3]})
 
@@ -279,16 +260,6 @@ class _FrameTest(unittest.TestCase):
         Xt = preprocessing.StandardScaler().fit_transform(X)
         self.assertFalse(isinstance(Xt, pd.DataFrame))
         np.testing.assert_equal(pd_Xt, Xt)
-
-    def test_fit_predict(self):
-        X = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
-        pd_y_hat = pd_linear_model.LinearRegression().fit(X, y).predict(X)
-        self.assertTrue(isinstance(pd_y_hat, pd.Series))
-        y_hat = linear_model.LinearRegression().fit(X, y).predict(X)
-        self.assertFalse(isinstance(y_hat, pd.Series))
-        np.testing.assert_equal(pd_y_hat, y_hat)
 
     def test_fit_permute_cols(self):
         X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
@@ -430,49 +401,6 @@ class _TransTest(unittest.TestCase):
 
 
 class _IrisTest(unittest.TestCase):
-    def test_fit_transform(self):
-        iris, features = _load_iris()
-
-        decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
-
-        tr = decomp.fit_transform(iris)
-        self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
-
-    def test_fit_plus_transform(self):
-        iris, features = _load_iris()
-
-        decomp = trans(pd_decomposition.PCA(n_components=2), None, ['pc1', 'pc2'])
-
-        tr = decomp.fit(iris).transform(iris)
-        self.assertEqual(set(tr.columns), set(['pc1', 'pc2']))
-
-    def test_logistic_regression_cv(self):
-        iris, features = _load_iris()
-
-        clf = pd_linear_model.LogisticRegression()
-        clf.fit(iris[features], iris['class'])
-
-        res = cross_val_score(
-            clf,
-            X=iris[features],
-            y=iris['class'])
-
-    def test_predict_proba(self):
-        iris, features = _load_iris()
-
-        clf = pd_linear_model.LogisticRegression()
-        clf.fit(iris[features], iris['class'])
-
-        clf.predict_proba(iris[features])
-
-    def test_predict_log_proba(self):
-        iris, features = _load_iris()
-
-        clf = pd_linear_model.LogisticRegression()
-        clf.fit(iris[features], iris['class'])
-
-        clf.predict_log_proba(iris[features])
-
     def test_pipeline_cv(self):
         iris, features = _load_iris()
 
@@ -529,23 +457,6 @@ class _IrisTest(unittest.TestCase):
         clf.fit(iris[features], iris['class'])
         clf.aic(iris[features])
         clf.bic(iris[features])
-
-
-# Tmp Ami
-if False:
-    class _DigitsTest(unittest.TestCase):
-        def test_cv(self):
-            digits, features = _load_digits()
-
-            clf = pd_decomposition.PCA() | pd_linear_model.LogisticRegression()
-
-            estimator = PDGridSearchCV(
-                clf,
-                {'pca__n_components': [20, 40, 64], 'logisticregression__C': np.logspace(-4, 4, 3)})
-
-            if _level < 1:
-                return
-            estimator.fit(digits[features], digits.digit)
 
 
 class _FeatureUnionTest(unittest.TestCase):
