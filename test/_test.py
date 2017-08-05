@@ -737,14 +737,6 @@ class _PickleTest(unittest.TestCase):
         pca = trn.fit_transform(iris[features])
         self.assertTrue(pca_unpickled.equals(pca))
 
-    def test_direct_single_xy(self):
-        from ibex import _xy_estimator
-
-        iris, features = _load_iris()
-
-        trn, _, _ = _xy_estimator.make_xy_estimator(pd_decomposition.PCA(), iris[features], None)
-        unpickled_trn = pickle.loads(pickle.dumps(trn))
-
     def test_direct_pipe_adapter(self):
         clf = pd_decomposition.PCA() | pd_linear_model.LinearRegression()
         unpickled_clf = pickle.loads(pickle.dumps(clf))

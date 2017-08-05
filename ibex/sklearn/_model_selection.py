@@ -5,6 +5,7 @@ from sklearn import model_selection as _orig
 from sklearn import base
 from sklearn import exceptions
 from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.metaestimators import if_delegate_has_method
 import pandas as pd
 
 from .._base import FrameMixin
@@ -232,8 +233,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
         return self.__run('decision_function', X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def transform(self, X):
         """Call transform on the estimator with the best found parameters.
 
@@ -249,8 +249,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
         return self.__run('transform', X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def inverse_transform(self, Xt):
         """Call inverse_transform on the estimator with the best found params.
 
@@ -308,6 +307,10 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
     @property
     def best_estimator_(self):
         return self._cv.best_estimator_
+
+    @property
+    def estimator(self):
+        return self._cv.estimator
 
     def __run(self, name, X, *args):
         self._check_is_fitted(name)

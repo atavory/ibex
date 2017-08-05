@@ -97,7 +97,7 @@ def make_estimator(estimator, ind):
             if hasattr(self, '_ibex_in_op'):
                 return fn(X, *args)
 
-            op_ind = ind[X[:, 0]]
+            op_ind = ind[X[:, 0].astype(int)]
             X_ = pd.DataFrame(X[:, 1:], index=op_ind)
 
             base_attr = getattr(type(estimator), name)
