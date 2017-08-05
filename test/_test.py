@@ -64,10 +64,12 @@ class _EstimatorTest(unittest.TestCase):
     pass
 
 
-def _generate_bases_test(_est, pd_est):
+def _generate_bases_test(est, pd_est):
     def test(self):
         self.assertTrue(isinstance(pd_est, FrameMixin))
         self.assertFalse(isinstance(est, FrameMixin))
+        self.assertIsInstance(pd_est, type(est))
+
     return test
 
 
@@ -85,17 +87,18 @@ _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
 
 _estimators, _pd_estimators = [], []
-_estimators.append(linear_model.LinearRegression())
-_pd_estimators.append(pd_linear_model.LinearRegression())
 _estimators.append(decomposition.PCA())
 _pd_estimators.append(pd_decomposition.PCA())
+_estimators.append(linear_model.LinearRegression())
+_pd_estimators.append(pd_linear_model.LinearRegression())
 
 for dataset in zip(_dataset_names, _Xs, _ys):
     dataset_name, X, y = dataset
     for estimators in zip(_estimators, _pd_estimators):
         est, pd_est = estimators
-        name = dataset[0] + '_' + type(estimators[0]).__name__.lower()
-        setattr(_EstimatorTest, 'test_bases' + name, _generate_bases_test(est, pd_est))
+        print(est, pd_est)
+        name = dataset_name + '_' + type(est).__name__.lower()
+        setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
         setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
 
 
