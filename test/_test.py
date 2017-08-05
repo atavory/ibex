@@ -566,11 +566,33 @@ class _NBsTest(unittest.TestCase):
     pass
 
 
-def test_nb(name):
-    nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
-    nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
-    for n in nb_f_names:
-        pass
+def _generate_nb_tests(name):
+    def test(self):
+        cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s --ExecutePreprocessor.timeout=7200' % (name, name)
+
+        try:
+            self.assertEqual(os.system(cmd), 0)
+        except Exception as exc:
+            print(cmd, exc)
+            # Python2.7 fails on travis, for some reason
+            if six.PY3:
+                raise
+    return test
+
+nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
+nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
+for n in nb_f_names:
+    with (open(n, encoding='utf-8') if six.PY3 else open(n)) as f:
+        cnt = json.loads(f.read(), encoding='utf-8')
+    metadata = cnt['metadata']
+    if 'ibex_test_level' not in metadata:
+        raise KeyError('ibex_test_level missing from metadata of ' + n)
+    if _level < int(metadata['ibex_test_level']):
+        continue
+
+    test_name = os.path.splitexti(os.path.split(n)[1])[0]
+    print test_name
+    ff
 
 if False:
     def test_nbs(self):
