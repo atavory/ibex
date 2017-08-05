@@ -4,11 +4,8 @@ from glob import glob
 import doctest
 import json
 import pickle
-import inspect
-import functools
 
 import six
-import ddt
 from sklearn import preprocessing
 from ibex.sklearn import exceptions
 from ibex.sklearn import preprocessing as pd_preprocessing
@@ -578,6 +575,7 @@ def _generate_nb_tests(name):
             if six.PY3:
                 raise
     return test
+
 
 nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
 nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
