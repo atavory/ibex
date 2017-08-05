@@ -382,6 +382,8 @@ class Pipeline(base.BaseEstimator, FrameMixin):
         return self
 
     def fit_transform(self, X, y=None, **fit_params):
+        if not hasattr(self._final_estimator, 'transform') and not hasattr(self._final_estimator, 'fit_transform'):
+            raise AttributeError('%s has no transform or fit_transform')
         return self._pipeline.fit_transform(X, y, **fit_params)
 
     @if_delegate_has_method(delegate='_final_estimator')

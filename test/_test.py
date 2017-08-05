@@ -110,6 +110,32 @@ def _generate_predict_test(X, y, est, pd_est):
     return test
 
 
+def _generate_predict_proba_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'predict_proba'),
+            hasattr(pd_est, 'predict_proba'))
+        if not hasattr(est, 'predict_proba'):
+            return
+        pd_y_hat = pd_est.fit(X, y).predict_proba(X)
+        y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
+    return test
+
+
+def _generate_predict_log_proba_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'predict_log_proba'),
+            hasattr(pd_est, 'predict_log_proba'))
+        if not hasattr(est, 'predict_log_proba'):
+            return
+        pd_y_hat = pd_est.fit(X, y).predict_log_proba(X)
+        y_hat = est.fit(X.as_matrix(), y.values).predict_log_proba(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
+    return test
+
+
 def _generate_fit_predict_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
@@ -154,11 +180,20 @@ def _generate_fit_transform_test(X, y, est, pd_est):
         self.assertEqual(
             hasattr(est, 'fit_transform'),
             hasattr(pd_est, 'fit_transform'))
-        if not hasattr(est, 'fit_transform'):
-            return
-        pd_y_hat = pd_est.fit_transform(X)
-        y_hat = est.fit_transform(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        # sklearn pipeline has a different mechanism for
+        # pipeline.Pipeline.fit_transform
+        try:
+            y_hat = est.fit_transform(X.as_matrix(), y)
+        except:
+            y_hat = None
+        try:
+            pd_y_hat = pd_est.fit_transform(X, y)
+        except AttributeError:
+            pd_y_hat = None
+        if pd_y_hat is None:
+            self.assertIsNone(y_hat)
+        else:
+            np.testing.assert_array_equal(pd_y_hat, y_hat)
     return test
 
 
@@ -175,21 +210,24 @@ _estimators.append(linear_model.LinearRegression())
 _pd_estimators.append(pd_linear_model.LinearRegression())
 _estimators.append(pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
 _pd_estimators.append(pd_decomposition.PCA() | pd_linear_model.LinearRegression())
+_estimators.append(linear_model.LogisticRegression())
+_pd_estimators.append(pd_linear_model.LogisticRegression())
 
-if False:
-    for estimators in zip(_estimators, _pd_estimators):
-        est, pd_est = estimators
-        name = type(est).__name__.lower()
-        setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
-        for dataset in zip(_dataset_names, _Xs, _ys):
-            dataset_name, X, y = dataset
-            name = dataset_name + '_' + type(est).__name__.lower()
-            setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
-            setattr(_EstimatorTest, 'test_attr_' + name, _generate_attr_test(X, y, est, pd_est))
-            setattr(_EstimatorTest, 'test_fit_predict_' + name, _generate_fit_predict_test(X, y, est, pd_est))
-            setattr(_EstimatorTest, 'test_predict_' + name, _generate_predict_test(X, y, est, pd_est))
-            setattr(_EstimatorTest, 'test_transform_' + name, _generate_transform_test(X, y, est, pd_est))
-            setattr(_EstimatorTest, 'test_fit_transform_' + name, _generate_fit_transform_test(X, y, est, pd_est))
+for estimators in zip(_estimators, _pd_estimators):
+    est, pd_est = estimators
+    name = type(est).__name__.lower()
+    setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
+    for dataset in zip(_dataset_names, _Xs, _ys):
+        dataset_name, X, y = dataset
+        name = dataset_name + '_' + type(est).__name__.lower()
+        setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_attr_' + name, _generate_attr_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_fit_predict_' + name, _generate_fit_predict_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_predict_' + name, _generate_predict_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_predict_proba_' + name, _generate_predict_proba_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_predict_log_proba_' + name, _generate_predict_log_proba_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_transform_' + name, _generate_transform_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_fit_transform_' + name, _generate_fit_transform_test(X, y, est, pd_est))
 
 
 class _BaseTest(unittest.TestCase):
