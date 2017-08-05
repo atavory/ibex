@@ -40,3 +40,29 @@ def update_class_wrapper(new_class, orig_class):
 def update_method_wrapper(new_class, orig_class, method_name):
     functools.update_wrapper(getattr(new_class, method_name), getattr(orig_class, method_name))
     getattr(new_class, method_name).__doc__ = _wrap_msg + getattr(orig_class, method_name).__doc__
+
+
+wrapped_fn_names = [
+    'fit_transform',
+    'predict_proba',
+    'sample_y',
+    'score_samples',
+    'score',
+    'staged_predict_proba',
+    'apply',
+    'bic',
+    'perplexity',
+    'fit',
+    'decision_function',
+    'aic',
+    'partial_fit',
+    'predict',
+    'radius_neighbors',
+    'staged_decision_function',
+    'staged_predict',
+    'inverse_transform',
+    'fit_predict',
+    'kneighbors',
+    'predict_log_proba',
+    'transform',
+]

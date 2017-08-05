@@ -10,6 +10,7 @@ from sklearn import pipeline
 
 from ._verify_args import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
+from ._utils import wrapped_fn_names
 
 
 __all__ = []
@@ -222,31 +223,7 @@ def frame(est):
         if parfunc and getattr(parfunc, '__doc__', None):
             func.__doc__ = parfunc.__doc__
 
-    wrapped = [
-        'fit_transform',
-        'predict_proba',
-        'sample_y',
-        'score_samples',
-        'score',
-        'staged_predict_proba',
-        'apply',
-        'bic',
-        'perplexity',
-        'fit',
-        'decision_function',
-        'aic',
-        'partial_fit',
-        'predict',
-        'radius_neighbors',
-        'staged_decision_function',
-        'staged_predict',
-        'inverse_transform',
-        'fit_predict',
-        'kneighbors',
-        'predict_log_proba',
-        'transform',
-    ]
-    for wrap in wrapped:
+    for wrap in wrapped_fn_names:
         if not hasattr(est, wrap) and hasattr(_Adapter, wrap):
             delattr(_Adapter, wrap)
         elif six.callable(getattr(_Adapter, wrap)):

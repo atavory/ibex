@@ -9,7 +9,9 @@ from sklearn import base
 from sklearn import pipeline
 from sklearn import exceptions
 from sklearn.externals import joblib
+from sklearn.utils.metaestimators import if_delegate_has_method
 
+from ._utils import wrapped_fn_names
 from ._verify_args import verify_x_type, verify_y_type
 
 
@@ -382,45 +384,45 @@ class Pipeline(base.BaseEstimator, FrameMixin):
     def fit_transform(self, X, y=None, **fit_params):
         return self._pipeline.fit_transform(X, y, **fit_params)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def predict(self, X):
         return self._pipeline.predict(X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def fit_predict(self, X, y=None, **fit_params):
         return self._pipeline.fit_predict(X, y, **fit_params)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def predict_proba(self, X):
         return self._pipeline.predict_proba(X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def decision_function(self, X):
         return self._pipeline.decision_function(X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def predict_log_proba(self, X):
         return self._pipeline.predict_log_proba(X)
 
+    @if_delegate_has_method(delegate='_final_estimator')
     def transform(self, X):
         return self._pipeline.transform(X)
 
+    @if_delegate_has_method(delegate='_final_estimator')
     def inverse_transform(self, X):
         return self._pipeline.inverse_transform(X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate='_final_estimator')
+    @if_delegate_has_method(delegate='_final_estimator')
     def score(self, X, y=None):
         return self._pipeline.score(X, y)
 
     @property
     def classes_(self):
         return self._pipeline.classes_
+
+    @property
+    def _final_estimator(self):
+        return self._pipeline.steps[-1][1]
 
 
 __all__ += ['Pipeline']
