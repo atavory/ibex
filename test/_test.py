@@ -64,10 +64,18 @@ class _EstimatorTest(unittest.TestCase):
     pass
 
 
+def _generate_bases_test(_est, pd_est):
+    def test(self):
+        self.assertTrue(isinstance(pd_est, FrameMixin))
+        self.assertFalse(isinstance(est, FrameMixin))
+    return test
+
+
 def _generate_fit_test(X, y, est, pd_est):
     def test(self):
         pd_est.fit(X, y)
-        est.fit(X.asmatrix(), y.values)
+        est.fit(X.as_matrix(), y.values)
+    return test
 
 
 _dataset_names, _Xs, _ys = [], [], []
@@ -79,32 +87,16 @@ _ys.append(_iris['class'])
 _estimators, _pd_estimators = [], []
 _estimators.append(linear_model.LinearRegression())
 _pd_estimators.append(pd_linear_model.LinearRegression())
+_estimators.append(decomposition.PCA())
+_pd_estimators.append(pd_decomposition.PCA())
 
-for h in itertools.product(zip(_dataset_names, _Xs, _ys), zip(_estimators, _pd_estimators)):
-    print(h)
-
-if False:
-    return test
-                # Python2.7 fails on travis, for some reason
-                if six.PY3:
-                    raise
-        return test
-
-
-    nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
-    nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
-    for n in nb_f_names:
-        with (open(n, encoding='utf-8') if six.PY3 else open(n)) as f:
-            cnt = json.loads(f.read(), encoding='utf-8')
-        metadata = cnt['metadata']
-        if 'ibex_test_level' not in metadata:
-            raise KeyError('ibex_test_level missing from metadata of ' + n)
-        if _level < int(metadata['ibex_test_level']):
-            continue
-
-        test_name = 'test_' + os.path.splitext(os.path.split(n)[1])[0]
-        test = _generate_nb_tests(n)
-        setattr(_NBsTest, test_name, test)
+for dataset in zip(_dataset_names, _Xs, _ys):
+    dataset_name, X, y = dataset
+    for estimators in zip(_estimators, _pd_estimators):
+        est, pd_est = estimators
+        name = dataset[0] + '_' + type(estimators[0]).__name__.lower()
+        setattr(_EstimatorTest, 'test_bases' + name, _generate_bases_test(est, pd_est))
+        setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
 
 
 class _ConceptsTest(unittest.TestCase):
