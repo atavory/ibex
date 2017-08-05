@@ -7,6 +7,7 @@ import pickle
 import inspect
 
 import six
+import ddt
 from sklearn import preprocessing
 from ibex.sklearn import exceptions
 from ibex.sklearn import preprocessing as pd_preprocessing
@@ -31,12 +32,6 @@ from sklearn import datasets
 from sklearn.externals import joblib
 import pandas as pd
 import numpy as np
-try:
-    import nbformat
-    from nbconvert.preprocessors import ExecutePreprocessor
-    _nbconvert = True
-except ImportError:
-    _nbconvert = False
 
 from ibex import *
 
@@ -65,6 +60,13 @@ def _load_digits():
         columns=features+['digit'])
     digits = digits.sample(frac=0.1).reset_index()
     return digits, features
+
+
+@ddt.ddt
+class _EstimatorTest(unittest.TestCase):
+    @ddt.data([1, 2])
+    def test_ddt(self, value):
+        print(value)
 
 
 class _ConceptsTest(unittest.TestCase):
