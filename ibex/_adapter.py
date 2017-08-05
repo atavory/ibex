@@ -56,9 +56,6 @@ def make_adapter(est):
             return self.__run(super(_Adapter, self).perplexity, 'perplexity', X, *args)
 
         def fit(self, X, *args):
-            """
-            Shmippy shmoppoo
-            """
             return self.__run(super(_Adapter, self).fit, 'fit', X, *args)
 
         def decision_function(self, X, *args):

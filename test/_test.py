@@ -96,6 +96,45 @@ def _generate_predict_test(X, y, est, pd_est):
     return test
 
 
+def _generate_fit_predict_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'fit_predict'),
+            hasattr(pd_est, 'fit_predict'))
+        if not hasattr(est, 'fit_predict'):
+            return
+        pd_Xt = pd_est.fit_predict(X, y)
+        Xt = est.fit_predict(X.as_matrix(), y.values)
+        np.testing.assert_array_equal(pd_Xt, Xt)
+    return test
+
+
+def _generate_transform_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'transform'),
+            hasattr(pd_est, 'transform'))
+        if not hasattr(est, 'transform'):
+            return
+        pd_y_hat = pd_est.fit(X, y).transform(X)
+        y_hat = est.fit(X.as_matrix(), y.values).transform(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
+    return test
+
+
+def _generate_fit_transform_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'fit_transform'),
+            hasattr(pd_est, 'fit_transform'))
+        if not hasattr(est, 'fit_transform'):
+            return
+        pd_y_hat = pd_est.fit_transform(X)
+        y_hat = est.fit_transform(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
+    return test
+
+
 _dataset_names, _Xs, _ys = [], [], []
 _iris, _features = _load_iris()
 _dataset_names.append('iris')
@@ -108,15 +147,18 @@ _pd_estimators.append(pd_decomposition.PCA())
 _estimators.append(linear_model.LinearRegression())
 _pd_estimators.append(pd_linear_model.LinearRegression())
 
-for dataset in zip(_dataset_names, _Xs, _ys):
-    dataset_name, X, y = dataset
-    for estimators in zip(_estimators, _pd_estimators):
-        est, pd_est = estimators
-        print(est, pd_est)
+for estimators in zip(_estimators, _pd_estimators):
+    est, pd_est = estimators
+    name = type(est).__name__.lower()
+    setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
+    for dataset in zip(_dataset_names, _Xs, _ys):
+        dataset_name, X, y = dataset
         name = dataset_name + '_' + type(est).__name__.lower()
-        setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
         setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_fit_predict_' + name, _generate_fit_predict_test(X, y, est, pd_est))
         setattr(_EstimatorTest, 'test_predict_' + name, _generate_predict_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_transform_' + name, _generate_transform_test(X, y, est, pd_est))
+        setattr(_EstimatorTest, 'test_fit_transform_' + name, _generate_fit_transform_test(X, y, est, pd_est))
 
 
 class _ConceptsTest(unittest.TestCase):
