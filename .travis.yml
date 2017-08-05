@@ -21,7 +21,7 @@ install:
   - sudo pip install python-coveralls
   - sudo pip install codecov
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage jupyter seaborn 
-  - conda install -c -n test-environment python=$TRAVIS_PYTHON_VERSION ddt
+  - conda install -c conda-forge -n test-environment python=$TRAVIS_PYTHON_VERSION ddt
   - source activate test-environment
   - python setup.py install
 
