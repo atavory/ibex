@@ -126,7 +126,7 @@ def cross_val_predict(
         return pd.DataFrame(y_hat, index=y.index)
 
 
-class BaseSearchCV(base.BaseEstimator, FrameMixin):
+class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
     def __init__(self, estimator):
         self._estimator = estimator
 

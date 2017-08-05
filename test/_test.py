@@ -20,6 +20,8 @@ from sklearn import ensemble
 from ibex.sklearn import ensemble as pd_ensemble
 from sklearn import feature_selection
 from ibex.sklearn import feature_selection as pd_feature_selection
+from sklearn import svm
+from ibex.sklearn import svm as pd_svm
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
 from sklearn import decomposition
@@ -27,8 +29,10 @@ from ibex.sklearn import decomposition as pd_decomposition
 from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
 try:
     from sklearn.model_selection import cross_val_score
+    from sklearn.model_selection import GridSearchCV
 except ImportError:
     from sklearn.cross_validation import cross_val_score
+    from sklearn.cross_validation import GridSearchCV
 from sklearn import datasets
 from sklearn.externals import joblib
 import pandas as pd
@@ -85,7 +89,8 @@ def _generate_bases_test(est, pd_est):
         for mixin in mixins:
             self.assertEqual(
                 isinstance(pd_est, mixin),
-                isinstance(est, mixin))
+                isinstance(est, mixin),
+                mixin)
 
     return test
 
@@ -207,31 +212,97 @@ _ys.append(_iris['class'])
 
 _estimators, _pd_estimators = [], []
 _estimators.append(decomposition.PCA())
-_pd_estimators.append(pd_decomposition.PCA())
-_estimators.append(linear_model.LinearRegression())
-_pd_estimators.append(pd_linear_model.LinearRegression())
-_estimators.append(pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(pd_decomposition.PCA() | pd_linear_model.LinearRegression())
-_estimators.append(linear_model.LogisticRegression())
-_pd_estimators.append(pd_linear_model.LogisticRegression())
-_estimators.append(pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
+_pd_estimators.append(
+    pd_decomposition.PCA())
+_estimators.append(
+    linear_model.LinearRegression())
+_pd_estimators.append(
+    pd_linear_model.LinearRegression())
+_estimators.append(
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
+_pd_estimators.append(
+    pd_decomposition.PCA() | pd_linear_model.LinearRegression())
+_estimators.append(
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
+_pd_estimators.append(
+    pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()))
+_estimators.append(
+    linear_model.LogisticRegression())
+_pd_estimators.append(
+    pd_linear_model.LogisticRegression())
+_estimators.append(
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(
+    pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
+_estimators.append(
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(
+    pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)))
+# Tmp Ami
+if False:
+    param_grid = dict(
+        featureunion__pca__n_components=[1, 2, 3],
+        featureunion__selectkbest__k=[1, 2],
+        svc__C=[0.1, 1, 10])
+    _estimators.append(
+        GridSearchCV(
+            pipeline.make_pipeline(
+                pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
+                svm.SVC(kernel="linear")),
+            param_grid=param_grid,
+            verbose=0))
+    _pd_estimators.append(
+            PDGridSearchCV(
+                pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear"),
+                param_grid=param_grid,
+                verbose=0))
 
+
+test_i = 0
 for estimators in zip(_estimators, _pd_estimators):
     est, pd_est = estimators
     name = type(est).__name__.lower()
-    setattr(_EstimatorTest, 'test_bases_' + name, _generate_bases_test(est, pd_est))
+    setattr(
+        _EstimatorTest,
+        'test_bases_%s_%d' % (name, test_i),
+        _generate_bases_test(est, pd_est))
     for dataset in zip(_dataset_names, _Xs, _ys):
         dataset_name, X, y = dataset
         name = dataset_name + '_' + type(est).__name__.lower()
-        setattr(_EstimatorTest, 'test_fit_' + name, _generate_fit_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_attr_' + name, _generate_attr_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_fit_predict_' + name, _generate_fit_predict_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_predict_' + name, _generate_predict_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_predict_proba_' + name, _generate_predict_proba_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_predict_log_proba_' + name, _generate_predict_log_proba_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_transform_' + name, _generate_transform_test(X, y, est, pd_est))
-        setattr(_EstimatorTest, 'test_fit_transform_' + name, _generate_fit_transform_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_fit_%s_%d' % (name, test_i),
+            _generate_fit_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_attr_%s_%d' % (name, test_i),
+            _generate_attr_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_fit_predict_%s_%d' % (name, test_i),
+            _generate_fit_predict_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_predict_%s_%d' % (name, test_i),
+            _generate_predict_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_predict_proba_%s_%d' % (name, test_i),
+            _generate_predict_proba_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_predict_log_proba_%s_%d' % (name, test_i),
+            _generate_predict_log_proba_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_transform_%s_%d' % (name, test_i),
+            _generate_transform_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_fit_transform_%s_%d' % (name, test_i),
+            _generate_fit_transform_test(X, y, est, pd_est))
+
+        test_i += 1
 
 
 class _BaseTest(unittest.TestCase):
@@ -427,7 +498,7 @@ class _IrisTest(unittest.TestCase):
             featureunion__selectkbest__k=[1, 2],
             svc__C=[0.1, 1, 10])
 
-        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
+        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=0)
         if _level < 1:
             return
         grid_search.fit(iris[features], iris['class'])
@@ -597,7 +668,7 @@ if False:
                 featureunion__selectkbest__k=[1, 2],
                 svc__C=[0.1, 1, 10])
 
-            grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=10)
+            grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=0)
             if _level < 1:
                 return
             grid_search.fit(iris[features], iris['class']).predict(iris[features])
