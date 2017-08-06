@@ -132,6 +132,41 @@ def _generate_predict_test(X, y, est, pd_est):
     return test
 
 
+def _generate_score_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'score'),
+            hasattr(pd_est, 'score'))
+        if not hasattr(est, 'score'):
+            return
+        pd_score = pd_est.fit(X, y).score(X, y)
+        score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values)
+        np.testing.assert_array_equal(pd_score, score)
+    return test
+
+
+def _generate_score_weight_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'score'),
+            hasattr(pd_est, 'score'))
+        if not hasattr(est, 'score'):
+            return
+        weight = np.abs(np.random.randn(len(y)))
+        try:
+            pd_score = pd_est.fit(X, y).score(X, y, weight)
+        except TypeError:
+            pd_score = None
+        try:
+            score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values, sample_weight=weight)
+        except TypeError:
+            score = None
+        if score is not None:
+            self.assertNotEqual(pd_score, None)
+            self.assertTrue(np.isclose(score, pd_score))
+    return test
+
+
 def _generate_predict_proba_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
@@ -330,6 +365,14 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_predict_%s_%d' % (name, test_i),
             _generate_predict_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_score_%s_%d' % (name, test_i),
+            _generate_score_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_score_weight_%s_%d' % (name, test_i),
+            _generate_score_weight_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_predict_proba_%s_%d' % (name, test_i),
