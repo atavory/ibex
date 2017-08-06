@@ -6,7 +6,6 @@ import inspect
 import six
 import numpy as np
 import pandas as pd
-from sklearn import pipeline
 
 from ._verify_args import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
@@ -198,7 +197,6 @@ def frame(est):
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
     from ._base import FrameMixin
-
 
     if isinstance(est, FrameMixin):
         return est
