@@ -203,10 +203,6 @@ def frame(est):
     if isinstance(est, FrameMixin):
         return est
 
-    # Tmp Ami - what about feature union?
-    if isinstance(est, pipeline.Pipeline):
-        return frame(pipeline.Pipeline)(ests=est.ests)
-
     if not inspect.isclass(est):
         params = est.get_params()
         f = frame(type(est))(**params)
