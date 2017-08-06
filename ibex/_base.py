@@ -418,7 +418,6 @@ class Pipeline(base.BaseEstimator, FrameMixin):
 
     @if_delegate_has_method(delegate='_final_estimator')
     def score(self, X, y=None, *args, **kwargs):
-        sfsdf
         return self._pipeline.score(X, y, *args, **kwargs)
 
     @property

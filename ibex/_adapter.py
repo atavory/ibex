@@ -95,12 +95,12 @@ def make_adapter(est):
         def transform(self, X, *args):
             return self.__run(super(_Adapter, self).transform, 'transform', X, *args)
 
-        def score(self, X, *args):
-            return self.__run(super(_Adapter, self).score, 'score', X, *args)
+        def score(self, X, *args, **kwargs):
+            return self.__run(super(_Adapter, self).score, 'score', X, *args, **kwargs)
 
-        def __run(self, fn, name, X, *args):
+        def __run(self, fn, name, X, *args, **kwargs):
             if hasattr(self, '_ibex_in_op'):
-                return fn(X, *args)
+                return fn(X, *args, **kwargs)
 
             if not isinstance(X, pd.DataFrame):
                 verify_x_type(X)
@@ -126,7 +126,7 @@ def make_adapter(est):
 
             self._ibex_in_op = True
             try:
-                res = fn(self.__x(X), *args)
+                res = fn(self.__x(X), *args, **kwargs)
             finally:
                 delattr(self, '_ibex_in_op')
 

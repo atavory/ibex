@@ -162,7 +162,7 @@ def _generate_score_weight_test(X, y, est, pd_est):
         except TypeError:
             score = None
         if score is not None:
-            self.assertNotEqual(pd_score, None)
+            self.assertNotEqual(pd_score, None, pd_est)
             self.assertTrue(np.isclose(score, pd_score))
     return test
 
