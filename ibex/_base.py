@@ -356,7 +356,7 @@ for wrap in _wrapped:
         pass
 
 
-__all__ += ['Pipeline']
+__all__ += ['FeatureUnion']
 
 
 class Pipeline(base.BaseEstimator, FrameMixin):

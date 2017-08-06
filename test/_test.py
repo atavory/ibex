@@ -702,8 +702,6 @@ def _generate_nb_tests(name):
             self.assertEqual(os.system(cmd), 0)
         except Exception as exc:
             print(cmd, exc)
-            # Tmp Ami
-            return
             # Python2.7 fails on travis, for some reason
             if six.PY3:
                 raise
