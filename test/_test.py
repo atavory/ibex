@@ -22,6 +22,8 @@ from sklearn import feature_selection
 from ibex.sklearn import feature_selection as pd_feature_selection
 from sklearn import svm
 from ibex.sklearn import svm as pd_svm
+from sklearn import gaussian_process
+from ibex.sklearn import gaussian_process as pd_gaussian_process
 from sklearn import mixture
 from ibex.sklearn import mixture as pd_mixture
 from sklearn import decomposition
@@ -164,6 +166,19 @@ def _generate_score_weight_test(X, y, est, pd_est):
         if score is not None:
             self.assertNotEqual(pd_score, None, pd_est)
             self.assertTrue(np.isclose(score, pd_score))
+    return test
+
+
+def _generate_sample_y_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'sample_y'),
+            hasattr(pd_est, 'sample_y'))
+        if not hasattr(est, 'sample_y'):
+            return
+        pd_sample = pd_est.fit(X, y).sample_y(X)
+        sample = est.fit(X.as_matrix(), y.values).sample_y(X.as_matrix())
+        np.testing.assert_array_equal(pd_sample, sample)
     return test
 
 
@@ -313,6 +328,10 @@ _pd_estimators.append(
         pd_svm.SVC(kernel="linear", random_state=42, probability=True),
         param_grid=param_grid,
         verbose=0))
+_estimators.append(
+    gaussian_process.GaussianProcessRegressor())
+_pd_estimators.append(
+    pd_gaussian_process.GaussianProcessRegressor())
 # Tmp Ami
 if False:
     param_grid = dict(
@@ -373,6 +392,10 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_score_weight_%s_%d' % (name, test_i),
             _generate_score_weight_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_sample_y__%s_%d' % (name, test_i),
+            _generate_sample_y_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_predict_proba_%s_%d' % (name, test_i),
