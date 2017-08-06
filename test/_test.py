@@ -104,6 +104,16 @@ def _generate_fit_test(X, y, est, pd_est):
     return test
 
 
+def _generate_bad_fit_test(X, y, pd_est):
+    def test(self):
+        global y
+        y = y.copy()
+        y.index = reversed(X.index.values)
+        with self.assertRaises(ValueError):
+            pd_est.fit(X, y)
+    return test
+
+
 def _generate_predict_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
@@ -210,6 +220,11 @@ _iris, _features = _load_iris()
 _dataset_names.append('iris')
 _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
+_iris = _iris.copy()
+_iris.index = ['i%d' % i for i in range(len(_iris))]
+_dataset_names.append('iris_str_index')
+_Xs.append(_iris[_features])
+_ys.append(_iris['class'])
 
 _estimators, _pd_estimators = [], []
 _estimators.append(decomposition.PCA())
@@ -290,6 +305,10 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_fit_%s_%d' % (name, test_i),
             _generate_fit_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_bad_fit_%s_%d' % (name, test_i),
+            _generate_bad_fit_test(X, y, pd_est))
         setattr(
             _EstimatorTest,
             'test_attr_%s_%d' % (name, test_i),
