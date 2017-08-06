@@ -10,6 +10,7 @@ import pandas as pd
 
 from .._base import FrameMixin
 from .._xy_estimator import make_estimator, make_xy
+from .._utils import verify_x_type, verify_y_type
 
 
 def cross_val_predict(
@@ -106,8 +107,10 @@ def cross_val_predict(
         ...
 
     """
+    verify_x_type(X)
+    verify_y_type(y)
 
-    est = make_estimator(estimator, X.index)
+    est = make_estimator(estimator, X.index, output_arrays=True)
     X_, y_ = make_xy(X, y)
     y_hat = _orig.cross_val_predict(
         est,
@@ -151,6 +154,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         -------
         score : float
         """
+        verify_y_type(y)
         return self.__run('score', X, y)
 
     def _check_is_fitted(self, method_name):
@@ -165,8 +169,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         else:
             check_is_fitted(self, 'best_estimator_')
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def predict(self, X):
         """Call predict on the estimator with the best found parameters.
 
@@ -182,8 +185,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
         return self.__run('predict', X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def predict_proba(self, X):
         """Call predict_proba on the estimator with the best found parameters.
 
@@ -199,8 +201,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
         return self.__run('predict_proba', X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def predict_log_proba(self, X):
         """Call predict_log_proba on the estimator with the best found parameters.
 
@@ -216,8 +217,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         """
         return self.__run('predict_log_proba', X)
 
-    # Tmp Ami
-    # @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
+    @if_delegate_has_method(delegate=('best_estimator_', 'estimator'))
     def decision_function(self, X):
         """Call decision_function on the estimator with the best found parameters.
 
@@ -291,9 +291,12 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         **fit_params : dict of string -> object
             Parameters passed to the ``fit`` method of the estimator
         """
+        verify_x_type(X)
+        verify_y_type(y)
 
         params = self._cv.get_params()
-        # est, X_, y_ = make_xy_estimator(self._estimator, X, y)
+        est = make_estimator(self._estimator, X.index, output_arrays=False)
+        X_, y_ = make_xy(X, y)
         params.update({'estimator': self._estimator})
         self._cv.set_params(**params)
         self._cv.fit(X, y=y, groups=groups)
@@ -313,6 +316,7 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         return self._cv.estimator
 
     def __run(self, name, X, *args):
+        verify_x_type(X)
         self._check_is_fitted(name)
         return getattr(self.best_estimator_, name)(X, *args)
 

@@ -9,11 +9,11 @@ import pandas as pd
 from sklearn import base
 
 
-def _from_pickle(est, X, y):
-    return make_xy_estimator(est, ind)[0]
+def _from_pickle(est, X, y, output_arrays):
+    return make_estimator(est, ind, output_arrays)[0]
 
 
-def make_estimator(estimator, ind):
+def make_estimator(estimator, ind, output_arrays=False):
     ind = ind.copy()
 
     def get_set_params(est):
@@ -121,7 +121,7 @@ def make_estimator(estimator, ind):
             return self.__process_wrapped_call_res(res)
 
         def __reduce__(self):
-            return (_from_pickle, (estimator, ind))
+            return (_from_pickle, (estimator, ind, output_arrays))
 
         @property
         def orig_estimator(self):
@@ -129,6 +129,9 @@ def make_estimator(estimator, ind):
             return est.set_params(**get_set_params(self))
 
         def __process_wrapped_call_res(self, res):
+            if not output_arrays:
+                return res
+
             if isinstance(res, pd.Series):
                 return res.as_matrix()
 
