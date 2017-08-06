@@ -99,12 +99,17 @@ def _generate_fit_test(X, y, est, pd_est):
     def test(self):
         pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
+    return test
+
+
+def _generate_array_bad_fit_test(X, y, pd_est):
+    def test(self):
         with self.assertRaises(TypeError):
             pd_est.fit(X.as_matrix(), y.values)
     return test
 
 
-def _generate_bad_fit_test(X, y, pd_est):
+def _generate_index_mismatch_bad_fit_test(X, y, pd_est):
     def test(self):
         global y
         y = y.copy()
@@ -307,8 +312,12 @@ for estimators in zip(_estimators, _pd_estimators):
             _generate_fit_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
-            'test_bad_fit_%s_%d' % (name, test_i),
-            _generate_bad_fit_test(X, y, pd_est))
+            'test_array_bad_fit_%s_%d' % (name, test_i),
+            _generate_array_bad_fit_test(X, y, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_index_mismatch_bad_fit_%s_%d' % (name, test_i),
+            _generate_index_mismatch_bad_fit_test(X, y, pd_est))
         setattr(
             _EstimatorTest,
             'test_attr_%s_%d' % (name, test_i),
