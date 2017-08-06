@@ -196,6 +196,20 @@ def _generate_predict_proba_test(X, y, est, pd_est):
     return test
 
 
+def _generate_staged_predict_proba_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'staged_predict_proba'),
+            hasattr(pd_est, 'staged_predict_proba'),
+            (est, pd_est))
+        if not hasattr(est, 'staged_predict_proba'):
+            return
+        pd_y_hat = pd_est.fit(X, y).staged_predict_proba(X)
+        y_hat = est.fit(X.as_matrix(), y.values).staged_predict_proba(X.as_matrix())
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
+    return test
+
+
 def _generate_predict_log_proba_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
@@ -400,6 +414,10 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_predict_proba_%s_%d' % (name, test_i),
             _generate_predict_proba_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_staged_predict_proba_%s_%d' % (name, test_i),
+            _generate_staged_predict_proba_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_predict_log_proba_%s_%d' % (name, test_i),
