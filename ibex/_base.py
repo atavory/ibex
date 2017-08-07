@@ -55,7 +55,7 @@ class FrameMixin(object):
         ...         self.x_columns = X.columns # (4)
         ...         return self
         ...
-        ...     def transform(self, X):
+        ...     def transform(self, X, *args, **kwargs):
         ...         return X[self.x_columns] # (5)
 
         Note the following general points:
@@ -188,12 +188,8 @@ class FrameMixin(object):
 __all__ += ['FrameMixin']
 
 
-def _fit(transformer, X):
-    return transformer.transform(X)
-
-
-def _transform(transformer, weight, X):
-    res = transformer.transform(X)
+def _transform(transformer, weight, X, *args, **kwargs):
+    res = transformer.transform(X, *args, **kwargs)
     if weight is not None:
         res *= weight
     return res
@@ -203,7 +199,7 @@ def _fit_transform(transformer, weight, X, y, **fit_params):
     if hasattr(transformer, 'fit_transform'):
         res = transformer.fit_transform(X, y, **fit_params)
     else:
-        res = transformer.fit(X, y, **fit_params).transform(X)
+        res = transformer.fit(X, y, **fit_params).transform(X, *args, **kwargs)
     if weight is not None:
         res *= weight
     return res
@@ -241,7 +237,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         >>> trn = pd_pipeline.FeatureUnion([
         ...     ('std', pd_preprocessing.StandardScaler()),
         ...     ('asb', pd_preprocessing.MaxAbsScaler())])
-        >>> trn.fit_transform(X)
+        >>> trn.fit_transform(X, *args, **kwargs)
                 a         b         a    b
         0 -1.224745  1.192166  0.333333  1.0
         1  0.000000 -1.254912  0.666667 -0.3
@@ -250,7 +246,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         >>> from ibex import trans
         >>>
         >>> trn = pd_preprocessing.StandardScaler() + pd_preprocessing.MaxAbsScaler()
-        >>> trn.fit_transform(X)
+        >>> trn.fit_transform(X, *args, **kwargs)
                 a         b         a    b
         0 -1.224745  1.192166  0.333333  1.0
         1  0.000000 -1.254912  0.666667 -0.3
@@ -258,7 +254,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
 
         >>> trn = trans(pd_preprocessing.StandardScaler(), out_cols=['std_scale_a', 'std_scale_b'])
         >>> trn += trans(pd_preprocessing.MaxAbsScaler(), out_cols=['max_scale_a', 'max_scale_b'])
-        >>> trn.fit_transform(X)
+        >>> trn.fit_transform(X, *args, **kwargs)
         std_scale_a  std_scale_b  max_scale_a  max_scale_b
         0    -1.224745     1.192166     0.333333          1.0
         1     0.000000    -1.254912     0.666667         -0.3
@@ -305,7 +301,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             joblib.delayed(_fit_transform)(trans, weight, X, y, **fit_params) for _, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
-    def transform(self, X):
+    def transform(self, X, *args, **kwargs):
         """
         Transforms ``X`` using the transformers, uses :func:`pandas.concat`
         to horizontally concatenate the results.
@@ -313,7 +309,7 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         verify_x_type(X)
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
-            joblib.delayed(_transform)(trans, weight, X) for _, trans, weight in self._iter())
+            joblib.delayed(_transform)(trans, weight, X, *args, **kwargs) for _, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
     def get_feature_names(self):
@@ -389,32 +385,32 @@ class Pipeline(base.BaseEstimator, FrameMixin):
         return self._pipeline.fit_transform(X, y, **fit_params)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def predict(self, X):
-        return self._pipeline.predict(X)
+    def predict(self, X, *args, **kwargs):
+        return self._pipeline.predict(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
     def fit_predict(self, X, y=None, **fit_params):
         return self._pipeline.fit_predict(X, y, **fit_params)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def predict_proba(self, X):
-        return self._pipeline.predict_proba(X)
+    def predict_proba(self, X, *args, **kwargs):
+        return self._pipeline.predict_proba(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def decision_function(self, X):
-        return self._pipeline.decision_function(X)
+    def decision_function(self, X, *args, **kwargs):
+        return self._pipeline.decision_function(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def predict_log_proba(self, X):
-        return self._pipeline.predict_log_proba(X)
+    def predict_log_proba(self, X, *args, **kwargs):
+        return self._pipeline.predict_log_proba(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def transform(self, X):
-        return self._pipeline.transform(X)
+    def transform(self, X, *args, **kwargs):
+        return self._pipeline.transform(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
-    def inverse_transform(self, X):
-        return self._pipeline.inverse_transform(X)
+    def inverse_transform(self, X, *args, **kwargs):
+        return self._pipeline.inverse_transform(X, *args, **kwargs)
 
     @if_delegate_has_method(delegate='_final_estimator')
     def score(self, X, y=None, *args, **kwargs):
