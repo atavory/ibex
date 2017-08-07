@@ -346,21 +346,19 @@ _estimators.append(
     gaussian_process.GaussianProcessRegressor())
 _pd_estimators.append(
     pd_gaussian_process.GaussianProcessRegressor())
-# Tmp Ami
-if False:
-    param_grid = dict(
-        svc__C=[0.1, 1, 10])
-    _estimators.append(
-        GridSearchCV(
-            pipeline.make_pipeline(
-                svm.SVC(kernel="linear", random_state=42, probability=True)),
-            param_grid=param_grid,
-            verbose=0))
-    _pd_estimators.append(
-        PDGridSearchCV(
-            pd_pipeline.make_pipeline(pd_svm.SVC(kernel="linear", random_state=42, probability=True)),
-            param_grid=param_grid,
-            verbose=0))
+param_grid = dict(
+    logisticregression__C=[0.1, 1, 10])
+_estimators.append(
+    GridSearchCV(
+        pipeline.make_pipeline(
+            linear_model.LogisticRegression()),
+        param_grid=param_grid,
+        verbose=0))
+_pd_estimators.append(
+    PDGridSearchCV(
+        pd_pipeline.make_pipeline(pd_linear_model.LogisticRegression()),
+        param_grid=param_grid,
+        verbose=0))
 
 
 test_i = 0
