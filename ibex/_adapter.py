@@ -124,6 +124,11 @@ def make_adapter(est):
                 pass
 
             self._ibex_in_op = True
+            if name == 'score':
+                # Tmp Ami
+                pass
+                #print(args[0].value_counts())
+                #print('res', fn(self.__x(X), *args, **kwargs))
             try:
                 res = fn(self.__x(X), *args, **kwargs)
             finally:
