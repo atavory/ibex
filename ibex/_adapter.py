@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 
 import inspect
+import os
 
 import six
 import numpy as np
@@ -13,6 +14,9 @@ from ._utils import wrapped_fn_names
 
 
 __all__ = []
+
+
+_in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
 
 
 def _from_pickle(est, params):
@@ -98,7 +102,7 @@ def make_adapter(est):
             return self.__run(super(_Adapter, self).score, 'score', X, *args, **kwargs)
 
         def __run(self, fn, name, X, *args, **kwargs):
-            if hasattr(self, '_ibex_in_op'):
+            if hasattr(self, _in_op_flag):
                 return fn(X, *args, **kwargs)
 
             if not isinstance(X, pd.DataFrame):
@@ -123,16 +127,11 @@ def make_adapter(est):
             except TypeError:
                 pass
 
-            self._ibex_in_op = True
-            if name == 'score':
-                # Tmp Ami
-                pass
-                #print(args[0].value_counts())
-                #print('res', fn(self.__x(X), *args, **kwargs))
+            setattr(self, _in_op_flag, True)
             try:
                 res = fn(self.__x(X), *args, **kwargs)
             finally:
-                delattr(self, '_ibex_in_op')
+                delattr(self,_in_op_flag)
 
             return self.__process_wrapped_call_res(X[self.x_columns], res)
 

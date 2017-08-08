@@ -420,6 +420,11 @@ class Pipeline(base.BaseEstimator, FrameMixin):
     def classes_(self):
         return self._pipeline.classes_
 
+    # Tmp Ami - find implications for this.
+    @property
+    def _estimator_type(self):
+        return self.steps[-1][1]._estimator_type
+
     @property
     def _final_estimator(self):
         return self._pipeline.steps[-1][1]

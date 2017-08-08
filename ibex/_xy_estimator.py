@@ -2,11 +2,15 @@ from __future__ import absolute_import
 
 
 import inspect
+import os
 
 import six
 import numpy as np
 import pandas as pd
 from sklearn import base
+
+
+_in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
 
 
 def _from_pickle(est, X, y, output_arrays):
@@ -94,7 +98,7 @@ def make_estimator(estimator, ind, output_arrays=False):
             return self.__run(super(_Adapter, self).score, 'score', X, *args, **kwargs)
 
         def __run(self, fn, name, X, *args, **kwargs):
-            if hasattr(self, '_ibex_in_op'):
+            if hasattr(self, _in_op_flag):
                 return fn(X, *args, **kwargs)
 
             op_ind = ind[X[:, 0].astype(int)]
@@ -112,11 +116,11 @@ def make_estimator(estimator, ind, output_arrays=False):
                 args = list(args)[:]
                 args[0] = pd.Series(args[0], index=op_ind)
 
-            self._ibex_in_op = True
+            setattr(self, _in_op_flag, True)
             try:
                 res = fn(X_, *args, **kwargs)
             finally:
-                delattr(self, '_ibex_in_op')
+                delattr(self,_in_op_flag)
 
             return self.__process_wrapped_call_res(res)
 
