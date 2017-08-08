@@ -49,6 +49,7 @@ import sklearn
 from ._model_selection import update_module as _model_selection_update_module
 from ._pipeline import update_module as _pipeline_update_module
 from ._preprocessing import update_module as _preprocessing_update_module
+from ._feature_selection import update_module as _feature_selection_update_module
 
 
 __all__ = sklearn.__all__
@@ -107,6 +108,7 @@ class _NewModuleLoader(object):
         _model_selection_update_module(orig, mod)
         _pipeline_update_module(orig, mod)
         _preprocessing_update_module(orig, mod)
+        _feature_selection_update_module(orig, mod)
 
         return mod
 
