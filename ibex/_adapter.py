@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import inspect
 import os
+import types
 
 import six
 import numpy as np
@@ -153,6 +154,9 @@ def make_adapter(est):
                     else:
                         columns = [' ' for _ in range(res.shape[1])]
                     return pd.DataFrame(res, index=X.index, columns=columns)
+
+            if isinstance(res, types.GeneratorType):
+                return (self.__process_wrapped_call_res(X, r) for r in res)
 
             return res
 

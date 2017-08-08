@@ -220,9 +220,10 @@ def _generate_staged_predict_proba_test(X, y, est, pd_est):
             (est, pd_est))
         if not hasattr(est, 'staged_predict_proba'):
             return
-        pd_y_hat = pd_est.fit(X, y).staged_predict_proba(X)
-        y_hat = est.fit(X.as_matrix(), y.values).staged_predict_proba(X.as_matrix())
-        np.testing.assert_allclose(pd_y_hat, y_hat)
+        pd_y_hats = pd_est.fit(X, y).staged_predict_proba(X)
+        y_hats = est.fit(X.as_matrix(), y.values).staged_predict_proba(X.as_matrix())
+        for pd_y_hat, y_hat in zip(pd_y_hats, y_hats):
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -328,6 +329,10 @@ _estimators.append(
     linear_model.LogisticRegression())
 _pd_estimators.append(
     pd_linear_model.LogisticRegression())
+_estimators.append(
+    ensemble.GradientBoostingClassifier())
+_pd_estimators.append(
+    pd_ensemble.GradientBoostingClassifier())
 _estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(

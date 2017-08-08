@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import inspect
 import os
+import types
 
 import six
 import numpy as np
@@ -91,6 +92,9 @@ def make_estimator(estimator, ind, output_arrays=False):
 
             if isinstance(res, pd.DataFrame):
                 return res.values
+
+            if isinstance(res, types.GeneratorType):
+                return (self.__process_wrapped_call_res(r) for r in res)
 
             return res
 
