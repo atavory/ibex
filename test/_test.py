@@ -133,7 +133,7 @@ def _generate_predict_test(X, y, est, pd_est):
             return
         pd_y_hat = pd_est.fit(X, y).predict(X)
         y_hat = est.fit(X.as_matrix(), y.values).predict(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -146,14 +146,12 @@ def _generate_score_test(X, y, est, pd_est):
             return
         pd_score = pd_est.fit(X, y).score(X, y)
         score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values)
-        np.testing.assert_array_equal(pd_score, score)
+        np.testing.assert_allclose(pd_score, score)
     return test
 
 
 def _generate_cross_val_predict_test(X, y, est, pd_est):
     def test(self):
-        # Tmp Ami
-        return
         self.assertEqual(
             hasattr(est, 'predict'),
             hasattr(pd_est, 'predict'))
@@ -161,7 +159,7 @@ def _generate_cross_val_predict_test(X, y, est, pd_est):
             return
         pd_y_hat = pd_cross_val_predict(pd_est, X, y)
         y_hat = cross_val_predict(est, X.as_matrix(), y.values)
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -196,7 +194,7 @@ def _generate_sample_y_test(X, y, est, pd_est):
             return
         pd_sample = pd_est.fit(X, y).sample_y(X)
         sample = est.fit(X.as_matrix(), y.values).sample_y(X.as_matrix())
-        np.testing.assert_array_equal(pd_sample, sample)
+        np.testing.assert_allclose(pd_sample, sample)
     return test
 
 
@@ -210,7 +208,7 @@ def _generate_predict_proba_test(X, y, est, pd_est):
             return
         pd_y_hat = pd_est.fit(X, y).predict_proba(X)
         y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -224,7 +222,7 @@ def _generate_staged_predict_proba_test(X, y, est, pd_est):
             return
         pd_y_hat = pd_est.fit(X, y).staged_predict_proba(X)
         y_hat = est.fit(X.as_matrix(), y.values).staged_predict_proba(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -237,7 +235,7 @@ def _generate_predict_log_proba_test(X, y, est, pd_est):
             return
         pd_y_hat = pd_est.fit(X, y).predict_log_proba(X)
         y_hat = est.fit(X.as_matrix(), y.values).predict_log_proba(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -250,7 +248,7 @@ def _generate_fit_predict_test(X, y, est, pd_est):
             return
         pd_Xt = pd_est.fit_predict(X, y)
         Xt = est.fit_predict(X.as_matrix(), y.values)
-        np.testing.assert_array_equal(pd_Xt, Xt)
+        np.testing.assert_allclose(pd_Xt, Xt)
     return test
 
 
@@ -263,20 +261,17 @@ def _generate_attr_test(X, y, est, pd_est):
             hasattr(pd_est, 'coef_'))
         if not hasattr(est, 'coef_'):
             return
-        np.testing.assert_array_equal(est.coef_, pd_est.coef_)
+        np.testing.assert_allclose(est.coef_, pd_est.coef_)
     return test
 
 
 def _generate_transform_test(X, y, est, pd_est):
     def test(self):
-        self.assertEqual(
-            hasattr(est, 'transform'),
-            hasattr(pd_est, 'transform'))
         if not hasattr(est, 'transform'):
             return
         pd_y_hat = pd_est.fit(X, y).transform(X)
         y_hat = est.fit(X.as_matrix(), y.values).transform(X.as_matrix())
-        np.testing.assert_array_equal(pd_y_hat, y_hat)
+        np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -298,7 +293,7 @@ def _generate_fit_transform_test(X, y, est, pd_est):
         if pd_y_hat is None:
             self.assertIsNone(y_hat)
         else:
-            np.testing.assert_array_equal(pd_y_hat, y_hat)
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -883,7 +878,7 @@ class _PickleTest(unittest.TestCase):
         clf = PDGridSearchCV(
             clf,
             {'kernel':('linear', 'rbf'), 'C':[1, 10]},
-            n_jobs=2)
+            n_jobs=1)
         clf.fit(iris[features], iris['class'])
 
 

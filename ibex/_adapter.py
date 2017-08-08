@@ -137,8 +137,7 @@ def make_adapter(est):
 
         # Tmp Ami - should be in base?
         def __x(self, X):
-            X = X[self.x_columns]
-            return X if isinstance(est, FrameMixin) else X.as_matrix()
+            return X[self.x_columns]
 
         def __process_wrapped_call_res(self, X, res):
             if hasattr(self, '_ibex_in_op'):
