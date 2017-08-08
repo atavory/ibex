@@ -355,79 +355,10 @@ for wrap in _wrapped:
 __all__ += ['FeatureUnion']
 
 
-class Pipeline(base.BaseEstimator, FrameMixin):
+class Pipeline(pipeline.Pipeline, FrameMixin):
 
-    def __init__(self, steps, *args, **kwargs):
-        self._pipeline = pipeline.Pipeline(steps, *args, **kwargs)
-
-    def get_params(self, deep=True):
-        return self._pipeline.get_params(deep)
-
-    def set_params(self, **kwargs):
-        self._pipeline.set_params(**kwargs)
-        return self
-
-    @property
-    def named_steps(self):
-        return self._pipeline.named_steps
-
-    @property
-    def steps(self):
-        return self._pipeline.steps
-
-    def fit(self, X, y=None, **fit_params):
-        self._pipeline.fit(X, y, **fit_params)
-        return self
-
-    def fit_transform(self, X, y=None, **fit_params):
-        if not hasattr(self._final_estimator, 'transform') and not hasattr(self._final_estimator, 'fit_transform'):
-            raise AttributeError('%s has no transform or fit_transform')
-        return self._pipeline.fit_transform(X, y, **fit_params)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def predict(self, X, *args, **kwargs):
-        return self._pipeline.predict(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def fit_predict(self, X, y=None, **fit_params):
-        return self._pipeline.fit_predict(X, y, **fit_params)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def predict_proba(self, X, *args, **kwargs):
-        return self._pipeline.predict_proba(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def decision_function(self, X, *args, **kwargs):
-        return self._pipeline.decision_function(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def predict_log_proba(self, X, *args, **kwargs):
-        return self._pipeline.predict_log_proba(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def transform(self, X, *args, **kwargs):
-        return self._pipeline.transform(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def inverse_transform(self, X, *args, **kwargs):
-        return self._pipeline.inverse_transform(X, *args, **kwargs)
-
-    @if_delegate_has_method(delegate='_final_estimator')
-    def score(self, X, y=None, *args, **kwargs):
-        return self._pipeline.score(X, y, *args, **kwargs)
-
-    @property
-    def classes_(self):
-        return self._pipeline.classes_
-
-    # Tmp Ami - find implications for this.
-    @property
-    def _estimator_type(self):
-        return self.steps[-1][1]._estimator_type
-
-    @property
-    def _final_estimator(self):
-        return self._pipeline.steps[-1][1]
+    def __init__(self, steps):
+        pipeline.Pipeline.__init__(self, steps)
 
 
 __all__ += ['Pipeline']
