@@ -39,9 +39,6 @@ def make_adapter(est):
         def fit_transform(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).fit_transform, 'fit_transform', X, *args, **kwargs)
 
-        def predict_proba(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args, **kwargs)
-
         def sample_y(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).sample_y, 'sample_y', X, *args, **kwargs)
 
@@ -93,8 +90,17 @@ def make_adapter(est):
         def kneighbors(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).kneighbors, 'kneighbors', X, *args, **kwargs)
 
+        def predict_proba(self, X, *args, **kwargs):
+            res = self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args, **kwargs)
+            if not hasattr(self, _in_op_flag):
+                res.columns = self.classes_
+            return res
+
         def predict_log_proba(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba', X, *args, **kwargs)
+            res = self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba', X, *args, **kwargs)
+            if not hasattr(self, _in_op_flag):
+                res.columns = self.classes_
+            return res
 
         def transform(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).transform, 'transform', X, *args, **kwargs)

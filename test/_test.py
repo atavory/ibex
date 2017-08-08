@@ -132,6 +132,8 @@ def _generate_predict_test(X, y, est, pd_est):
         if not hasattr(est, 'predict'):
             return
         pd_y_hat = pd_est.fit(X, y).predict(X)
+        self.assertTrue(isinstance(pd_y_hat, pd.Series))
+        self.assertTrue(pd_y_hat.index.equals(X.index))
         y_hat = est.fit(X.as_matrix(), y.values).predict(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
@@ -145,6 +147,7 @@ def _generate_score_test(X, y, est, pd_est):
         if not hasattr(est, 'score'):
             return
         pd_score = pd_est.fit(X, y).score(X, y)
+        # Tmp Ami - what is the type of score?
         score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values)
         np.testing.assert_allclose(pd_score, score)
     return test
@@ -158,6 +161,8 @@ def _generate_cross_val_predict_test(X, y, est, pd_est):
         if not hasattr(est, 'predict'):
             return
         pd_y_hat = pd_cross_val_predict(pd_est, X, y)
+        self.assertTrue(isinstance(pd_y_hat, pd.Series))
+        self.assertTrue(pd_y_hat.index.equals(X.index))
         y_hat = cross_val_predict(est, X.as_matrix(), y.values)
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
@@ -207,6 +212,9 @@ def _generate_predict_proba_test(X, y, est, pd_est):
         if not hasattr(est, 'predict_proba'):
             return
         pd_y_hat = pd_est.fit(X, y).predict_proba(X)
+        self.assertTrue(isinstance(pd_y_hat, pd.DataFrame))
+        self.assertTrue(pd_y_hat.index.equals(X.index))
+        self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_))
         y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
@@ -223,6 +231,8 @@ def _generate_staged_predict_proba_test(X, y, est, pd_est):
         pd_y_hats = pd_est.fit(X, y).staged_predict_proba(X)
         y_hats = est.fit(X.as_matrix(), y.values).staged_predict_proba(X.as_matrix())
         for pd_y_hat, y_hat in zip(pd_y_hats, y_hats):
+            self.assertTrue(isinstance(pd_y_hat, pd.DataFrame))
+            # self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_))
             np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
@@ -235,6 +245,9 @@ def _generate_predict_log_proba_test(X, y, est, pd_est):
         if not hasattr(est, 'predict_log_proba'):
             return
         pd_y_hat = pd_est.fit(X, y).predict_log_proba(X)
+        self.assertTrue(isinstance(pd_y_hat, pd.DataFrame))
+        self.assertTrue(pd_y_hat.index.equals(X.index))
+        self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_))
         y_hat = est.fit(X.as_matrix(), y.values).predict_log_proba(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
@@ -372,14 +385,14 @@ _estimators.append(
             linear_model.LogisticRegression()),
         param_grid=param_grid,
         return_train_score=False,
-        verbose=10))
+        verbose=0))
 _pd_estimators.append(
     PDGridSearchCV(
         pd_pipeline.make_pipeline(
             pd_linear_model.LogisticRegression()),
         param_grid=param_grid,
         return_train_score=False,
-        verbose=10))
+        verbose=0))
 
 
 test_i = 0
