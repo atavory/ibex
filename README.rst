@@ -11,7 +11,7 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
     :target: https://landscape.io/github/atavory/ibex/master
 
 .. image:: https://img.shields.io/codecov/c/github/atavory/ibex/master.svg
-    :target: https://codecov.io/gh/atavory/ibex/tree/master/ibex
+    :target: https://codecov.io/gh/atavory/ibex/
 
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
     :target: http://ibex.readthedocs.io/en/latest/?badge=latest
