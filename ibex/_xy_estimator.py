@@ -31,38 +31,9 @@ def make_estimator(estimator, ind, output_arrays=False):
         return args
 
     class _Adapter(type(estimator)):
-        def fit_transform(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).fit_transform, 'fit_transform', X, *args, **kwargs)
-
-        def predict_proba(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args, **kwargs)
-
-        def sample_y(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).sample_y, 'sample_y', X, *args, **kwargs)
-
-        def score_samples(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).score_samples, 'score_samples', X, *args, **kwargs)
-
-        def staged_predict_proba(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).staged_predict_proba, 'staged_predict_proba', X, *args, **kwargs)
-
-        def apply(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).apply, 'apply', X, *args, **kwargs)
-
-        def bic(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).bic, 'bic', X, *args, **kwargs)
-
-        def perplexity(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).perplexity, 'perplexity', X, *args, **kwargs)
-
         def fit(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).fit, 'fit', X, *args, **kwargs)
-
-        def decision_function(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).decision_function, 'decision_function', X, *args, **kwargs)
-
-        def aic(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).aic, 'aic', X, *args, **kwargs)
+            self.__run(super(_Adapter, self).fit, 'fit', X, *args, **kwargs)
+            return self
 
         def partial_fit(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).partial_fit, 'partial_fit', X, *args, **kwargs)
@@ -70,32 +41,11 @@ def make_estimator(estimator, ind, output_arrays=False):
         def predict(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).predict, 'predict', X, *args, **kwargs)
 
-        def radius_neighbors(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).radius_neighbors, 'radius_neighbors', X, *args, **kwargs)
-
-        def staged_decision_function(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).staged_decision_function, 'staged_decision_function', X, *args, **kwargs)
-
         def staged_predict(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).staged_predict, 'staged_predict', X, *args, **kwargs)
 
-        def inverse_transform(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).inverse_transform, 'inverse_transform', X, *args, **kwargs)
-
         def fit_predict(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).fit_predict, 'fit_predict', X, *args, **kwargs)
-
-        def kneighbors(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).kneighbors, 'kneighbors', X, *args, **kwargs)
-
-        def predict_log_proba(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba', X, *args, **kwargs)
-
-        def transform(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).transform, 'transform', X, *args, **kwargs)
-
-        def score(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).score, 'score', X, *args, **kwargs)
 
         def __run(self, fn, name, X, *args, **kwargs):
             if hasattr(self, _in_op_flag):

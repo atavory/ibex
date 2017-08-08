@@ -295,12 +295,9 @@ class BaseSearchCV(base.BaseEstimator, base.MetaEstimatorMixin, FrameMixin):
         verify_y_type(y)
 
         params = self._cv.get_params()
-        est = make_estimator(self._estimator, X.index, output_arrays=False)
-        X_, y_ = make_xy(X, y)
         params.update({'estimator': self._estimator})
         self._cv.set_params(**params)
         self._cv.fit(X, y=y, groups=groups)
-        print(self._cv.best_estimator_)
         return self
 
     @property

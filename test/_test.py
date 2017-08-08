@@ -29,12 +29,15 @@ from ibex.sklearn import mixture as pd_mixture
 from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
+from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
 try:
     from sklearn.model_selection import cross_val_score
     from sklearn.model_selection import GridSearchCV
+    from sklearn.model_selection import cross_val_predict
 except ImportError:
     from sklearn.cross_validation import cross_val_score
     from sklearn.cross_validation import GridSearchCV
+    from sklearn.cross_validation import cross_val_predict
 from sklearn import datasets
 from sklearn.externals import joblib
 import pandas as pd
@@ -144,6 +147,21 @@ def _generate_score_test(X, y, est, pd_est):
         pd_score = pd_est.fit(X, y).score(X, y)
         score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values)
         np.testing.assert_array_equal(pd_score, score)
+    return test
+
+
+def _generate_cross_val_predict_test(X, y, est, pd_est):
+    def test(self):
+        # Tmp Ami
+        return
+        self.assertEqual(
+            hasattr(est, 'predict'),
+            hasattr(pd_est, 'predict'))
+        if not hasattr(est, 'predict'):
+            return
+        pd_y_hat = pd_cross_val_predict(pd_est, X, y)
+        y_hat = cross_val_predict(est, X.as_matrix(), y.values)
+        np.testing.assert_array_equal(pd_y_hat, y_hat)
     return test
 
 
@@ -399,6 +417,10 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_predict_%s_%d' % (name, test_i),
             _generate_predict_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_cross_val_predict_%s_%d' % (name, test_i),
+            _generate_cross_val_predict_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_score_%s_%d' % (name, test_i),

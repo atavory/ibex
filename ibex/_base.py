@@ -206,7 +206,7 @@ def _fit_transform(transformer, weight, X, y, **fit_params):
 
 
 # Tmp Ami - test weights weights
-class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
+class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
     """
     Concatenates results of multiple transformer objects.
     This estimator applies a list of transformer objects in parallel to the
@@ -261,27 +261,12 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         2     1.224745     0.062746     1.000000          0.4
     """
     def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
-        FrameMixin.__init__(self)
-
-        self._feature_union = pipeline.FeatureUnion(
+        pipeline.FeatureUnion.__init__(
+            self,
             transformer_list,
             n_jobs,
             transformer_weights)
-
-    def fit(self, X, y=None):
-        """
-        Fits the transformer using ``X`` (and possibly ``y``).
-
-        Returns:
-
-            ``self``
-        """
-        verify_x_type(X)
-        verify_y_type(y)
-
-        self._feature_union.fit(X, y)
-
-        return self
+        FrameMixin.__init__(self)
 
     # Tmp Ami - get docstrings from sklearn.
     def fit_transform(self, X, y=None, **fit_params):
@@ -312,26 +297,8 @@ class FeatureUnion(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             joblib.delayed(_transform)(trans, weight, X, *args, **kwargs) for _, trans, weight in self._iter())
         return pd.concat(Xts, axis=1)
 
-    def get_feature_names(self):
-        return self._feature_union.get_feature_names()
-
-    def get_params(self, deep=True):
-        return self._feature_union.get_params(deep)
-
-    def set_params(self, **params):
-        self._feature_union.set_params(**params)
-        return self
-
-    @property
-    def transformer_list(self):
-        return self._feature_union.transformer_list
-
-    @property
-    def n_jobs(self):
-        return self._feature_union.n_jobs
-
     def _iter(self):
-        weights = self._feature_union.transformer_weights
+        weights = self.transformer_weights
         if weights is None:
             weights = {}
         return ((name, trans, weights.get(name, None)) for name, trans in self.transformer_list)
