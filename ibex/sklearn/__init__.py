@@ -72,7 +72,7 @@ from sklearn import base
 import ibex
 
 
-for name in dir(_orig):
+for name in _orig.__all__:
     if name.startswith('_'):
         continue
     est = getattr(_orig, name)

@@ -24,8 +24,6 @@ from sklearn import svm
 from ibex.sklearn import svm as pd_svm
 from sklearn import gaussian_process
 from ibex.sklearn import gaussian_process as pd_gaussian_process
-from sklearn import mixture
-from ibex.sklearn import mixture as pd_mixture
 from sklearn import feature_selection
 from ibex.sklearn import feature_selection as pd_feature_selection
 from sklearn import decomposition
@@ -72,6 +70,119 @@ def _load_digits():
         columns=features+['digit'])
     digits = digits.sample(frac=0.1).reset_index()
     return digits, features
+
+
+_dataset_names, _Xs, _ys = [], [], []
+_iris, _features = _load_iris()
+_dataset_names.append('iris')
+_Xs.append(_iris[_features])
+_ys.append(_iris['class'])
+_iris = _iris.copy()
+_iris.index = ['i%d' % i for i in range(len(_iris))]
+_dataset_names.append('iris_str_index')
+_Xs.append(_iris[_features])
+_ys.append(_iris['class'])
+
+_estimators, _pd_estimators = [], []
+_estimators.append(decomposition.PCA())
+_pd_estimators.append(
+    pd_decomposition.PCA())
+_estimators.append(
+    linear_model.LinearRegression())
+_pd_estimators.append(
+    pd_linear_model.LinearRegression())
+_estimators.append(
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
+_pd_estimators.append(
+    pd_decomposition.PCA() | pd_linear_model.LinearRegression())
+_estimators.append(
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
+_pd_estimators.append(
+    pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()))
+_estimators.append(
+    linear_model.LogisticRegression())
+_pd_estimators.append(
+    pd_linear_model.LogisticRegression())
+_estimators.append(
+    ensemble.GradientBoostingClassifier())
+_pd_estimators.append(
+    pd_ensemble.GradientBoostingClassifier())
+_estimators.append(
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(
+    pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
+_estimators.append(
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(
+    pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)))
+# Tmp Ami - fails without probability=True
+_estimators.append(
+    pipeline.make_pipeline(
+        feature_selection.SelectKBest(k=1),
+        svm.SVC(kernel="linear", random_state=42, probability=True)))
+_pd_estimators.append(
+    pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True))
+param_grid = dict(
+    C=[0.1, 1, 10])
+_estimators.append(
+    GridSearchCV(
+        svm.SVC(kernel="linear", random_state=42, probability=True),
+        param_grid=param_grid,
+        verbose=0))
+_pd_estimators.append(
+    PDGridSearchCV(
+        pd_svm.SVC(kernel="linear", random_state=42, probability=True),
+        param_grid=param_grid,
+        verbose=0))
+_estimators.append(
+    gaussian_process.GaussianProcessRegressor())
+_pd_estimators.append(
+    pd_gaussian_process.GaussianProcessRegressor())
+param_grid = dict(
+    logisticregression__C=[0.1, 1, 10])
+_estimators.append(
+    GridSearchCV(
+        pipeline.make_pipeline(
+            linear_model.LogisticRegression()),
+        param_grid=param_grid,
+        return_train_score=False,
+        verbose=0))
+_pd_estimators.append(
+    PDGridSearchCV(
+        pd_pipeline.make_pipeline(
+            pd_linear_model.LogisticRegression()),
+        param_grid=param_grid,
+        return_train_score=False,
+        verbose=0))
+
+
+_feature_selectors, _pd_feature_selectors = [], []
+_feature_selectors.append(
+    feature_selection.SelectKBest(k=1))
+_pd_feature_selectors.append(
+    pd_feature_selection.SelectKBest(k=1))
+_feature_selectors.append(
+    feature_selection.SelectKBest(k=2))
+_pd_feature_selectors.append(
+    pd_feature_selection.SelectKBest(k=2))
+_feature_selectors.append(
+    feature_selection.SelectPercentile())
+_pd_feature_selectors.append(
+    pd_feature_selection.SelectPercentile())
+_feature_selectors.append(
+    feature_selection.SelectFdr())
+_pd_feature_selectors.append(
+    pd_feature_selection.SelectFdr())
+_feature_selectors.append(
+    feature_selection.SelectFwe())
+_pd_feature_selectors.append(
+    pd_feature_selection.SelectFwe())
+# Tmp Ami
+if False:
+    _feature_selectors.append(
+        feature_selection.RFE(linear_model.LogisticRegression()))
+    _pd_feature_selectors.append(
+        pd_feature_selection.RFE(pd_linear_model.LogisticRegression()))
 
 
 class _EstimatorTest(unittest.TestCase):
@@ -316,92 +427,8 @@ def _generate_fit_transform_test(X, y, est, pd_est):
     return test
 
 
-_dataset_names, _Xs, _ys = [], [], []
-_iris, _features = _load_iris()
-_dataset_names.append('iris')
-_Xs.append(_iris[_features])
-_ys.append(_iris['class'])
-_iris = _iris.copy()
-_iris.index = ['i%d' % i for i in range(len(_iris))]
-_dataset_names.append('iris_str_index')
-_Xs.append(_iris[_features])
-_ys.append(_iris['class'])
-
-_estimators, _pd_estimators = [], []
-_estimators.append(decomposition.PCA())
-_pd_estimators.append(
-    pd_decomposition.PCA())
-_estimators.append(
-    linear_model.LinearRegression())
-_pd_estimators.append(
-    pd_linear_model.LinearRegression())
-_estimators.append(
-    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_decomposition.PCA() | pd_linear_model.LinearRegression())
-_estimators.append(
-    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()))
-_estimators.append(
-    linear_model.LogisticRegression())
-_pd_estimators.append(
-    pd_linear_model.LogisticRegression())
-_estimators.append(
-    ensemble.GradientBoostingClassifier())
-_pd_estimators.append(
-    pd_ensemble.GradientBoostingClassifier())
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)))
-# Tmp Ami - fails without probability=True
-_estimators.append(
-    pipeline.make_pipeline(
-        feature_selection.SelectKBest(k=1),
-        svm.SVC(kernel="linear", random_state=42, probability=True)))
-_pd_estimators.append(
-    pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True))
-param_grid = dict(
-    C=[0.1, 1, 10])
-_estimators.append(
-    GridSearchCV(
-        svm.SVC(kernel="linear", random_state=42, probability=True),
-        param_grid=param_grid,
-        verbose=0))
-_pd_estimators.append(
-    PDGridSearchCV(
-        pd_svm.SVC(kernel="linear", random_state=42, probability=True),
-        param_grid=param_grid,
-        verbose=0))
-_estimators.append(
-    gaussian_process.GaussianProcessRegressor())
-_pd_estimators.append(
-    pd_gaussian_process.GaussianProcessRegressor())
-param_grid = dict(
-    logisticregression__C=[0.1, 1, 10])
-_estimators.append(
-    GridSearchCV(
-        pipeline.make_pipeline(
-            linear_model.LogisticRegression()),
-        param_grid=param_grid,
-        return_train_score=False,
-        verbose=0))
-_pd_estimators.append(
-    PDGridSearchCV(
-        pd_pipeline.make_pipeline(
-            pd_linear_model.LogisticRegression()),
-        param_grid=param_grid,
-        return_train_score=False,
-        verbose=0))
-
-
 test_i = 0
-for estimators in zip(_estimators, _pd_estimators):
+for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_feature_selectors):
     est, pd_est = estimators
     name = type(est).__name__.lower()
     setattr(
@@ -471,6 +498,33 @@ for estimators in zip(_estimators, _pd_estimators):
             _EstimatorTest,
             'test_fit_transform_%s_%d' % (name, test_i),
             _generate_fit_transform_test(X, y, est, pd_est))
+
+        test_i += 1
+
+
+def _generate_feature_selection_transform_test(X, y, pd_est):
+    def test(self):
+        pd_y_hat = pd_est.fit(X, y).transform(X)
+        self.assertTrue(isinstance(pd_y_hat, pd.DataFrame))
+        for f in pd_y_hat.columns:
+            self.assertIn(f, X.columns)
+    return test
+
+
+class _FeatureSelectorTest(unittest.TestCase):
+    pass
+
+
+for estimators in zip( _feature_selectors,  _pd_feature_selectors):
+    est, pd_est = estimators
+    name = type(est).__name__.lower()
+    for dataset in zip(_dataset_names, _Xs, _ys):
+        dataset_name, X, y = dataset
+        name = dataset_name + '_' + type(est).__name__.lower()
+        setattr(
+            _FeatureSelectorTest,
+            'test_feature_selection_transform_%s_%d' % (name, test_i),
+            _generate_feature_selection_transform_test(X, y, pd_est))
 
         test_i += 1
 
