@@ -779,7 +779,7 @@ class _PickleTest(unittest.TestCase):
 
         pca_unpickled = unpickled_trn.fit_transform(iris[features])
         pca = trn.fit_transform(iris[features])
-        self.assertTrue(pca_unpickled.equals(pca))
+        self.assertTrue(pca_unpickled.equals(pca), (pca.columns, pca_unpickled.columns))
 
     def test_direct_pipe_adapter(self):
         clf = pd_decomposition.PCA() | pd_linear_model.LinearRegression()

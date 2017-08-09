@@ -2,9 +2,11 @@ from __future__ import absolute_import
 
 
 import functools
+import inspect
 
 import pandas as pd
 from sklearn import base
+from .._adapter import  frame
 
 
 def _wrap_transform_type(fn):
@@ -12,7 +14,7 @@ def _wrap_transform_type(fn):
     def wrapped(self, X, *args, **kwargs):
         ret = fn(self, X, *args, **kwargs)
         if isinstance(ret, pd.DataFrame):
-            ret.columns = self.x_columns[self.get_support(indices=True)]
+            ret.columns = ['comp_%i' % i for i in range(len(ret.columns))]
         return ret
     return wrapped
 
@@ -32,7 +34,7 @@ def _update_est(est):
 
 
 def update_module(name, module):
-    if name != 'feature_selection':
+    if name != 'decomposition':
         return
 
     for name in dir(module):
@@ -41,8 +43,6 @@ def update_module(name, module):
             if not issubclass(c, base.TransformerMixin):
                 continue
         except TypeError:
-            continue
-        if not hasattr(c, 'get_support'):
             continue
         _update_est(c)
 

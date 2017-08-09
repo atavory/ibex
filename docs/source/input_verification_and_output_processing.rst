@@ -105,9 +105,11 @@ In general, the columns of an outputted ``DataFrame`` object are those on which 
 
 Some outputted ``DataFrame`` objects have a number of columns that is different from that of the input. If this is the case, the resulting ``DataFrame``'s columns will all be blank strings (``''``): 
 
+# Tmp Ami
+
     >>> from ibex.sklearn import decomposition as pd_decomposition
     >>> pd_decomposition.PCA(n_components=1).fit(X).transform(X)
-    <BLANKLINE>   
+      comp_0   
     0 -0.707107
     1  0.707107
 

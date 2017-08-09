@@ -62,7 +62,7 @@ The output using this, however, discards the meaning of the columns:
 
 	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
     >>> trn.fit_transform(iris[features], iris['class'])
-                             petal length (cm)
+           comp_0    comp_1  petal length (cm)
     0   -2.684207  0.326607  1.4
     1   -2.715391 -0.169557  1.4
     2   -2.889820 -0.137346  1.3
