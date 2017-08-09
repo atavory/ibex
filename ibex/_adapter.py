@@ -92,6 +92,8 @@ def make_adapter(est):
 
         def predict_proba(self, X, *args, **kwargs):
             res = self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args, **kwargs)
+            # Tmp Ami
+            return res
             if not hasattr(self, _in_op_flag):
                 res.columns = self.classes_
             return res
