@@ -324,9 +324,7 @@ __all__ += ['FeatureUnion']
 
 
 class Pipeline(pipeline.Pipeline, FrameMixin):
-
-    def __init__(self, steps):
-        pipeline.Pipeline.__init__(self, steps)
+    pass
 
 
 __all__ += ['Pipeline']
