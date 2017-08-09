@@ -178,15 +178,18 @@ Applying multiple transformations on a single ``DataFrame`` is no different than
 
     >>> trn = trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
     >>> trn.fit_transform(X)
-          sin_a     cos_b
-    0  0.841471 -0.989992
-    1  0.909297 -0.653644
+      functiontransformer_0 functiontransformer_1
+                      sin_a                 cos_b
+    0              0.841471             -0.989992
+    1              0.909297             -0.653644
 
     >>> trn = trans() + trans(np.sin, 'a', 'sin_a') + trans(np.cos, 'b', 'cos_b')
     >>> trn.fit_transform(X)
-       a  b     sin_a     cos_b
-    0  1  3  0.841471 -0.989992
-    1  2  4  0.909297 -0.653644
+      functiontransformer_0    functiontransformer_1 functiontransformer_2
+                          a  b                 sin_a                 cos_b
+    0                     1  3              0.841471             -0.989992
+    1                     2  4              0.909297             -0.653644
+
 
 .. tip::
 

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import collections
 import functools
+import itertools
 
 import pandas as pd
 from sklearn import base
@@ -260,13 +261,15 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
         1     0.000000    -1.254912     0.666667         -0.3
         2     1.224745     0.062746     1.000000          0.4
     """
-    def __init__(self, transformer_list, n_jobs=1, transformer_weights=None):
+    # Tmp Ami - document as_index
+    def __init__(self, transformer_list, n_jobs=1, transformer_weights=None, as_index=True):
         pipeline.FeatureUnion.__init__(
             self,
             transformer_list,
             n_jobs,
             transformer_weights)
         FrameMixin.__init__(self)
+        self._as_index = as_index
 
     # Tmp Ami - get docstrings from sklearn.
     def fit_transform(self, X, y=None, **fit_params):
@@ -284,7 +287,7 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_fit_transform)(trans, weight, X, y, **fit_params) for _, trans, weight in self._iter())
-        return pd.concat(Xts, axis=1)
+        return self.__concat(Xts)
 
     def transform(self, X, *args, **kwargs):
         """
@@ -295,13 +298,32 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
 
         Xts = joblib.Parallel(n_jobs=self.n_jobs)(
             joblib.delayed(_transform)(trans, weight, X, *args, **kwargs) for _, trans, weight in self._iter())
-        return pd.concat(Xts, axis=1)
+        return self.__concat(Xts)
 
     def _iter(self):
         weights = self.transformer_weights
         if weights is None:
             weights = {}
         return ((name, trans, weights.get(name, None)) for name, trans in self.transformer_list)
+
+    def __concat(self, Xts):
+        conc = pd.concat(Xts, axis=1)
+
+        cols = conc.columns
+        tups = [(c, ) if not isinstance(c, tuple) else c for c in cols]
+        max_tup_len = max(len(t) for t in tups)
+        tups = [c + ('', ) * (max_tup_len - len(c)) for c in tups]
+
+        if self._as_index:
+            names = [name for (name, _, _) in self._iter()]
+            mults = [len(X.columns) for X in Xts]
+            tup_heads = [(name, ) * m for (name, m) in zip(names, mults)]
+            tup_heads = list(itertools.chain.from_iterable(tup_heads))
+            tups = [(h, ) + t for h, t in zip(tup_heads, tups)]
+
+        conc.columns = pd.MultiIndex.from_tuples(tups)
+
+        return conc
 
 
 FeatureUnion.__name__ = 'FeatureUnion'

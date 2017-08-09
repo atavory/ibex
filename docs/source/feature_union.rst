@@ -62,12 +62,13 @@ The output using this, however, discards the meaning of the columns:
 
 	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
     >>> trn.fit_transform(iris[features], iris['class'])
-           comp_0    comp_1  petal length (cm)
-    0   -2.684207  0.326607  1.4
-    1   -2.715391 -0.169557  1.4
-    2   -2.889820 -0.137346  1.3
-    3   -2.746437 -0.311124  1.5
-    4   -2.728593  0.333925  1.4
+              pca                 selectkbest
+           comp_0    comp_1 petal length (cm)
+    0   -2.684207  0.326607               1.4
+    1   -2.715391 -0.169557               1.4
+    2   -2.889820 -0.137346               1.3
+    3   -2.746437 -0.311124               1.5
+    4   -2.728593  0.333925               1.4
 	...
 
 A better way would be to combine this with :func:`ibex.trans`:
@@ -76,12 +77,13 @@ A better way would be to combine this with :func:`ibex.trans`:
 	>>> 
 	>>> trn = trans(PDPCA(n_components=2), out_cols=['pc1', 'pc2']) + trans(PDSelectKBest(k=1), out_cols='best', pass_y=True)
     >>> trn.fit_transform(iris[features], iris['class'])
-              pc1       pc2  best
-    0   -2.684207  0.326607   1.4
-    1   -2.715391 -0.169557   1.4
-    2   -2.889820 -0.137346   1.3
-    3   -2.746437 -0.311124   1.5
-    4   -2.728593  0.333925   1.4
+        functiontransformer_0           functiontransformer_1
+                          pc1       pc2                  best
+    0               -2.684207  0.326607                   1.4
+    1               -2.715391 -0.169557                   1.4
+    2               -2.889820 -0.137346                   1.3
+    3               -2.746437 -0.311124                   1.5
+    4               -2.728593  0.333925                   1.4
 	...
  
 
