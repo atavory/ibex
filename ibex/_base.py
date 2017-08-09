@@ -9,7 +9,6 @@ from sklearn import base
 from sklearn import pipeline
 from sklearn import exceptions
 from sklearn.externals import joblib
-from sklearn.utils.metaestimators import if_delegate_has_method
 
 from ._verify_args import verify_x_type, verify_y_type
 
@@ -196,9 +195,9 @@ def _transform(transformer, weight, X, *args, **kwargs):
     return res
 
 
-def _fit_transform(transformer, weight, X, y, **fit_params):
+def _fit_transform(transformer, weight, X, y, *args, **kwargs):
     if hasattr(transformer, 'fit_transform'):
-        res = transformer.fit_transform(X, y, **fit_params)
+        res = transformer.fit_transform(X, y, *args, **kwargs)
     else:
         res = transformer.fit(X, y, **fit_params).transform(X, *args, **kwargs)
     if weight is not None:

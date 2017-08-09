@@ -14,7 +14,7 @@ from sklearn import base
 _in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
 
 
-def _from_pickle(est, X, y, output_arrays):
+def _from_pickle(est, ind, output_arrays):
     return make_estimator(est, ind, output_arrays)[0]
 
 

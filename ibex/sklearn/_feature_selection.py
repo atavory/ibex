@@ -2,9 +2,11 @@ from __future__ import absolute_import
 
 
 import functools
+import inspect
 
 import pandas as pd
 from sklearn import base
+from .._adapter import  frame
 
 
 def _wrap_transform_type(fn):
