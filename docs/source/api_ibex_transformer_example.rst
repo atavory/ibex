@@ -1,6 +1,6 @@
-Regressor Example
+Transformer Example
 ******************************************
 
-.. autoclass:: ibex.sklearn.linear_model.LinearRegression
+.. autoclass:: ibex.sklearn.decomposition.PCA
     :members:
     :special-members:
