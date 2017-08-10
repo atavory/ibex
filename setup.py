@@ -44,16 +44,16 @@ class _DocumentCommand(Command):
 
 setup(
     name='ibex',
-    version='0.1.1',
+    version='0.1.1.3',
     author='Ami Tavory, Shahar Azulay, Tali Raveh-Sadka',
-    author_email='atavory at gmail',
+    author_email='atavory@gmail.com',
     url='https://github.com/atavory/ibex',
     packages=[
         'ibex',
         'ibex.sklearn',
     ],
     license='bsd',
-    description='Tmp Ami',
+    description='Pandas Adapters For Scikit-Learn',
     long_description=open('README.rst').read(),
     install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,

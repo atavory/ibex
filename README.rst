@@ -19,6 +19,9 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
 .. image:: https://img.shields.io/badge/license-BSD--3--Clause-brightgreen.svg
     :target: https://raw.githubusercontent.com/atavory/ibex/master/LICENSE.txt
 
+.. image:: https://badge.fury.io/py/ibex.svg
+    :target: https://badge.fury.io/py/ibex
+
 
 This library aims for two (somewhat independent) goals:
 
@@ -32,7 +35,7 @@ approach.)
 The full documentation at |read_the_docs_ibex|_ defines these matters in detail, but the library has an extremely-small `interface <http://ibex.readthedocs.io/en/latest/overview.html>`_.
 
 
-.. |read_the_docs_ibex| image:: https://github.com/atavory/ibex/blob/master/docs/source/_static/read_the_docs.png
+.. |read_the_docs_ibex| image:: http://ibex.readthedocs.io/en/latest/_static/read_the_docs.png
 .. _read_the_docs_ibex: http://ibex.readthedocs.io/en/latest/?badge=latest
 
 
