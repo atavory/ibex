@@ -1,0 +1,4 @@
+``frame``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: ibex.frame

@@ -1,0 +1,4 @@
+``trans``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autofunction:: ibex.trans
