@@ -58,11 +58,7 @@ API
 
 :func:`ibex.sklearn.pipeline.make_union`
 
-:func:`ibex.sklearn.pipeline.make_pipeline`
-
 :class:`ibex.sklearn.pipeline.FeatureUnion`
-
-:class:`ibex.sklearn.pipeline.Pipeline`
 
 
 ``preprocessing``
