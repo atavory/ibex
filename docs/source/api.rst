@@ -30,6 +30,12 @@ API
 .. automodule:: ibex.sklearn
 
 
+``cluster``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ibex.sklearn.cluster
+
+
 ``decomposition``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -51,6 +51,7 @@ from ._pipeline import update_module as _pipeline_update_module
 from ._preprocessing import update_module as _preprocessing_update_module
 from ._feature_selection import update_module as _feature_selection_update_module
 from ._decomposition import update_module as _decomposition_update_module
+from ._cluster import update_module as _cluster_update_module
 
 
 __all__ = sklearn.__all__
@@ -111,6 +112,7 @@ class _NewModuleLoader(object):
         _preprocessing_update_module(orig, mod)
         _feature_selection_update_module(orig, mod)
         _decomposition_update_module(orig, mod)
+        _cluster_update_module(orig, mod)
 
         return mod
 
