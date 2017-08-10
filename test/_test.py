@@ -26,6 +26,8 @@ from sklearn import gaussian_process
 from ibex.sklearn import gaussian_process as pd_gaussian_process
 from sklearn import feature_selection
 from ibex.sklearn import feature_selection as pd_feature_selection
+from sklearn import neighbors
+from ibex.sklearn import neighbors as pd_neighbors
 from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
