@@ -200,7 +200,7 @@ def _fit_transform(transformer, weight, X, y, *args, **kwargs):
     if hasattr(transformer, 'fit_transform'):
         res = transformer.fit_transform(X, y, *args, **kwargs)
     else:
-        res = transformer.fit(X, y, **fit_params).transform(X, *args, **kwargs)
+        res = transformer.fit(X, y, *args, **kwargs).transform(X)
     if weight is not None:
         res *= weight
     return res

@@ -6,7 +6,7 @@ import inspect
 
 import pandas as pd
 from sklearn import base
-from .._adapter import  frame
+from .._adapter import frame
 
 
 def _wrap_transform_type(fn):
@@ -59,7 +59,7 @@ Example
 
     >>> clt = PDKMeans(n_clusters=3, random_state=1).fit(iris[features])
     >>> clt.transform(iris[features])
-		 0         1         2
+         0         1         2
     0    3.419251  0.146942  5.059542
     1    3.398574  0.438169  5.114943
     2    3.569357  0.412301  5.279355
@@ -84,4 +84,3 @@ def update_module(name, module):
         except TypeError:
             continue
         _update_est(c)
-

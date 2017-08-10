@@ -106,6 +106,10 @@ _estimators.append(
 _pd_estimators.append(
     pd_linear_model.LogisticRegression())
 _estimators.append(
+    neighbors.KNeighborsClassifier())
+_pd_estimators.append(
+    pd_neighbors.KNeighborsClassifier())
+_estimators.append(
     ensemble.GradientBoostingClassifier())
 _pd_estimators.append(
     pd_ensemble.GradientBoostingClassifier())
@@ -599,33 +603,6 @@ class _FrameTest(unittest.TestCase):
             pred.predict(X)
 
 
-class _FramePipelineTest(unittest.TestCase):
-    def test_pipeline_fit(self):
-        X = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
-        # Tmp Ami - make verify that are framemixins
-        p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
-        self.assertTrue(isinstance(p, FrameMixin))
-        pd_p = frame(p)
-        pd_p = pd_p.fit(X, y)
-        y_hat = pd_p.fit(X, y).predict(X)
-        self.assertTrue(isinstance(y_hat, pd.Series))
-
-    def test_pipeline_fit_internal_pd_stage(self):
-        X = pd.DataFrame({'a': [1, 2, 3]})
-        y = pd.Series([1, 2, 3])
-
-        p = pd_pipeline.make_pipeline(pd_linear_model.LinearRegression())
-        self.assertTrue(isinstance(p, FrameMixin))
-        pd_p = frame(p)
-        y_hat = pd_p.fit(X, y).predict(X)
-        self.assertTrue(isinstance(y_hat, pd.Series))
-
-    def test_make_pipeline(self):
-        p = pd_pipeline.make_pipeline(pd_preprocessing.StandardScaler(), pd_linear_model.LinearRegression())
-
-
 class _TransTest(unittest.TestCase):
     def test_trans_none(self):
         X = pd.DataFrame({'a': [1, 2, 3], 'b': [30, 23, 2]})
@@ -695,47 +672,6 @@ class _TransTest(unittest.TestCase):
 
         trans(pd_preprocessing.StandardScaler()).fit(X).fit_transform(X)
         trans(pd_preprocessing.StandardScaler()).fit(X).fit_transform(X, X.a)
-
-
-class _ModelSelectionTest(unittest.TestCase):
-    def test_cross_val_predict(self):
-        from ibex.sklearn import model_selection as pd_model_selection
-
-        iris, features = _load_iris()
-
-        n = 100
-        df = pd.DataFrame({
-                'x': range(n),
-                'y': range(n),
-            },
-            index=['i%d' % i for i in range(n)])
-
-        y_hat = pd_model_selection.cross_val_predict(
-            pd_linear_model.LinearRegression(),
-            df[['x']],
-            df['y'])
-        self.assertIsInstance(y_hat, pd.Series)
-        self.assertEqual(len(y_hat), len(df))
-
-    # Tmp Ami
-    def _test_grid_search_fit_predict(self):
-        from ibex.sklearn.svm import SVC
-        from ibex.sklearn.decomposition import PCA
-        from ibex.sklearn.feature_selection import SelectKBest
-
-        iris, features = _load_iris()
-
-        clf = PCA(n_components=2) + SelectKBest(k=1) | SVC(kernel="linear")
-
-        param_grid = dict(
-            featureunion__pca__n_components=[1, 2, 3],
-            featureunion__selectkbest__k=[1, 2],
-            svc__C=[0.1, 1, 10])
-
-        grid_search = PDGridSearchCV(clf, param_grid=param_grid, verbose=0)
-        if _level < 1:
-            return
-        grid_search.fit(iris[features], iris['class']).predict(iris[features])
 
 
 class _NBsTest(unittest.TestCase):
@@ -825,4 +761,16 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == '__main__':
+    # Tmp Ami
+    if False:
+        class Foo(pd_linear_model.LinearRegression):
+            def goo(self):
+                pass
+
+        foo = pickle.loads(pickle.dumps(Foo()))
+        foo.__class__ = Foo
+        foo.__class__.__name__ = 'foo'
+        foo.goo()
+
+        ff
     unittest.main()
