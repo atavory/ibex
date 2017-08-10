@@ -2,6 +2,10 @@ Examples
 ========
 
 
+`Transforming Features In The Iris Dataset <https://github.com/atavory/ibex/blob/master/examples/iris_feature_transform.ipynb>`_
+
+    This is a version of part of the :mod:`sklearn` example `Feature importances with forests of trees <http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html>`_. It illustrates retaining the semantic meaning of features as they are transformed.
+
 `Feature Importance In The Iris Dataset <https://github.com/atavory/ibex/blob/master/examples/iris_feature_importance.ipynb>`_
 
     This is a version of the :mod:`sklearn` example `Feature importances with forests of trees <http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html>`_. It illustrates the consistent use of :mod:`pandas` data structures throughout the process.
