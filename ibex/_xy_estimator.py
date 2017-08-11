@@ -14,11 +14,11 @@ from sklearn import base
 _in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
 
 
-def _from_pickle(est, ind, output_arrays):
-    return make_estimator(est, ind, output_arrays)[0]
+def _from_pickle(est, ind):
+    return make_estimator(est, ind)[0]
 
 
-def make_estimator(estimator, ind, output_arrays=False):
+def make_estimator(estimator, ind):
     ind = ind.copy()
 
     def get_set_params(est):
@@ -76,7 +76,7 @@ def make_estimator(estimator, ind, output_arrays=False):
             return self.__process_wrapped_call_res(res)
 
         def __reduce__(self):
-            return (_from_pickle, (estimator, ind, output_arrays))
+            return (_from_pickle, (estimator, ind))
 
         @property
         def orig_estimator(self):
@@ -84,9 +84,6 @@ def make_estimator(estimator, ind, output_arrays=False):
             return est.set_params(**get_set_params(self))
 
         def __process_wrapped_call_res(self, res):
-            if not output_arrays:
-                return res
-
             if isinstance(res, pd.Series):
                 return res.as_matrix()
 
