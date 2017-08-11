@@ -36,14 +36,8 @@ def make_estimator(estimator, ind):
             self.__run(super(_Adapter, self).fit, 'fit', X, *args, **kwargs)
             return self
 
-        def partial_fit(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).partial_fit, 'partial_fit', X, *args, **kwargs)
-
         def predict(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).predict, 'predict', X, *args, **kwargs)
-
-        def staged_predict(self, X, *args, **kwargs):
-            return self.__run(super(_Adapter, self).staged_predict, 'staged_predict', X, *args, **kwargs)
 
         def fit_predict(self, X, *args, **kwargs):
             return self.__run(super(_Adapter, self).fit_predict, 'fit_predict', X, *args, **kwargs)
