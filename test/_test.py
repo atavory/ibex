@@ -8,6 +8,7 @@ import pickle
 import six
 import numpy as np
 from sklearn import preprocessing
+from ibex import frame
 from ibex.sklearn import exceptions
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
@@ -28,6 +29,8 @@ from sklearn import feature_selection
 from ibex.sklearn import feature_selection as pd_feature_selection
 from sklearn import neighbors
 from ibex.sklearn import neighbors as pd_neighbors
+from sklearn import cluster
+from ibex.sklearn import cluster as pd_cluster
 from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
 from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
@@ -92,6 +95,10 @@ _pd_estimators.append(
 _estimators.append(
     linear_model.LinearRegression())
 _pd_estimators.append(
+    frame(pd_linear_model.LinearRegression()))
+_estimators.append(
+    linear_model.LinearRegression())
+_pd_estimators.append(
     pd_linear_model.LinearRegression())
 _estimators.append(
     pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
@@ -105,6 +112,10 @@ _estimators.append(
     linear_model.LogisticRegression())
 _pd_estimators.append(
     pd_linear_model.LogisticRegression())
+_estimators.append(
+    cluster.KMeans(random_state=42))
+_pd_estimators.append(
+    pd_cluster.KMeans(random_state=42))
 _estimators.append(
     neighbors.KNeighborsClassifier())
 _pd_estimators.append(
@@ -223,6 +234,13 @@ def _generate_fit_test(X, y, est, pd_est):
     def test(self):
         pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
+    return test
+
+
+def _generate_str_repr_test(pd_est):
+    def test(self):
+        # Tmp Ami - check it starts with Adapter
+        self.assertEqual(str(pd_est), repr(pd_est))
     return test
 
 
@@ -450,6 +468,10 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_fit_%s_%d' % (name, test_i),
             _generate_fit_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_str_repr_%s_%d' % (name, test_i),
+            _generate_str_repr_test(pd_est))
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),
