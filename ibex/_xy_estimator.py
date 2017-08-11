@@ -78,11 +78,6 @@ def make_estimator(estimator, ind):
         def __reduce__(self):
             return (_from_pickle, (estimator, ind))
 
-        @property
-        def orig_estimator(self):
-            est = base.clone(estimator)
-            return est.set_params(**get_set_params(self))
-
         def __process_wrapped_call_res(self, res):
             if isinstance(res, pd.Series):
                 return res.as_matrix()
