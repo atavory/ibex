@@ -48,6 +48,12 @@ API
 .. automodule:: ibex.sklearn.feature_selection
 
 
+``linear_model``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ibex.sklearn.linear_model
+
+
 ``model_selection``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
