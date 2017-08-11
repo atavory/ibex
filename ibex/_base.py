@@ -347,5 +347,4 @@ __all__ += ['FeatureUnion']
 class Pipeline(pipeline.Pipeline, FrameMixin):
     pass
 
-
 __all__ += ['Pipeline']
