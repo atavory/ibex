@@ -92,17 +92,13 @@ def make_adapter(est):
 
         def predict_proba(self, X, *args, **kwargs):
             res = self.__run(super(_Adapter, self).predict_proba, 'predict_proba', X, *args, **kwargs)
-            # Tmp Ami
-            return res
-            if not hasattr(self, _in_op_flag):
+            if not hasattr(self, _in_op_flag) and hasattr(self, 'classes_'):
                 res.columns = self.classes_
             return res
 
         def predict_log_proba(self, X, *args, **kwargs):
             res = self.__run(super(_Adapter, self).predict_log_proba, 'predict_log_proba', X, *args, **kwargs)
-            # Tmp Ami
-            return res
-            if not hasattr(self, _in_op_flag):
+            if not hasattr(self, _in_op_flag) and hasattr(self, 'classes_'):
                 res.columns = self.classes_
             return res
 

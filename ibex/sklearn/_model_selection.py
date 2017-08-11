@@ -110,7 +110,7 @@ def cross_val_predict(
     verify_x_type(X)
     verify_y_type(y)
 
-    est = make_estimator(estimator, X.index, output_arrays=True)
+    est = make_estimator(estimator, X.index)
     X_, y_ = make_xy(X, y)
     y_hat = _orig.cross_val_predict(
         est,
