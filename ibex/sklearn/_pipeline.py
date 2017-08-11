@@ -72,7 +72,7 @@ def pd_make_union(*transformers):
     return PDFeatureUnion([(name, transformers[0])])
 
 
-def update_module(name, module):
+def update_module(module):
     setattr(module, 'Pipeline', PDPipeline)
     setattr(module, 'FeatureUnion', PDFeatureUnion)
     setattr(module, 'make_pipeline', pd_make_pipeline)

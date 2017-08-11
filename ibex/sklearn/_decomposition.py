@@ -73,7 +73,7 @@ _extra_doc = """
 """
 
 
-def update_module(name, module):
+def update_module(module):
     module.__doc__ += _extra_doc
 
     for name in dir(module):

@@ -52,7 +52,7 @@ _extra_doc = """
 """
 
 
-def update_module(name, module):
+def update_module(module):
     for name in dir(module):
         c = getattr(module, name)
         try:
