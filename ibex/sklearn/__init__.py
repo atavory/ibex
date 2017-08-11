@@ -46,13 +46,6 @@ import string
 import six
 import sklearn
 
-from ._model_selection import update_module as _model_selection_update_module
-from ._pipeline import update_module as _pipeline_update_module
-from ._preprocessing import update_module as _preprocessing_update_module
-from ._feature_selection import update_module as _feature_selection_update_module
-from ._decomposition import update_module as _decomposition_update_module
-from ._cluster import update_module as _cluster_update_module
-
 
 __all__ = sklearn.__all__
 
@@ -107,12 +100,24 @@ class _NewModuleLoader(object):
 
         six.exec_(code, mod.__dict__)
 
-        _model_selection_update_module(orig, mod)
-        _pipeline_update_module(orig, mod)
-        _preprocessing_update_module(orig, mod)
-        _feature_selection_update_module(orig, mod)
-        _decomposition_update_module(orig, mod)
-        _cluster_update_module(orig, mod)
+        if orig in ['cross_validation', 'model_selection']:
+            from ._cross_val_predict import update_module as _cross_val_predict_update_module
+            _cross_val_predict_update_module(orig, mod)
+        if orig == 'cluster':
+            from ._cluster import update_module as _cluster_update_module
+            _cluster_update_module(orig, mod)
+        if orig == 'decomposition':
+            from ._decomposition import update_module as _decomposition_update_module
+            _decomposition_update_module(orig, mod)
+        if orig == 'feature_selection':
+            from ._feature_selection import update_module as _feature_selection_update_module
+            _feature_selection_update_module(orig, mod)
+        if orig == 'pipeline':
+            from ._pipeline import update_module as _pipeline_update_module
+            _pipeline_update_module(orig, mod)
+        if orig == 'preprocessing':
+            from ._preprocessing import update_module as _preprocessing_update_module
+            _preprocessing_update_module(orig, mod)
 
         return mod
 

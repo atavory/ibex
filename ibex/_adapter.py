@@ -184,7 +184,7 @@ def frame(est):
     """
     Arguments:
         est: either an estimator class or an estimator object. The class (or class of the
-            object) should subclass :py:class:`ibex.sklearn.base.BaseEstimator`.
+            object) should subclass :py:class:`sklearn.base.BaseEstimator`.
 
     Returns:
         If ``est`` is a class, returns a class; if ``est`` is an object,

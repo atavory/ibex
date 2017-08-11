@@ -1,6 +1,6 @@
-Regressor Example
+``ibex.FrameMixin``
 ******************************************
 
-.. autoclass:: ibex.sklearn.linear_model.LinearRegression
+.. autoclass:: ibex.FrameMixin
     :members:
     :special-members:

@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
-
-from sklearn import model_selection as _orig
+try:
+    from sklearn.model_selection import cross_val_predict as _orig_cross_val_predict
+except ImportError:
+    from sklearn.cross_validation import cross_val_predict as _orig_cross_val_predict
 from sklearn import base
 from sklearn import exceptions
 from sklearn.utils.validation import check_is_fitted
@@ -112,7 +114,7 @@ def cross_val_predict(
 
     est = make_estimator(estimator, X.index)
     X_, y_ = make_xy(X, y)
-    y_hat = _orig.cross_val_predict(
+    y_hat = _orig_cross_val_predict(
         est,
         X_,
         y_,
