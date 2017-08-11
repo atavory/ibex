@@ -335,7 +335,7 @@ def _generate_predict_proba_test(X, y, est, pd_est):
         self.assertTrue(pd_y_hat.index.equals(X.index))
         if hasattr(est, 'classes_'):
             # Tmp Ami - unreached
-            self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_))
+            self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_), pd_est)
         y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
