@@ -4,13 +4,8 @@ try:
     from sklearn.model_selection import cross_val_predict as _orig_cross_val_predict
 except ImportError:
     from sklearn.cross_validation import cross_val_predict as _orig_cross_val_predict
-from sklearn import base
-from sklearn import exceptions
-from sklearn.utils.validation import check_is_fitted
-from sklearn.utils.metaestimators import if_delegate_has_method
 import pandas as pd
 
-from .._base import FrameMixin
 from .._xy_estimator import make_estimator, make_xy
 from .._utils import verify_x_type, verify_y_type
 
