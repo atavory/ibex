@@ -7,25 +7,27 @@ API
 ``ibex``
 --------
 
+Module Doc
+~~~~~~~~~~~~~
+
 .. automodule:: ibex
 
 
-:class:`ibex.FrameMixin`
+Notable Members
+~~~~~~~~~~~~~~~
 
-:func:`ibex.frame`
+* :func:`ibex.frame`
 
-:func:`ibex.trans`
+* :class:`ibex.FrameMixin`
+
+* :func:`ibex.trans`
 
 
 ``sklearn``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-.. toctree::
-    :maxdepth: 3
-    
-    api_overview
-    api_sklearn
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ibex.sklearn
 
@@ -33,11 +35,19 @@ API
 ``cluster``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+Module Doc
+******************************************
+
 .. automodule:: ibex.sklearn.cluster
 
 
 ``decomposition``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Module Doc
+******************************************
 
 .. automodule:: ibex.sklearn.decomposition
 
@@ -45,11 +55,19 @@ API
 ``feature_selection``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+Module Doc
+******************************************
+
 .. automodule:: ibex.sklearn.feature_selection
 
 
 ``linear_model``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Module Doc
+******************************************
 
 .. automodule:: ibex.sklearn.linear_model
 
@@ -57,28 +75,49 @@ API
 ``model_selection``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+Module Doc
+******************************************
+
 .. automodule:: ibex.sklearn.model_selection
 
 
-:func:`ibex.sklearn.model_selection.cross_val_predict`
+Notable Members
+******************************************
+
+* :func:`ibex.sklearn.model_selection.cross_val_predict`
 
 
 ``pipeline``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+Module Doc
+******************************************
+
 .. automodule:: ibex.sklearn.pipeline
 
-:func:`ibex.sklearn.pipeline.make_union`
 
-:class:`ibex.sklearn.pipeline.FeatureUnion`
+Notable Members
+******************************************
+
+* :func:`ibex.sklearn.pipeline.make_union`
+
+* :class:`ibex.sklearn.pipeline.FeatureUnion`
 
 
 ``preprocessing``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Module Doc
+******************************************
+
 .. automodule:: ibex.sklearn.preprocessing
 
-:class:`ibex.sklearn.preprocessing.FunctionTransformer`
+Notable Members
+******************************************
+
+* :class:`ibex.sklearn.preprocessing.FunctionTransformer`
 
 
 
