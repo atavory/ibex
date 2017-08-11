@@ -73,9 +73,6 @@ def pd_make_union(*transformers):
 
 
 def update_module(name, module):
-    if name != 'pipeline':
-        return
-
     setattr(module, 'Pipeline', PDPipeline)
     setattr(module, 'FeatureUnion', PDFeatureUnion)
     setattr(module, 'make_pipeline', pd_make_pipeline)

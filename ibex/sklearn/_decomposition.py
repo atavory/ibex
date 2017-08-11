@@ -72,9 +72,6 @@ Example
 
 
 def update_module(name, module):
-    if name != 'decomposition':
-        return
-
     module.__doc__ += _extra_doc
 
     for name in dir(module):

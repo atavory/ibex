@@ -117,6 +117,10 @@ _estimators.append(
 _pd_estimators.append(
     pd_cluster.KMeans(random_state=42))
 _estimators.append(
+    cluster.KMeans(random_state=42))
+_pd_estimators.append(
+    pickle.loads(pickle.dumps(pd_cluster.KMeans(random_state=42))))
+_estimators.append(
     neighbors.KNeighborsClassifier())
 _pd_estimators.append(
     pd_neighbors.KNeighborsClassifier())

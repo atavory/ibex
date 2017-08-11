@@ -133,9 +133,6 @@ def cross_val_predict(
 
 
 def update_module(name, module):
-    if name != 'model_selection':
-        return
-
     attribs = {
         'cross_val_predict': cross_val_predict,
     }
