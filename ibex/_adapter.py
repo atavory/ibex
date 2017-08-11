@@ -177,7 +177,9 @@ def make_adapter(est):
             return base_attr
 
         def __reduce__(self):
-            return (_from_pickle, (est, self.get_params(deep=True), ))
+            if not self.__module__.startswith('ibex'):
+                raise TypeError('Cannot serialize a subclass of this type; please use composition instead')
+            return (_from_pickle, (est, self.get_params(deep=True)))
 
     return _Adapter
 

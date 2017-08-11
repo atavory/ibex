@@ -708,6 +708,15 @@ for n in nb_f_names:
     setattr(_NBsTest, test_name, test)
 
 
+class _ExternalSubclass(pd_linear_model.LinearRegression):
+    pass
+
+
+class _ExternalComposer(object):
+    def __init__(self):
+        self.prd = pd_linear_model.LinearRegression()
+
+
 class _PickleTest(unittest.TestCase):
     def test_direct_single_adapter(self):
         iris, features = _load_iris()
@@ -735,6 +744,15 @@ class _PickleTest(unittest.TestCase):
             n_jobs=1)
         clf.fit(iris[features], iris['class'])
 
+    def test_external_subclass(self):
+        e = _ExternalSubclass()
+        with self.assertRaises(TypeError):
+            pickle.dumps(e)
+
+    def test_external_composition(self):
+        e = _ExternalComposer()
+        pickle.loads(pickle.dumps(e))
+
 
 def load_tests(loader, tests, ignore):
     import ibex
@@ -761,16 +779,4 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == '__main__':
-    # Tmp Ami
-    if False:
-        class Foo(pd_linear_model.LinearRegression):
-            def goo(self):
-                pass
-
-        foo = pickle.loads(pickle.dumps(Foo()))
-        foo.__class__ = Foo
-        foo.__class__.__name__ = 'foo'
-        foo.goo()
-
-        ff
     unittest.main()
