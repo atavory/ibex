@@ -100,6 +100,8 @@ class _NewModuleLoader(object):
 
         six.exec_(code, mod.__dict__)
 
+        from ._predict_star_proba import update_module as _predict_star_proba_update_module
+        _predict_star_proba_update_module(orig, mod)
         if orig in ['cross_validation', 'model_selection']:
             from ._cross_val_predict import update_module as _cross_val_predict_update_module
             _cross_val_predict_update_module(orig, mod)

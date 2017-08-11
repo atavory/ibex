@@ -5,7 +5,6 @@ import inspect
 import six
 import sklearn
 from sklearn import base
-import jinja2
 
 
 m_names = set()
@@ -34,10 +33,11 @@ for mod_name in sklearn.__all__:
             # print(name, c, m_name, params)
             m_names.add(m_name)
 
-loader = jinja2.FileSystemLoader(os.path.dirname(__file__))
-env = jinja2.Environment(loader=loader)
-tmpl = env.get_template('_adapter.py.jinja2')
-cnt =tmpl.render(
-	comment='# Auto generted from _adapter.py.jinja2',
-	m_names=m_names)
-open(os.path.join(os.path.dirname(__file__), '../ibex/_adapter.py'), 'w').write(cnt)
+
+print('\n\nmodules:\n\n')
+print('\n'.join(sorted(sklearn.__all__)))
+
+print('\n\nmethods:\n\n')
+print('\n'.join(sorted(m_names)))
+
+
