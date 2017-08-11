@@ -17,7 +17,7 @@ from ._utils import wrapped_fn_names
 __all__ = []
 
 
-_in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
+_in_op_flag = '_ibex_adapter_in_op_%s' % hash(os.path.abspath(__file__))
 
 
 def _from_pickle(est, params):

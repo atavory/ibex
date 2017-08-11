@@ -11,11 +11,7 @@ import pandas as pd
 from sklearn import base
 
 
-_in_op_flag = '_ibex_in_op_%s' % hash(os.path.abspath(__file__))
-
-
-def _from_pickle(est, ind):
-    return make_estimator(est, ind)[0]
+_in_op_flag = '_ibex_xy_estimator_in_op_%s' % hash(os.path.abspath(__file__))
 
 
 def make_estimator(estimator, ind):
@@ -68,9 +64,6 @@ def make_estimator(estimator, ind):
                 delattr(self,_in_op_flag)
 
             return self.__process_wrapped_call_res(res)
-
-        def __reduce__(self):
-            return (_from_pickle, (estimator, ind))
 
         def __process_wrapped_call_res(self, res):
             if isinstance(res, pd.Series):
