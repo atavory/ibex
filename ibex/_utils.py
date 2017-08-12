@@ -5,6 +5,7 @@ import pandas as pd
 
 
 _wrap_msg = """
+
 .. note::
 
     The documentation following is of the class wrapped by this class. There
@@ -14,8 +15,8 @@ _wrap_msg = """
 
         * A parameter ``y`` denotes a :class:`pandas.Series`.
 
---------------------------------
-
+--        ------------------------------
+v
 """
 
 

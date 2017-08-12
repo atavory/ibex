@@ -8,7 +8,6 @@ import types
 import six
 import numpy as np
 import pandas as pd
-from sklearn import base
 
 
 _in_op_flag = '_ibex_xy_estimator_in_op_%s' % hash(os.path.abspath(__file__))
@@ -61,7 +60,7 @@ def make_estimator(estimator, ind):
             try:
                 res = fn(X_, *args, **kwargs)
             finally:
-                delattr(self,_in_op_flag)
+                delattr(self, _in_op_flag)
 
             return self.__process_wrapped_call_res(res)
 
