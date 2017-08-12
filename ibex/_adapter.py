@@ -12,7 +12,7 @@ import pandas as pd
 from ._utils import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
 from ._utils import wrapped_fn_names
-from ._utils import IbexTypeError
+from ._utils import get_wrapped_y
 
 
 __all__ = []
@@ -229,28 +229,16 @@ def make_adapter(est):
             if name.startswith('fit'):
                 self.x_columns = X.columns
 
-            try:
-                base_attr = getattr(est, name)
-                if six.PY3:
-                    params = list(inspect.signature(base_attr).parameters)
-                else:
-                    params = inspect.getargspec(base_attr)[0]
-                # Tmp Ami - write a ut for this; remove todo from docs
-                if len(params) > 2 and params[2] == 'y' and len(args, **kwargs) > 0 and args[0] is not None:
-                    verify_y_type(args[0])
-
-                    if not X.index.equals(args[0].index):
-                        raise ValueError('Indexes do not match')
-            except IbexTypeError:
-                raise
-            except TypeError:
-                pass
+            y = get_wrapped_y(name, args)
+            verify_y_type(y)
+            if y is not None and not X.index.equals(y.index):
+                raise ValueError('Indexes do not match')
 
             setattr(self, _in_op_flag, True)
             try:
                 res = fn(self.__x(X), *args, **kwargs)
             finally:
-                delattr(self,_in_op_flag)
+                delattr(self, _in_op_flag)
 
             return self.__process_wrapped_call_res(X[self.x_columns], res)
 

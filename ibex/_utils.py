@@ -2,6 +2,7 @@ import functools
 
 import six
 import pandas as pd
+import numpy as np
 
 
 _wrap_msg = """
@@ -20,13 +21,9 @@ _wrap_msg = """
 """
 
 
-class IbexTypeError(TypeError):
-    pass
-
-
 def verify_x_type(X):
     if not isinstance(X, pd.DataFrame):
-        raise IbexTypeError('Expected pandas.DataFrame; got %s' % type(X))
+        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
 
 
 def verify_y_type(y):
@@ -34,7 +31,7 @@ def verify_y_type(y):
         return
 
     if not isinstance(y, (pd.DataFrame, pd.Series)):
-        raise IbexTypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
+        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
 
 
 def update_class_wrapper(new_class, orig_class):
@@ -45,6 +42,34 @@ def update_class_wrapper(new_class, orig_class):
 def update_method_wrapper(new_class, orig_class, method_name):
     functools.update_wrapper(getattr(new_class, method_name), getattr(orig_class, method_name))
     getattr(new_class, method_name).__doc__ = _wrap_msg + getattr(orig_class, method_name).__doc__
+
+
+_have_y_fn_names = [
+    'fit',
+    'fit_predict',
+    'fit_transform',
+    'inverse_transform',
+    'partial_fit',
+    'score',
+    'transform',
+]
+
+
+def get_wrapped_y(name, args):
+    if name not in _have_y_fn_names:
+        return None
+
+    if len(args) < 1:
+        return None
+
+    if isinstance(args[0], (pd.Series, pd.DataFrame, np.ndarray)):
+        return args[0]
+
+    return None
+
+
+def update_wrapped_y(args, y):
+    args[0] = y
 
 
 wrapped_fn_names = [

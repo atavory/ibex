@@ -9,6 +9,8 @@ import six
 import numpy as np
 import pandas as pd
 
+from ._utils import get_wrapped_y, update_wrapped_y
+
 
 _in_op_flag = '_ibex_xy_estimator_in_op_%s' % hash(os.path.abspath(__file__))
 
@@ -44,17 +46,13 @@ def make_estimator(estimator, ind):
             op_ind = ind[X[:, 0].astype(int)]
             X_ = pd.DataFrame(X[:, 1:], index=op_ind)
 
-            base_attr = getattr(type(estimator), name)
-            if six.PY3:
-                params = list(inspect.signature(base_attr).parameters)
-            else:
-                params = inspect.getargspec(base_attr)[0]
-
-            # Tmp Ami - write a ut for this; remove todo from docs
-            # Tmp Ami - refactor this; it appears in _Adapter
-            if len(params) > 2 and params[2] == 'y' and len(args) > 0 and args[0] is not None:
+            y = get_wrapped_y(name, args)
+            if y is not None:
                 args = list(args)[:]
-                args[0] = pd.Series(args[0], index=op_ind)
+                if len(y.shape) == 1:
+                    update_wrapped_y(args, pd.Series(y, index=op_ind))
+                else:
+                    update_wrapped_y(args, pd.DataFrame(y, index=op_ind))
 
             setattr(self, _in_op_flag, True)
             try:

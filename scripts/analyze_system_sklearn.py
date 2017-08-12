@@ -21,8 +21,6 @@ for mod_name in sklearn.__all__:
         for m_name in c.__dict__:
             if m_name.startswith('_'):
                 continue
-            if m_name == 'score':
-                continue
             m = getattr(c, m_name)
             if not six.callable(m):
                 continue
@@ -30,8 +28,7 @@ for mod_name in sklearn.__all__:
             params = list(sig.parameters)
             if params[: 2] != ['self', 'X']:
                 continue
-            # print(name, c, m_name, params)
-            m_names.add(m_name)
+            m_names.add(m_name + '-' + ','.join(params[: 3]))
 
 
 print('\n\nmodules:\n\n')
