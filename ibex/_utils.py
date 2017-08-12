@@ -15,14 +15,18 @@ _wrap_msg = """
 
         * A parameter ``y`` denotes a :class:`pandas.Series`.
 
---        ------------------------------
-v
+--------------------------------
+
 """
+
+
+class IbexTypeError(TypeError):
+    pass
 
 
 def verify_x_type(X):
     if not isinstance(X, pd.DataFrame):
-        raise TypeError('Expected pandas.DataFrame; got %s' % type(X))
+        raise IbexTypeError('Expected pandas.DataFrame; got %s' % type(X))
 
 
 def verify_y_type(y):
@@ -30,7 +34,7 @@ def verify_y_type(y):
         return
 
     if not isinstance(y, (pd.DataFrame, pd.Series)):
-        raise TypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
+        raise IbexTypeError('Expected pandas.DataFrame or pandas.Series; got %s' % type(y))
 
 
 def update_class_wrapper(new_class, orig_class):

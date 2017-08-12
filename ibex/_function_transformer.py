@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import base
 
 from ._base import FrameMixin
-from ._verify_args import *
+from ._utils import verify_x_type, verify_y_type
 
 
 __all__ = []

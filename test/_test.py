@@ -262,8 +262,14 @@ def _generate_str_repr_test(pd_est):
 
 def _generate_array_bad_fit_test(X, y, pd_est):
     def test(self):
-        with self.assertRaises(TypeError):
-            pd_est.fit(X.as_matrix(), y.values)
+        try:
+            with self.assertRaises(TypeError):
+                pd_est.fit(X.as_matrix(), y)
+            with self.assertRaises(TypeError):
+                pd_est.fit(X, y.values)
+        except:
+            print(pd_est)
+            raise
     return test
 
 
@@ -373,6 +379,23 @@ def _generate_predict_proba_test(X, y, est, pd_est):
             self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_), pd_est)
         y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
+    return test
+
+
+def _generate_staged_predict_test(X, y, est, pd_est):
+    def test(self):
+        self.assertEqual(
+            hasattr(est, 'staged_predict'),
+            hasattr(pd_est, 'staged_predict'),
+            (est, pd_est))
+        if not hasattr(est, 'staged_predict'):
+            return
+        pd_y_hats = pd_est.fit(X, y).staged_predict(X)
+        y_hats = est.fit(X.as_matrix(), y.values).staged_predict(X.as_matrix())
+        for pd_y_hat, y_hat in zip(pd_y_hats, y_hats):
+            self.assertTrue(isinstance(pd_y_hat, pd.DataFrame))
+            # self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_))
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -524,6 +547,10 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_sample_y__%s_%d' % (name, test_i),
             _generate_sample_y_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_staged_predict_proba_%s_%d' % (name, test_i),
+            _generate_staged_predict_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_predict_proba_%s_%d' % (name, test_i),

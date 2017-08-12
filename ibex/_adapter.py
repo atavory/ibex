@@ -9,9 +9,10 @@ import six
 import numpy as np
 import pandas as pd
 
-from ._verify_args import verify_x_type, verify_y_type
+from ._utils import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
 from ._utils import wrapped_fn_names
+from ._utils import IbexTypeError
 
 
 __all__ = []
@@ -228,8 +229,8 @@ def make_adapter(est):
             if name.startswith('fit'):
                 self.x_columns = X.columns
 
-            base_attr = getattr(est, name)
             try:
+                base_attr = getattr(est, name)
                 if six.PY3:
                     params = list(inspect.signature(base_attr).parameters)
                 else:
@@ -240,6 +241,8 @@ def make_adapter(est):
 
                     if not X.index.equals(args[0].index):
                         raise ValueError('Indexes do not match')
+            except IbexTypeError:
+                raise
             except TypeError:
                 pass
 

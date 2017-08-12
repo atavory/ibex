@@ -11,7 +11,7 @@ from sklearn import pipeline
 from sklearn import exceptions
 from sklearn.externals import joblib
 
-from ._verify_args import verify_x_type, verify_y_type
+from ._utils import verify_x_type, verify_y_type
 
 
 __all__ = []
