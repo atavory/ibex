@@ -3,6 +3,8 @@ from __future__ import absolute_import
 
 from sklearn import base
 
+from ._utils import get_matching_estimators
+
 
 _extra_doc = """
 
@@ -53,14 +55,8 @@ _extra_doc = """
 
 
 def update_module(module):
-    for name in dir(module):
-        c = getattr(module, name)
-        try:
-            if issubclass(c, base.TransformerMixin):
-                module.__doc__ += _extra_doc
-                break
-        except TypeError:
-            pass
+    if get_matching_estimators(module, base.TransformerMixin):
+        module.__doc__ += _extra_doc
 
 
 

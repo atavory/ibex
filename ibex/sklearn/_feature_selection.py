@@ -6,7 +6,9 @@ import inspect
 
 import pandas as pd
 from sklearn import base
+
 from .._adapter import  frame
+from ._utils import get_matching_estimators
 
 
 def _wrap_transform_type(fn):
@@ -77,16 +79,10 @@ _extra_doc = """
 def update_module(module):
     module.__doc__ += _extra_doc
 
-    for name in dir(module):
-        c = getattr(module, name)
-        try:
-            if not issubclass(c, base.TransformerMixin):
-                continue
-        except TypeError:
+    for est in get_matching_estimators(module, base.TransformerMixin):
+        if not hasattr(est, 'get_support'):
             continue
-        if not hasattr(c, 'get_support'):
-            continue
-        _update_est(c)
+        _update_est(est)
 
 
 
