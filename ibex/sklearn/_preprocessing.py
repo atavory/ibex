@@ -63,16 +63,15 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             cv=None,
             n_jobs=1,
             verbose=0,
-            fit_params=None,
             pre_dispatch='2*n_jobs'):
 
-        self._estimator, self._cv, self._n_jobs, self._verbose, self._fit_params, self._pre_dispatch = \
-            estimator, cv, n_jobs, verbose, fit_params, pre_dispatch
+        self._estimator, self._cv, self._n_jobs, self._verbose, self._pre_dispatch = \
+            estimator, cv, n_jobs, verbose, pre_dispatch
 
     def fit_transform(self, X, y, **fit_params):
-        Xt = self._train_transform(X, y)
+        Xt = self._train_transform(X, y, **fit_params)
 
-        self.fit(X, y)
+        self.fit(X, y, **fit_params)
 
         return Xt
 
@@ -102,7 +101,7 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
                     train,
                     test,
                     self._verbose,
-                    fit_params=self._fit_params)
+                    fit_params=fit_params)
                 for train, test in cv_iter)
         return pd.concat(out, axis=0)
 
