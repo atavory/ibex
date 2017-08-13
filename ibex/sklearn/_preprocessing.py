@@ -75,7 +75,7 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         return Xt
 
     def fit(self, X, y, **fit_params):
-        self._estimator.fit(X, y)
+        self._estimator.fit(X, y, **fit_params)
 
         return self
 
