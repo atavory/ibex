@@ -19,13 +19,12 @@ Examples
 
     This is a version of the :mod:`sklearn` example `Pipelining: chaining a PCA and a logistic regression <http://scikit-learn.org/stable/auto_examples/plot_digits_pipe.html#sphx-glr-auto-examples-plot-digits-pipe-py>`_. It illustrates the use of pipelines. 
 
-`Multiple-Row Features In The Movielens Dataset 1 <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows_1.ipynb>`_
+`Multiple-Row Features In The Movielens Dataset 1 <https://github.com/atavory/ibex/blob/master/examples/movielens_row_aggregating_features_1.ipynb>`_
 
     This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances). Pandas excels (no pun intended) in these kinds of operations.
 
+.. `Multiple-Row Features In The Movielens Dataset 2 <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows_2.ipynb>`_
 
-`Multiple-Row Features In The Movielens Dataset 2 <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows_2.ipynb>`_
-
-    This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances); this time using [NMF]()j.
+        This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances); this time using [NMF]()j.
 
 
