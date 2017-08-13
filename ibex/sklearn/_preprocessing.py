@@ -92,18 +92,18 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             print(n_splits)
         cv_iter = list(cv.split(X, y, None))
         out = Parallel(
-            n_jobs=self._n_jobs,
-            verbose=self._verbose,
-            pre_dispatch=self._pre_dispatch
-        )(delayed(_fit_transform)(
-            clone(self._estimator),
-                X,
-                y,
-                train,
-                test,
-                self._verbose,
-                fit_params=self._fit_params)
-            for train, test in cv_iter)
+                n_jobs=self._n_jobs,
+                verbose=self._verbose,
+                pre_dispatch=self._pre_dispatch
+            )(delayed(_fit_transform)(
+                clone(self._estimator),
+                    X,
+                    y,
+                    train,
+                    test,
+                    self._verbose,
+                    fit_params=self._fit_params)
+                for train, test in cv_iter)
         return pd.concat(out, axis=0)
 
     def _test_transform(self, X):
