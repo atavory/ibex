@@ -89,6 +89,9 @@ _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
 
 _estimators, _pd_estimators = [], []
+_estimators.append(preprocessing.StandardScaler())
+_pd_estimators.append(
+    pd_preprocessing.StandardScaler())
 _estimators.append(decomposition.PCA())
 _pd_estimators.append(
     pd_decomposition.PCA())
@@ -470,6 +473,18 @@ def _generate_transform_test(X, y, est, pd_est):
     return test
 
 
+def _generate_inverse_transform_test(X, y, est, pd_est):
+    def test(self):
+        if not hasattr(est, 'inverse_transform'):
+            return
+        pd_est.fit(X, y)
+        pd_re_X = pd_est.inverse_transform(pd_est.transform(X))
+        est.fit(X.as_matrix(), y.values)
+        re_X = est.inverse_transform(est.transform(X.as_matrix()))
+        np.testing.assert_allclose(pd_re_X, re_X)
+    return test
+
+
 def _generate_fit_transform_test(X, y, est, pd_est):
     def test(self):
         self.assertEqual(
@@ -567,6 +582,10 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_transform_%s_%d' % (name, test_i),
             _generate_transform_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_transform_%s_%d' % (name, test_i),
+            _generate_inverse_transform_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_fit_transform_%s_%d' % (name, test_i),

@@ -234,21 +234,28 @@ def make_adapter(est):
             if y is not None and not X.index.equals(y.index):
                 raise ValueError('Indexes do not match')
 
+            inv = name == 'inverse_transform'
+
             setattr(self, _in_op_flag, True)
             try:
-                res = fn(self.__x(X), *args, **kwargs)
+                res = fn(self.__x(inv, X), *args, **kwargs)
             finally:
                 delattr(self, _in_op_flag)
 
-            return self.__process_wrapped_call_res(X[self.x_columns], res)
+            return self.__process_wrapped_call_res(inv, X, res)
 
         # Tmp Ami - should be in base?
-        def __x(self, X):
-            return X[self.x_columns]
+        def __x(self, inv, X):
+            return X[self.x_columns] if not inv else X
 
-        def __process_wrapped_call_res(self, X, res):
+        def __process_wrapped_call_res(self, inv, X, res):
             if hasattr(self, '_ibex_in_op'):
                 return res
+
+            if inv:
+                return pd.DataFrame(res, index=X.index, columns=self.x_columns)
+
+            X = X[self.x_columns]
 
             if isinstance(res, np.ndarray):
                 if len(res.shape) == 1:
@@ -262,7 +269,7 @@ def make_adapter(est):
                     return pd.DataFrame(res, index=X.index, columns=columns)
 
             if isinstance(res, types.GeneratorType):
-                return (self.__process_wrapped_call_res(X, r) for r in res)
+                return (self.__process_wrapped_call_res(False, X, r) for r in res)
 
             return res
 
