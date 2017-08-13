@@ -112,6 +112,10 @@ _estimators.append(
 _pd_estimators.append(
     pd_feature_selection.SelectKBest(k=2) | pd_decomposition.PCA() | pd_linear_model.LinearRegression())
 _estimators.append(
+    pipeline.make_pipeline(feature_selection.SelectKBest(k=2), decomposition.PCA(), linear_model.LinearRegression()))
+_pd_estimators.append(
+    pd_feature_selection.SelectKBest(k=2) | (pd_decomposition.PCA() | pd_linear_model.LinearRegression()))
+_estimators.append(
     pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
 _pd_estimators.append(
     pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()))
@@ -143,6 +147,10 @@ _estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(
     pd_decomposition.PCA(n_components=1) + pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
+_estimators.append(
+    pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
+_pd_estimators.append(
+    pd_decomposition.PCA(n_components=1) + (pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1)))
 _estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(
