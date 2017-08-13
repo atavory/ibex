@@ -10,7 +10,6 @@ from sklearn.externals.joblib import Parallel, delayed
 from sklearn.base import clone
 from sklearn.utils.metaestimators import _safe_split
 import pandas as pd
-import numpy as np
 
 from .._base import FrameMixin
 from .._function_transformer import FunctionTransformer as PDFunctionTransformer
@@ -28,7 +27,7 @@ def _fit_transform(
     X_train, y_train = _safe_split(estimator, X, y, train)
     if fit_params is None:
         fit_params = {}
-    estimator.fit(X, y, **fit_params)
+    estimator.fit(X_train, y_train, **fit_params)
     X_test, _ = _safe_split(estimator, X, y, test, train)
     return estimator.transform(X_test)
 
@@ -58,8 +57,8 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             by transforming on the corresponding indices of `x`.
     """
     def __init__(
-			self,
-			estimator,
+            self,
+            estimator,
             cv=None,
             n_jobs=1,
             verbose=0,
