@@ -221,6 +221,11 @@ if False:
         pd_feature_selection.RFE(pd_linear_model.LogisticRegression()))
 
 
+_pd_stackers = []
+_pd_stackers.append(
+    pd_preprocessing.Stacker(pd_decomposition.PCA()))
+
+
 class _EstimatorTest(unittest.TestCase):
     pass
 
@@ -621,15 +626,33 @@ for estimators in zip( _feature_selectors,  _pd_feature_selectors):
         test_i += 1
 
 
-class _BaseTest(unittest.TestCase):
-    def test_neut(self):
-        prd = linear_model.LinearRegression(fit_intercept=False)
-        self.assertIn('get_params', dir(prd))
-        self.assertEqual(prd.get_params()['fit_intercept'], False)
+class _StackerTest(unittest.TestCase):
+    pass
 
-        prd = pd_linear_model.LinearRegression(fit_intercept=False)
-        self.assertIn('get_params', dir(prd))
-        self.assertEqual(prd.get_params()['fit_intercept'], False)
+
+def _generate_stacker_fit_predict_test(X, y, pd_est):
+    def test(self):
+        pd_est.fit_transform(X, y)
+        pd_est.fit(X, y).transform(X)
+    return test
+
+
+test_i = 0
+for pd_est in _pd_stackers:
+    name = type(pd_est).__name__.lower()
+    # Tmp Ami - add name test
+    if False:
+        setattr(
+            _StackerTest,
+            'test_bases_%s_%d' % (name, test_i),
+            _generate_bases_test(est, pd_est))
+    for dataset in zip(_dataset_names, _Xs, _ys):
+        dataset_name, X, y = dataset
+        name = dataset_name + '_' + type(pd_est).__name__.lower()
+        setattr(
+            _StackerTest,
+            'test_fit_predict_%s_%d' % (name, test_i),
+            _generate_stacker_fit_predict_test(X, y, pd_est))
 
 
 class _FrameTest(unittest.TestCase):
