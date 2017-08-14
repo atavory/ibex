@@ -144,6 +144,14 @@ _estimators.append(
 _pd_estimators.append(
     pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
 _estimators.append(
+    pipeline.FeatureUnion(
+        [('pca', decomposition.PCA(n_components=2)), ('kbest', feature_selection.SelectKBest(k=1))],
+        transformer_weights={'pca': 3, 'kbest': 4}))
+_pd_estimators.append(
+    pd_pipeline.FeatureUnion(
+        [('pca', pd_decomposition.PCA(n_components=2)), ('kbest', pd_feature_selection.SelectKBest(k=1))],
+        transformer_weights={'pca': 3, 'kbest': 4}))
+_estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(
     pd_decomposition.PCA(n_components=1) + pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
