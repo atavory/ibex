@@ -531,7 +531,7 @@ def _generate_fit_transform_test(X, y, est, pd_est):
 test_i = 0
 
 
-for pd_est in [e[1] for e in _estimators + _feature_selectors] + _pd_stackers:
+for pd_est in _pd_estimators + _pd_feature_selectors + _pd_stackers:
     name = type(pd_est).__name__.lower()
     setattr(
         _EstimatorTest,
