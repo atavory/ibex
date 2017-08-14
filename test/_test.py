@@ -656,12 +656,10 @@ def _generate_stacker_fit_predict_test(X, y, pd_est):
 test_i = 0
 for pd_est in _pd_stackers:
     name = type(pd_est).__name__.lower()
-    # Tmp Ami - add name test
-    if False:
-        setattr(
-            _StackerTest,
-            'test_bases_%s_%d' % (name, test_i),
-            _generate_bases_test(est, pd_est))
+    setattr(
+        _StackerTest,
+        'test_name_%s_%d' % (name, test_i),
+        _generate_str_repr_test(pd_est))
     for dataset in zip(_dataset_names, _Xs, _ys):
         dataset_name, X, y = dataset
         name = dataset_name + '_' + type(pd_est).__name__.lower()

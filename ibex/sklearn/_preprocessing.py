@@ -64,8 +64,12 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
             verbose=0,
             pre_dispatch='2*n_jobs'):
 
-        self._estimator, self._cv, self._n_jobs, self._verbose, self._pre_dispatch = \
-            estimator, cv, n_jobs, verbose, pre_dispatch
+        self.set_params(
+            estimator=estimator,
+            cv=cv,
+            n_jobs=n_jobs,
+            verbose=verbose,
+            pre_dispatch=pre_dispatch)
 
     def fit_transform(self, X, y, **fit_params):
         Xt = self._train_transform(X, y, **fit_params)
@@ -75,7 +79,7 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         return Xt
 
     def fit(self, X, y, **fit_params):
-        self._estimator.fit(X, y, **fit_params)
+        self.estimator.fit(X, y, **fit_params)
 
         return self
 
@@ -83,29 +87,29 @@ class Stacker(base.BaseEstimator, base.TransformerMixin, FrameMixin):
         return self._test_transform(X)
 
     def _train_transform(self, X, y, **fit_params):
-        cv = check_cv(self._cv, y, classifier=False)
+        cv = check_cv(self.cv, y, classifier=False)
         n_splits = cv.get_n_splits(X, y, None)
-        if self._verbose > 0:
+        if self.verbose > 0:
             # Tmp Ami
             print(n_splits)
         cv_iter = list(cv.split(X, y, None))
         out = Parallel(
-                n_jobs=self._n_jobs,
-                verbose=self._verbose,
-                pre_dispatch=self._pre_dispatch
+                n_jobs=self.n_jobs,
+                verbose=self.verbose,
+                pre_dispatch=self.pre_dispatch
             )(delayed(_fit_transform)(
-                clone(self._estimator),
+                clone(self.estimator),
                     X,
                     y,
                     train,
                     test,
-                    self._verbose,
+                    self.verbose,
                     fit_params=fit_params)
                 for train, test in cv_iter)
         return pd.concat(out, axis=0)
 
     def _test_transform(self, X):
-        return self._estimator.transform(X)
+        return self.estimator.transform(X)
 
 
 def update_module(module):

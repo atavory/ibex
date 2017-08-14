@@ -206,7 +206,6 @@ def _fit_transform(transformer, weight, X, y, *args, **kwargs):
     return res
 
 
-# Tmp Ami - test weights weights
 class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
     """
     Concatenates results of multiple transformer objects.
@@ -346,5 +345,6 @@ __all__ += ['FeatureUnion']
 
 class Pipeline(pipeline.Pipeline, FrameMixin):
     pass
+
 
 __all__ += ['Pipeline']
