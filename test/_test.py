@@ -529,6 +529,16 @@ def _generate_fit_transform_test(X, y, est, pd_est):
 
 
 test_i = 0
+
+
+for pd_est in [e[1] for e in _estimators + _feature_selectors] + _pd_stackers:
+    name = type(pd_est).__name__.lower()
+    setattr(
+        _EstimatorTest,
+        'test_str_repr_%s_%d' % (name, test_i),
+        _generate_str_repr_test(pd_est))
+
+
 for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_feature_selectors):
     est, pd_est = estimators
     name = type(est).__name__.lower()
@@ -543,10 +553,6 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_fit_%s_%d' % (name, test_i),
             _generate_fit_test(X, y, est, pd_est))
-        setattr(
-            _EstimatorTest,
-            'test_str_repr_%s_%d' % (name, test_i),
-            _generate_str_repr_test(pd_est))
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),
@@ -653,13 +659,8 @@ def _generate_stacker_fit_predict_test(X, y, pd_est):
     return test
 
 
-test_i = 0
 for pd_est in _pd_stackers:
     name = type(pd_est).__name__.lower()
-    setattr(
-        _StackerTest,
-        'test_name_%s_%d' % (name, test_i),
-        _generate_str_repr_test(pd_est))
     for dataset in zip(_dataset_names, _Xs, _ys):
         dataset_name, X, y = dataset
         name = dataset_name + '_' + type(pd_est).__name__.lower()
