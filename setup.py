@@ -27,18 +27,19 @@ class _TestCommand(Command):
 
 class _DocumentCommand(Command):
     user_options = [
+        ('reduced-checks', None, "Don't perforam all checks (spelling, links, lint)")
         ]
 
     def initialize_options(self):
-        pass
+        self.reduced_checks = False
 
     def finalize_options(self):
         pass
 
     def run(self):
-        # Tmp Ami
-        # run_str = "make html spelling lint"
-        run_str = "make html spelling"
+        run_str = "make html"
+        if not self.reduced_checks:
+            run_str += ' spelling lint linkcheck'
         subprocess.check_call(run_str.split(' '), cwd='docs')
 
 

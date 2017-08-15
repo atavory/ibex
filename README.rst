@@ -42,7 +42,7 @@ The full documentation at |read_the_docs_ibex|_ defines these matters in detail,
 TL;DR
 -----
 
-The following short example shows the main points of the library. It is an adaptation of the scikit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/feature_stacker.html>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
+The following short example shows the main points of the library. It is an adaptation of the scikit-learn example `Concatenating multiple feature extraction methods <http://scikit-learn.org/stable/auto_examples/plot_feature_stacker.html#sphx-glr-auto-examples-plot-feature-stacker-py>`_. In this example, we build a classifier for the `iris dataset <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_ using a combination of `PCA <https://en.wikipedia.org/wiki/Principal_component_analysis>`_, `univariate feature selection <https://en.wikipedia.org/wiki/Feature_selection#Subset_selection>`_, and a `support vecor machine classifier <https://en.wikipedia.org/wiki/Support_vector_machine>`_.
 
 We first load the Iris dataset into a pandas ``DataFrame``.
 
@@ -90,7 +90,7 @@ So what does this add to the original version?
 
 #. The estimators perform `verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
 
-#. It allows `writing Pandas-munging estimators <http://ibex.readthedocs.io/en/latest/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_multiple_rows.ipynb>`_).
+#. It allows `writing Pandas-munging estimators <http://ibex.readthedocs.io/en/latest/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
 
 #. Using ``DataFrame`` metadata, it allows writing more complex meta-learning algorithms, such as stacking and nested labeled and stratified cross validation.
 
