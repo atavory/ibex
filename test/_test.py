@@ -611,7 +611,7 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _generate_transform_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
-            'test_transform_%s_%d' % (name, test_i),
+            'test_inverse_transform_%s_%d' % (name, test_i),
             _generate_inverse_transform_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
@@ -652,10 +652,13 @@ class _StackerTest(unittest.TestCase):
     pass
 
 
-def _generate_stacker_fit_predict_test(X, y, pd_est):
+def _generate_stacker_fit_transform_test(X, y, pd_est):
     def test(self):
-        pd_est.fit_transform(X, y)
-        pd_est.fit(X, y).transform(X)
+        stacked_Xt = pd_est.fit_transform(X, y)
+        self.assertTrue(stacked_Xt.index.equals(X.index))
+        Xt = pd_est.fit(X, y).transform(X)
+        self.assertTrue(Xt.index.equals(X.index))
+        self.assertFalse(np.all(stacked_Xt == Xt))
     return test
 
 
@@ -667,7 +670,7 @@ for pd_est in _pd_stackers:
         setattr(
             _StackerTest,
             'test_fit_predict_%s_%d' % (name, test_i),
-            _generate_stacker_fit_predict_test(X, y, pd_est))
+            _generate_stacker_fit_transform_test(X, y, pd_est))
 
 
 class _FrameTest(unittest.TestCase):
