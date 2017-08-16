@@ -1,5 +1,5 @@
 ``FeatureUnion``
-******************************************
+==========================================
 
 .. autoclass:: ibex.sklearn.pipeline.FeatureUnion
     :members:

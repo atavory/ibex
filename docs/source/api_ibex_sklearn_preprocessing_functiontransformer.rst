@@ -1,5 +1,5 @@
 ``FunctionTransformer``
-******************************************
+==========================================
 
 .. autoclass:: ibex.sklearn.preprocessing.FunctionTransformer
     :members:

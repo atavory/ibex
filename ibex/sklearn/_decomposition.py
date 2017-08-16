@@ -54,8 +54,7 @@ def _nmf_from_pickle(est, params):
 
 
 def _nmf_update_est(est):
-    est.transform = _nmf_wrap_transform_type(est.transform)
-    est.fit_transform = _nmf_wrap_transform_type(est.fit_transform)
+    _update_est(est)
     est.__reduce__ = lambda self: (_nmf_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
 
 
