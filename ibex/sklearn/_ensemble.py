@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 
-import functools
 import inspect
 
 import pandas as pd
@@ -60,12 +59,14 @@ def _from_pickle(est, params):
 
 
 def _wrap_getattr(fn):
-    @functools.wraps(fn)
     def wrapped(self, name, *args, **kwargs):
         ret = fn(self, name, *args, **kwargs)
         if name == 'feature_importances_':
             return pd.Series(ret, index=self.x_columns)
         return ret
+
+    # Tmp Ami
+
     return wrapped
 
 

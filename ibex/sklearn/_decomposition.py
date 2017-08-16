@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
 
-import functools
 import inspect
 
+import wrapt
 import pandas as pd
 from sklearn import base
 
@@ -52,14 +52,14 @@ _extra_doc = """
 
 
 def _wrap_transform_type(fn):
-    @functools.wraps(fn)
     def wrapped(self, X, *args, **kwargs):
         ret = fn(self, X, *args, **kwargs)
         if isinstance(ret, pd.DataFrame):
             ret.columns = ['comp_%i' % i for i in range(len(ret.columns))]
         return ret
 
-    wrapped.__doc__ += _extra_doc
+    # Tmp Ami
+    wrapped.__doc__ = _extra_doc
 
     return wrapped
 
@@ -79,7 +79,6 @@ def _update_est(est):
 
 
 def _components_wrap_getattr(fn):
-    @functools.wraps(fn)
     def wrapped(self, name, *args, **kwargs):
         ret = fn(self, name, *args, **kwargs)
         if name == 'components_':

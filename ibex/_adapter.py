@@ -281,37 +281,7 @@ def make_adapter(est):
     return _Adapter
 
 
-def frame(est):
-    """
-    Arguments:
-        est: either an estimator class or an estimator object. The class (or class of the
-            object) should subclass :py:class:`sklearn.base.BaseEstimator`.
-
-    Returns:
-        If ``est`` is a class, returns a class; if ``est`` is an object,
-            returns an object. Note that the result will subclass ``est``
-            and :py:class:`ibex.FrameMixin`
-
-    Example:
-
-        >>> from sklearn import linear_model
-        >>> from ibex import frame
-
-        We can use ``frame`` to adapt an object:
-
-        >>> prd = frame(linear_model.LinearRegression())
-        >>> prd
-        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
-
-        We can use ``frame`` to adapt a class:
-
-        >>> PDLinearRegression = frame(linear_model.LinearRegression)
-        >>> PDLinearRegression()
-        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
-
-        >>> PDLinearRegression(fit_intercept=False)
-        Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
-    """
+def frame_with_post_ops(est, post_ops):
     from ._base import FrameMixin
 
     if isinstance(est, FrameMixin):
@@ -347,5 +317,38 @@ def frame(est):
 
     return _Adapter
 
+
+def frame(est):
+    """
+    Arguments:
+        est: either an estimator class or an estimator object. The class (or class of the
+            object) should subclass :py:class:`sklearn.base.BaseEstimator`.
+
+    Returns:
+        If ``est`` is a class, returns a class; if ``est`` is an object,
+            returns an object. Note that the result will subclass ``est``
+            and :py:class:`ibex.FrameMixin`
+
+    Example:
+
+        >>> from sklearn import linear_model
+        >>> from ibex import frame
+
+        We can use ``frame`` to adapt an object:
+
+        >>> prd = frame(linear_model.LinearRegression())
+        >>> prd
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+
+        We can use ``frame`` to adapt a class:
+
+        >>> PDLinearRegression = frame(linear_model.LinearRegression)
+        >>> PDLinearRegression()
+        Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+
+        >>> PDLinearRegression(fit_intercept=False)
+        Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
+    """
+    return frame_with_post_ops(est, [])
 
 __all__ += ['frame']
