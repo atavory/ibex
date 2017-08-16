@@ -7,7 +7,7 @@ import inspect
 import pandas as pd
 from sklearn import base
 
-from .._adapter import  frame
+from .._adapter import frame
 from ._utils import get_matching_estimators
 
 

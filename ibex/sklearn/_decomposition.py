@@ -7,7 +7,7 @@ import inspect
 import pandas as pd
 from sklearn import base
 
-from .._adapter import  frame
+from .._adapter import frame
 from ._utils import get_matching_estimators
 
 
@@ -33,6 +33,30 @@ def _update_est(est):
     est.transform = _wrap_transform_type(est.transform)
     est.fit_transform = _wrap_transform_type(est.fit_transform)
     est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
+
+
+def _nmf_wrap_transform_type(fn):
+    fn = _wrap_transform_type(fn)
+
+    @functools.wraps(fn)
+    def wrapped(self, X, *args, **kwargs):
+        ret = fn(self, X, *args, **kwargs)
+        return ret
+    return wrapped
+
+
+def _nmf_from_pickle(est, params):
+    est = frame(est)
+
+    _nmf_update_est(est)
+
+    return est(**params)
+
+
+def _nmf_update_est(est):
+    est.transform = _nmf_wrap_transform_type(est.transform)
+    est.fit_transform = _nmf_wrap_transform_type(est.fit_transform)
+    est.__reduce__ = lambda self: (_nmf_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
 
 
 _extra_doc = """
@@ -79,6 +103,10 @@ def update_module(module):
     module.__doc__ += _extra_doc
 
     for est in get_matching_estimators(module, base.TransformerMixin):
+        if est.__name__ == 'NMF':
+            _nmf_update_est(est)
+            continue
+
         _update_est(est)
 
 

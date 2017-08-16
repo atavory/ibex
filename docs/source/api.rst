@@ -52,6 +52,12 @@ Module Doc
 .. automodule:: ibex.sklearn.decomposition
 
 
+Notable Members
+******************************************
+
+* :class:`ibex.sklearn.decomposition.NMF`
+
+
 ``feature_selection``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

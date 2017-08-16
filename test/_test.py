@@ -202,6 +202,10 @@ _pd_estimators.append(
         param_grid=param_grid,
         return_train_score=False,
         verbose=0))
+_estimators.append(
+    decomposition.NMF(random_state=42))
+_pd_estimators.append(
+    pd_decomposition.NMF(random_state=42))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
