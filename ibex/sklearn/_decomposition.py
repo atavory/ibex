@@ -3,7 +3,6 @@ from __future__ import absolute_import
 
 import inspect
 
-import wrapt
 import pandas as pd
 from sklearn import base
 
