@@ -18,6 +18,9 @@ def _wrap_transform_type(fn):
         if isinstance(ret, pd.DataFrame):
             ret.columns = ['comp_%i' % i for i in range(len(ret.columns))]
         return ret
+
+    wrapped.__doc__ += _extra_doc
+
     return wrapped
 
 
@@ -35,13 +38,10 @@ def _update_est(est):
     est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
 
 
-def _nmf_wrap_transform_type(fn):
-    fn = _wrap_transform_type(fn)
-
+def _nmf_wrap_getattr(fn):
     @functools.wraps(fn)
-    def wrapped(self, X, *args, **kwargs):
-        ret = fn(self, X, *args, **kwargs)
-        return ret
+    def wrapped(self, name, *args, **kwargs):
+        return fn(self, name, *args, **kwargs)
     return wrapped
 
 
@@ -55,6 +55,8 @@ def _nmf_from_pickle(est, params):
 
 def _nmf_update_est(est):
     _update_est(est)
+    est.__getattribute__ = _nmf_wrap_getattr(est.__getattribute__)
+    # setattr(est, 'components_', property(_nmf_components))
     est.__reduce__ = lambda self: (_nmf_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
 
 

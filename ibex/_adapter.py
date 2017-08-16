@@ -273,6 +273,7 @@ def make_adapter(est):
 
             return res
 
+        # Tmp Ami - move to ensemble_.py
         def __getattribute__(self, name):
             base_attr = super(_Adapter, self).__getattribute__(name)
             if name == 'feature_importances_':
