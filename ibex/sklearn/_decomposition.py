@@ -11,55 +11,6 @@ from .._adapter import frame
 from ._utils import get_matching_estimators
 
 
-def _wrap_transform_type(fn):
-    @functools.wraps(fn)
-    def wrapped(self, X, *args, **kwargs):
-        ret = fn(self, X, *args, **kwargs)
-        if isinstance(ret, pd.DataFrame):
-            ret.columns = ['comp_%i' % i for i in range(len(ret.columns))]
-        return ret
-
-    wrapped.__doc__ += _extra_doc
-
-    return wrapped
-
-
-def _from_pickle(est, params):
-    est = frame(est)
-
-    _update_est(est)
-
-    return est(**params)
-
-
-def _update_est(est):
-    est.transform = _wrap_transform_type(est.transform)
-    est.fit_transform = _wrap_transform_type(est.fit_transform)
-    est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
-
-
-def _nmf_wrap_getattr(fn):
-    @functools.wraps(fn)
-    def wrapped(self, name, *args, **kwargs):
-        return fn(self, name, *args, **kwargs)
-    return wrapped
-
-
-def _nmf_from_pickle(est, params):
-    est = frame(est)
-
-    _nmf_update_est(est)
-
-    return est(**params)
-
-
-def _nmf_update_est(est):
-    _update_est(est)
-    est.__getattribute__ = _nmf_wrap_getattr(est.__getattribute__)
-    # setattr(est, 'components_', property(_nmf_components))
-    est.__reduce__ = lambda self: (_nmf_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
-
-
 _extra_doc = """
 
 .. tip::
@@ -100,12 +51,66 @@ _extra_doc = """
 """
 
 
+def _wrap_transform_type(fn):
+    @functools.wraps(fn)
+    def wrapped(self, X, *args, **kwargs):
+        ret = fn(self, X, *args, **kwargs)
+        if isinstance(ret, pd.DataFrame):
+            ret.columns = ['comp_%i' % i for i in range(len(ret.columns))]
+        return ret
+
+    wrapped.__doc__ += _extra_doc
+
+    return wrapped
+
+
+def _from_pickle(est, params):
+    est = frame(est)
+
+    _update_est(est)
+
+    return est(**params)
+
+
+def _update_est(est):
+    est.transform = _wrap_transform_type(est.transform)
+    est.fit_transform = _wrap_transform_type(est.fit_transform)
+    est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
+
+
+def _components_wrap_getattr(fn):
+    @functools.wraps(fn)
+    def wrapped(self, name, *args, **kwargs):
+        ret = fn(self, name, *args, **kwargs)
+        if name == 'components_':
+            return pd.DataFrame(
+                ret,
+                index=['comp_%i' % i for i in range(len(ret))],
+                columns=self.x_columns)
+        return ret
+    return wrapped
+
+
+def _components_from_pickle(est, params):
+    est = frame(est)
+
+    _components_update_est(est)
+
+    return est(**params)
+
+
+def _components_update_est(est):
+    _update_est(est)
+    est.__getattribute__ = _components_wrap_getattr(est.__getattribute__)
+    est.__reduce__ = lambda self: (_components_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
+
+
 def update_module(module):
     module.__doc__ += _extra_doc
 
-    for est in get_matching_estimators(module, base.TransformerMixin):
-        if est.__name__ == 'NMF':
-            _nmf_update_est(est)
+    for est in get_matching_estimators(module, base.BaseEstimator):
+        if est.__name__ in ['NMF', 'PCA']:
+            _components_update_est(est)
             continue
 
         _update_est(est)

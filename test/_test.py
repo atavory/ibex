@@ -136,9 +136,9 @@ _estimators.append(
 _pd_estimators.append(
     pd_neighbors.KNeighborsClassifier())
 _estimators.append(
-    ensemble.GradientBoostingClassifier())
+    ensemble.GradientBoostingClassifier(random_state=42))
 _pd_estimators.append(
-    pd_ensemble.GradientBoostingClassifier())
+    pd_ensemble.GradientBoostingClassifier(random_state=42))
 _estimators.append(
     pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
 _pd_estimators.append(
@@ -278,6 +278,32 @@ def _generate_fit_test(X, y, est, pd_est):
     def test(self):
         pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
+    return test
+
+
+def _generate_feature_importances_test(X, y, est, pd_est):
+    def test(self):
+        pd_est.fit(X, y)
+        est.fit(X.as_matrix(), y.values)
+        try:
+            importances = est.feature_importances_
+        except AttributeError:
+            return
+        self.assertTrue(isinstance(pd_est.feature_importances_, pd.Series), (est, pd_est))
+        np.testing.assert_allclose(pd_est.feature_importances_, importances)
+    return test
+
+
+def _generate_components_test(X, y, est, pd_est):
+    def test(self):
+        pd_est.fit(X, y)
+        est.fit(X.as_matrix(), y.values)
+        try:
+            comps = est.components_
+        except AttributeError:
+            return
+        self.assertTrue(isinstance(pd_est.components_, pd.DataFrame))
+        np.testing.assert_allclose(pd_est.components_, comps)
     return test
 
 
@@ -557,6 +583,14 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_fit_%s_%d' % (name, test_i),
             _generate_fit_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_feature_importances_%s_%d' % (name, test_i),
+            _generate_feature_importances_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_components_%s_%d' % (name, test_i),
+            _generate_components_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),

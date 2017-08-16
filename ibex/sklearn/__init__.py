@@ -109,6 +109,9 @@ class _NewModuleLoader(object):
         if orig == 'decomposition':
             from ._decomposition import update_module as _decomposition_update_module
             _decomposition_update_module(mod)
+        if orig == 'ensemble':
+            from ._ensemble import update_module as _ensemble_update_module
+            _ensemble_update_module(mod)
         if orig == 'feature_selection':
             from ._feature_selection import update_module as _feature_selection_update_module
             _feature_selection_update_module(mod)
