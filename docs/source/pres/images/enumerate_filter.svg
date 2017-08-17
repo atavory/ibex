@@ -1,0 +1,91 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="600px" height="800px" version="1.1"
+viewBox="0 0 550 120" preserveAspectRatio="xMinYMin"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<marker id="arrow_end" viewBox="0 0 10 10" refX="1" refY="5" 
+  markerUnits="strokeWidth" orient="auto"
+  markerWidth="10" markerHeight="10">
+  <polyline points="0,0 10,5 0,10 1,5" fill="green" />
+</marker>
+        <rect id = "element"  width="100" height="30" 
+        fill="lightgreen" stroke="lightgreen" stroke-width="1"  />
+</defs>
+        <rect id = "bounding" x="0" y="0" width="550" height="120" 
+        fill="white" stroke="green" stroke-width="1"  />
+<g>
+<use x="50" y="60" xlink:href = "#element"/>
+<text x = "50" y="80" fill = "black">v</text>
+</g>
+<line x1="150" y1="75" x2="190" y2="75" stroke="black" 
+  stroke-width="1" marker-end="url(#arrow_end)" />
+<g>
+<use x="200" y="60" xlink:href = "#element"/>
+<text x = "200" y="80" fill = "black">filter</text>
+</g>
+<line x1="300" y1="75" x2="340" y2="75" stroke="black" 
+  stroke-width="1" marker-end="url(#arrow_end)" />
+<g>
+<use x="350" y="60" xlink:href = "#element"/>
+<text x = "350" y="80" fill = "black">enumerate</text>
+</g>
+<line x1="450" y1="75" x2="495" y2="75" stroke="black" 
+  stroke-width="1" marker-end="url(#arrow_end)" />
+<text x="50" y="40" fill = "black" opacity = "0">
+1
+<animate attributeName = "opacity" from = "0" to = "1" begin="bounding.click" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "200" begin="bounding.click" dur = "1s" fill="freeze"/>
+<animate id="1" attributeName = "opacity" from = "1" to = "0" begin="bounding.click + 1s" dur = "1s" fill="freeze"/>
+</text>
+<text x="50" y="40" fill = "black" opacity="0">
+2
+<animate attributeName = "opacity" from = "0" to = "1" begin="1.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "350" begin="1.end" dur = "2s" fill="freeze"/>
+<animate id="2" attributeName = "opacity" from = "1" to = "0" begin="1.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+<text x="350" y="40" fill = "black" opacity="0">
+0 2
+<animate attributeName = "opacity" from = "0" to = "1" begin="2.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "350" to = "500" begin="2.end" dur = "1s" fill="freeze"/>
+<animate id="e2" attributeName = "opacity" from = "1" to = "0" begin="2.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+<text x="50" y="40" fill = "black" opacity="0">
+3
+<animate attributeName = "opacity" from = "0" to = "1" begin="e2.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "200" begin="e2.end" dur = "1s" fill="freeze"/>
+<animate id="3" attributeName = "opacity" from = "1" to = "0" begin="e2.end + 1s" dur = "1s" fill="freeze"/>
+</text>
+<text x="50" y="40" fill = "black" opacity="0">
+4
+<animate attributeName = "opacity" from = "0" to = "1" begin="3.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "350" begin="3.end" dur = "2s" fill="freeze"/>
+<animate id="4" attributeName = "opacity" from = "1" to = "0" begin="3.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+<text x="350" y="40" fill = "black" opacity="0">
+1 4
+<animate attributeName = "opacity" from = "0" to = "1" begin="4.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "350" to = "500" begin="4.end" dur = "1s" fill="freeze"/>
+<animate id="e4" attributeName = "opacity" from = "1" to = "0" begin="4.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+<text x="50" y="40" fill = "black" opacity="0">
+5
+<animate attributeName = "opacity" from = "0" to = "1" begin="e4.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "200" begin="e4.end" dur = "1s" fill="freeze"/>
+<animate id="5" attributeName = "opacity" from = "1" to = "0" begin="e4.end + 1s" dur = "1s" fill="freeze"/>
+</text>
+<text x="50" y="40" fill = "black" opacity="0">
+6
+<animate attributeName = "opacity" from = "0" to = "1" begin="5.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "50" to = "350" begin="5.end" dur = "2s" fill="freeze"/>
+<animate id="6" attributeName = "opacity" from = "1" to = "0" begin="5.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+<text x="350" y="40" fill = "black" opacity="0">
+2 6
+<animate attributeName = "opacity" from = "0" to = "1" begin="6.end" dur="0.1s" fill="freeze"/>
+<animate attributeName = "x" from = "350" to = "500" begin="6.end" dur = "1s" fill="freeze"/>
+<animate id="e6" attributeName = "opacity" from = "1" to = "0" begin="6.end + 2s" dur = "1s" fill="freeze"/>
+</text>
+        </svg>

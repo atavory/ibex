@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600px" height="800px" version="1.1" viewBox="0 0 415 120" preserveAspectRatio="xMinYMin">
+  <defs>
+    <marker id="arrow_end" viewBox="0 0 10 10" refX="1" refY="5" markerUnits="strokeWidth" orient="auto" markerWidth="10" markerHeight="10">
+      <polyline points="0,0 10,5 0,10 1,5" fill="green"/>
+    </marker>
+  </defs>
+  <rect id="bounding" x="0" y="0" width="415" height="120" fill="white" stroke="green" stroke-width="1"/>
+  <g>
+    <text x="12" y="12" fill="black">move</text>
+    <rect id="source" x="25" y="25" width="160" height="80" style="fill-opacity:0;stroke:darkgreen;"/>
+    <text x="40" y="45" fill="black">source</text>
+  </g>
+  <g id="target" opacity="0">
+    <text x="240" y="45" fill="black">target</text>
+    <rect id="target" x="225" y="25" width="160" height="80" style="fill-opacity:0;stroke:darkgreen;"/>
+    <line x1="185" y1="65" x2="215" y2="65" stroke="black" stroke-width="1" marker-end="url(#arrow_end)"/>
+    <animate id="targete" attributeName="opacity" from="0" to="1" begin="bounding.click" dur="1s" fill="freeze"/>
+  </g>
+  <path id="ft" d="M 0 0 L 200 0" fill="none"/>
+  <g>
+    <ellipse cx="100" cy="80" rx="50" ry="15" style="fill:lightgreen"/>
+    <text x="79" y="80" fill="black">resource</text>
+    <animateMotion id="target_res" begin="targete.end" dur="1s" fill="freeze">
+      <mpath xlink:href="#ft"/>
+    </animateMotion>
+  </g>
+</svg>

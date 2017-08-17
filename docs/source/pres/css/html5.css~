@@ -1,0 +1,260 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+body {
+    font-family: 'Exo', sans-serif;
+    font-weight: 400;
+
+    min-height: 740px;
+
+    background-color: white;
+    -webkit-font-smoothing: antialiased;
+}
+
+b, strong { font-weight: bold }
+i, em { font-style: italic}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    background: yellow;
+    padding: 0 4px;
+}
+
+/* enable clicking on elements 'hiding' behind body in 3D */
+body     { pointer-events: none; }
+#impress { pointer-events: auto; }
+
+/* COMMON STEP STYLES */
+
+.step {
+    height: 900px;
+    width: 900px;
+    padding: 65px 60px 60px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing:    border-box;
+    -ms-box-sizing:     border-box;
+    -o-box-sizing:      border-box;
+    box-sizing:         border-box;
+
+    font-size: 35px;
+    line-height: 1.5;
+
+    -webkit-transition: opacity 1s;
+    -moz-transition:    opacity 1s;
+    -ms-transition:     opacity 1s;
+    -o-transition:      opacity 1s;
+    transition:         opacity 1s;
+}
+
+.step:not(.active) {
+    opacity: 0.3;
+}
+
+/* IMPRESS NOT SUPPORTED STYLES */
+
+.fallback-message {
+    font-family: sans-serif;
+    line-height: 1.3;
+    
+    display: none;
+    width: 780px;
+    padding: 10px 10px 0;
+    margin: 20px auto;
+
+    border-radius: 10px;
+    border: 1px solid #E4C652;
+    background: #EEDC94;
+}
+
+.fallback-message p {
+    margin-bottom: 10px;
+}
+
+.impress-not-supported .step {
+    position: relative;
+    opacity: 1;
+    margin: 20px auto;
+}
+
+.impress-not-supported .fallback-message {
+    display: block;
+}
+
+/* HTML5 PRESENTATION SPECIFIC */
+
+.step h1 {
+    font-size: 60px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.step p {margin: 20px 0;}
+.step li {line-height: 2em;}
+
+.step.top {height: auto;}
+.step.top h1 {display: block;}
+.step.top h1:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.step.top .number {
+  width: 200px;
+  height: 200px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 200px;
+  font-size: 150px;
+  float: left;
+  margin: 0 20px 30px 0;
+
+  font-weight: 700;
+}
+
+.step > aside {
+  font-size: .5em;
+  position: absolute;
+  bottom: 150px;
+}
+
+.step img {
+  position: absolute;
+  right: 0; 
+  bottom: 0;
+}
+
+/* HTML5 PRESENTATION STEP SPECIFIC */
+
+.step#home h1, .step#end h1 {font-size: 75px; margin: 0;}
+
+.step#whoami img {
+  right: 140px; 
+  bottom: 50px;
+}
+
+.step#starter ul, .step#starter p {
+  margin-top: 50px
+}
+
+.step#starter img {
+  right: 40px; 
+  bottom: 50px;
+}
+
+.step#troll h1 {
+  text-align:center; 
+  font-size: 3em;
+}
+
+.step#troll img {
+  right: 180px; 
+  bottom: 100px;
+}
+
+.step#previously ol.two-column {
+  margin-top: 20px;
+  -moz-column-width: 7em; 
+  -webkit-column-width: 7em; 
+  -moz-column-gap: 1em; 
+  -webkit-column-gap: 1em;
+}
+
+.step#previously ol li {
+  line-height: 1.6em
+}
+
+.step#mytop h1 {
+  font-size: 70px;
+  text-align: center;
+}
+
+.step#mytop h1 b {
+  font-size: 1.6em
+}
+
+.step#mytop img {
+  right: 150px; 
+  bottom: 120px;
+}
+
+.step#mytop img#tv-logo {
+  right: -80px; 
+  top: 120px;
+  -webkit-transform: rotate(20deg);
+}
+
+.step#install img {
+  bottom: 120px;
+}
+
+.step#install img + img {
+  left: 0;
+}
+
+.step#timetochange h1, .step#timetochange ol {
+  font-size: 1.4em;
+}
+
+.step#timetochange ol {
+  margin-left: 100px
+}
+
+.step#job img {
+  right: 200px; 
+  bottom: 40px;
+}
+
+.step#end h1 {
+  font-size:5em
+}

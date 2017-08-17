@@ -1,0 +1,107 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600px" height="800px" version="1.1" viewBox="0 0 415 240" preserveAspectRatio="xMinYMin">
+  <defs>
+    <marker id="arrow_end" viewBox="0 0 10 10" refX="1" refY="5" markerUnits="strokeWidth" orient="auto" markerWidth="10" markerHeight="10">
+      <polyline points="0,0 10,5 0,10 1,5" fill="green"/>
+    </marker>
+  </defs>
+  <!-- bounding -->
+  <rect id="bounding" x="0" y="0" width="415" height="240" fill="white" stroke="green" stroke-width="1"/>
+  <!-- r0 -->
+  <g>
+    <text x="40" y="45" fill="black">r0</text>
+    <rect x="25" y="25" width="160" height="80" style="fill-opacity:0;stroke:darkgreen;"/>
+  </g>
+  <!-- r1 -->
+  <g>
+    <text x="240" y="45" fill="black">r1</text>
+    <rect x="225" y="25" width="160" height="80" style="fill-opacity:0;stroke:darkgreen;"/>
+  </g>
+  <!-- chain_it -->
+  <g opacity = "0">
+    <text x="25" y="165" fill="black">chain_it</text>
+    <rect id = "chain_it" x="25" y="150" width="360" height="50" style="fill-opacity:0;stroke:darkgreen;stroke-dasharray:5,5"/>
+    <animate attributeName="opacity" from="0" to="1" begin="bounding.click" dur="7s" fill="freeze"/>
+  </g>
+  <!-- b-e path -->
+  <path id="b_e_path" d="M 0 0 L 120 0" fill="none"/>
+  <!-- e0 -->
+  <g opacity = "0">
+    <rect x="150" y="170" width="30" height="20" style="fill:white;fill-opacity:1;stroke:darkgreen;"/>
+    <text x="150" y="185" fill="black">e0</text>
+    <animate attributeName="opacity" from="0" to="1" begin="chain_it.click" dur="1s" fill="freeze"/>
+  </g>
+  <!-- b0 -->
+  <g opacity = "0">
+    <rect id="b0" x="30" y="170" width="30" height="20" style="fill:white;fill-opacity:1;stroke:darkgreen;">
+<animateColor id = "b0_active" attributeName="fill" 
+                      attributeType="XML"
+                      from="white"
+                      to="lightgreen"
+                    begin = "arrows_gone.end"
+                      dur="1s"
+                        fill="freeze"/>
+<animateColor id = "b0_inactive" attributeName="fill" 
+                      attributeType="XML"
+                      from="lightgreen"
+                      to="white"
+                    begin = "b0_to_e0.end"
+                      dur="1s"
+                        fill="freeze"/>
+</rect>
+    <text x="30" y="185" fill="black">b0</text>
+    <animate attributeName="opacity" from="0" to="1" begin="chain_it.click" dur="1s" fill="freeze"/>
+  <animateMotion id="b0_to_e0" begin="b0_active.end" dur="3s" fill="freeze">
+      <mpath xlink:href="#b_e_path"/>
+    </animateMotion>
+  </g>
+  <!-- e1 -->
+  <g opacity = "0">
+    <rect x="350" y="170" width="30" height="20" style="fill:white;fill-opacity:1;stroke:darkgreen;"/>
+    <text x="350" y="185" fill="black">e1</text>
+    <animate attributeName="opacity" from="0" to="1" begin="chain_it.click" dur="1s" fill="freeze"/>
+    </g>
+  <!-- b1 -->
+  <g opacity = "0">
+    <rect x="230" y="170" width="30" height="20" style="fill:white;fill-opacity:1;stroke:darkgreen;">
+<animateColor id = "b1_active" attributeName="fill" 
+                      attributeType="XML"
+                      from="white"
+                      to="lightgreen"
+                    begin = "b0_to_e0.end"
+                      dur="1s"
+                        fill="freeze"/>
+<animateColor attributeName="fill" 
+                      attributeType="XML"
+                      from="lightgreen"
+                      to="white"
+                    begin = "b1_to_e1.end"
+                      dur="1s"
+                        fill="freeze"/>
+</rect>
+    <text x="230" y="185" fill="black">b1</text>
+    <animate attributeName="opacity" from="0" to="1" begin="chain_it.click" dur="1s" fill="freeze"/>
+  <animateMotion id="b1_to_e1" begin="b1_active.end" dur="3s" fill="freeze">
+      <mpath xlink:href="#b_e_path"/>
+    </animateMotion>
+  </g>
+<!-- arrows -->
+  <g opacity = "0">
+
+  <!-- b0 arrow -->
+  <line x1="45" y1="170" x2="45" y2="115" stroke="black" stroke-dasharray="2,2" stroke-width="1" marker-end="url(#arrow_end)">
+  </line>
+  <!-- e0 arrow -->
+  <line x1="165" y1="170" x2="165" y2="115" stroke="black" stroke-dasharray="2,2" stroke-width="1" marker-end="url(#arrow_end)">
+  </line>
+  <!-- b1 arrow -->
+  <line x1="245" y1="170" x2="245" y2="115" stroke="black" stroke-dasharray="2,2" stroke-width="1" marker-end="url(#arrow_end)">
+  </line>
+  <!-- e1 arrow -->
+  <line x1="365" y1="170" x2="365" y2="115" stroke="black" stroke-dasharray="2,2" stroke-width="1" marker-end="url(#arrow_end)">
+  </line>
+    <animate attributeName="opacity" from="0" to="1" begin="chain_it.click" dur="1s" fill="freeze"/>
+    <animate id = "arrows_gone" attributeName="opacity" from="1" to="0" begin="b0.click" dur="1s" fill="freeze"/>
+</g>
+</svg>
