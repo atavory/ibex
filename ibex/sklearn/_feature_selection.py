@@ -6,8 +6,9 @@ import inspect
 
 import pandas as pd
 from sklearn import base
+from sklearn import feature_selection as orig
 
-from .._adapter import frame
+from .._adapter import frame_ex
 from ._utils import get_matching_estimators
 
 
@@ -52,31 +53,16 @@ _extra_doc = """
 """
 
 
-def _wrap_transform_type(fn):
-    @functools.wraps(fn)
-    def wrapped(self, X, *args, **kwargs):
-        ret = fn(self, X, *args, **kwargs)
-        if isinstance(ret, pd.DataFrame):
-            ret.columns = self.x_columns[self.get_support(indices=True)]
-        return ret
-
-    wrapped.__doc__ = _extra_doc + wrapped.__doc__
-
-    return wrapped
+def transform(self, base_ret):
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
 
 
-def _from_pickle(est, params):
-    est = frame(est)
-
-    _update_est(est)
-
-    return est(**params)
-
-
-def _update_est(est):
-    est.transform = _wrap_transform_type(est.transform)
-    est.fit_transform = _wrap_transform_type(est.fit_transform)
-    est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
+def fit_transform(self, base_ret):
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
 
 
 def update_module(module):
@@ -85,7 +71,10 @@ def update_module(module):
     for est in get_matching_estimators(module, base.TransformerMixin):
         if not hasattr(est, 'get_support'):
             continue
-        _update_est(est)
+        est = frame_ex(
+            getattr(orig, est.__name__),
+            extra_methods=[transform, fit_transform])
+        setattr(module, est.__name__, est)
 
 
 
