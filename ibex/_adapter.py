@@ -21,12 +21,25 @@ __all__ = []
 _in_op_flag = '_ibex_adapter_in_op_%s' % hash(os.path.abspath(__file__))
 
 
-def _from_pickle(est, params):
-    return frame(est)(**params)
+def _from_pickle(
+        est,
+        params,
+        extra_methods,
+        extra_attribs):
+    cls = frame_ex(est, extra_methods, extra_attribs)
+    est = cls(**params)
+    return est
 
 
-def make_adapter(est):
+def make_adapter(
+        est,
+        extra_methods,
+        extra_attribs):
     from ._base import FrameMixin
+
+
+    extra_attribs_d = {fn.__name__: fn for fn in extra_attribs}
+    extra_methods_d = {fn.__name__: fn for fn in extra_methods}
 
 
     class _Adapter(est, FrameMixin):
@@ -242,7 +255,12 @@ def make_adapter(est):
             finally:
                 delattr(self, _in_op_flag)
 
-            return self.__process_wrapped_call_res(inv, X, res)
+            ret = self.__process_wrapped_call_res(inv, X, res)
+
+            if name in extra_methods_d:
+                ret = extra_methods_d[name](self, ret)
+
+            return ret
 
         # Tmp Ami - should be in base?
         def __x(self, inv, X):
@@ -273,15 +291,21 @@ def make_adapter(est):
 
             return res
 
+        def __getattribute__(self, name):
+            base_ret = est.__getattribute__(self, name)
+            if name in extra_attribs_d:
+                return extra_attribs_d[name](self, base_ret)
+            return base_ret
+
         def __reduce__(self):
             if not self.__module__.startswith('ibex'):
                 raise TypeError('Cannot serialize a subclass of this type; please use composition instead')
-            return (_from_pickle, (est, self.get_params(deep=True)))
+            return (_from_pickle, (est, self.get_params(deep=True), extra_methods, extra_attribs))
 
     return _Adapter
 
 
-def frame_with_post_ops(est, post_ops):
+def frame_ex(est, extra_methods=[], extra_attribs=[]):
     from ._base import FrameMixin
 
     if isinstance(est, FrameMixin):
@@ -292,7 +316,7 @@ def frame_with_post_ops(est, post_ops):
         f = frame(type(est))(**params)
         return f
 
-    _Adapter = make_adapter(est)
+    _Adapter = make_adapter(est, extra_methods, extra_attribs)
 
     update_class_wrapper(_Adapter, est)
 
@@ -314,6 +338,11 @@ def frame_with_post_ops(est, post_ops):
                 update_method_wrapper(_Adapter, est, wrap)
             except AttributeError:
                 pass
+
+    # Tmp Ami
+    post_op = None
+    if post_op is not None:
+        post_op(_Adapter)
 
     return _Adapter
 
@@ -349,6 +378,6 @@ def frame(est):
         >>> PDLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
-    return frame_with_post_ops(est, [])
+    return frame_ex(est, extra_methods=[], extra_attribs=[])
 
 __all__ += ['frame']

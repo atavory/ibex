@@ -26,7 +26,6 @@ from ibex.sklearn import svm as pd_svm
 from sklearn import gaussian_process
 from ibex.sklearn import gaussian_process as pd_gaussian_process
 from sklearn import feature_selection
-from ibex.sklearn import feature_selection as pd_feature_selection
 from sklearn import neighbors
 from ibex.sklearn import neighbors as pd_neighbors
 from sklearn import cluster
@@ -239,11 +238,6 @@ if False:
         feature_selection.RFE(linear_model.LogisticRegression()))
     _pd_feature_selectors.append(
         pd_feature_selection.RFE(pd_linear_model.LogisticRegression()))
-
-
-_pd_stackers = []
-_pd_stackers.append(
-    pd_preprocessing.Stacker(pd_decomposition.PCA()))
 
 
 class _EstimatorTest(unittest.TestCase):
@@ -561,7 +555,7 @@ def _generate_fit_transform_test(X, y, est, pd_est):
 test_i = 0
 
 
-for pd_est in _pd_estimators + _pd_feature_selectors + _pd_stackers:
+for pd_est in _pd_estimators + _pd_feature_selectors:
     name = type(pd_est).__name__.lower()
     setattr(
         _EstimatorTest,
@@ -684,31 +678,6 @@ for estimators in zip( _feature_selectors,  _pd_feature_selectors):
             _generate_feature_selection_transform_test(X, y, pd_est))
 
         test_i += 1
-
-
-class _StackerTest(unittest.TestCase):
-    pass
-
-
-def _generate_stacker_fit_transform_test(X, y, pd_est):
-    def test(self):
-        stacked_Xt = pd_est.fit_transform(X, y)
-        self.assertTrue(stacked_Xt.index.equals(X.index))
-        Xt = pd_est.fit(X, y).transform(X)
-        self.assertTrue(Xt.index.equals(X.index))
-        self.assertFalse(np.all(stacked_Xt == Xt))
-    return test
-
-
-for pd_est in _pd_stackers:
-    name = type(pd_est).__name__.lower()
-    for dataset in zip(_dataset_names, _Xs, _ys):
-        dataset_name, X, y = dataset
-        name = dataset_name + '_' + type(pd_est).__name__.lower()
-        setattr(
-            _StackerTest,
-            'test_fit_predict_%s_%d' % (name, test_i),
-            _generate_stacker_fit_transform_test(X, y, pd_est))
 
 
 class _FrameTest(unittest.TestCase):

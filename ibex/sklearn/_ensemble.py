@@ -5,8 +5,9 @@ import inspect
 
 import pandas as pd
 from sklearn import base
+from sklearn import ensemble as orig
 
-from .._adapter import frame_with_post_ops
+from .._adapter import frame_ex
 from ._utils import get_matching_estimators
 
 
@@ -50,37 +51,17 @@ _extra_doc = """
 """
 
 
-def _from_pickle(est, params):
-    est = frame(est)
-
-    _update_est(est)
-
-    return est(**params)
-
-
-def _wrap_getattr(fn):
-    def wrapped(self, name, *args, **kwargs):
-        ret = fn(self, name, *args, **kwargs)
-        if name == 'feature_importances_':
-            return pd.Series(ret, index=self.x_columns)
-        return ret
-
-    # Tmp Ami
-
-    return wrapped
-
-
-def _update_est(est):
-    est.__getattribute__ = _wrap_getattr(est.__getattribute__)
-    est.__reduce__ = lambda self: (_from_pickle, (inspect.getmro(est)[1], self.get_params(deep=True), ))
+def feature_importances_(self, base_ret):
+    return pd.Series(base_ret, index=self.x_columns)
 
 
 def update_module(module):
     module.__doc__ += _extra_doc
 
     for est in get_matching_estimators(module, base.BaseEstimator):
-        est = frame_with_post_ops(est, [])
-        _update_est(est)
+        est = frame_ex(
+            getattr(orig, est.__name__),
+            extra_attribs=[feature_importances_])
         setattr(module, est.__name__, est)
 
 
