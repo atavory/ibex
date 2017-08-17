@@ -246,6 +246,8 @@ def make_adapter(
             verify_y_type(y)
             if y is not None and not X.index.equals(y.index):
                 raise ValueError('Indexes do not match')
+            if y is not None:
+                self.y_columns = y.columns if isinstance(y, pd.DataFrame) else None
 
             inv = name == 'inverse_transform'
 
@@ -339,11 +341,6 @@ def frame_ex(est, extra_methods=[], extra_attribs=[]):
             except AttributeError:
                 pass
 
-    # Tmp Ami
-    post_op = None
-    if post_op is not None:
-        post_op(_Adapter)
-
     return _Adapter
 
 
@@ -378,6 +375,6 @@ def frame(est):
         >>> PDLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
-    return frame_ex(est, extra_methods=[], extra_attribs=[])
+    return frame_ex(est, extra_methods=(), extra_attribs=())
 
 __all__ += ['frame']

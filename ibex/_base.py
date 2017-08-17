@@ -44,6 +44,7 @@ class FrameMixin(object):
         This is a simple, illustrative "identity" transformer,
         which simply relays its input.
 
+        >>> import pandas as pd
         >>> from sklearn import base
         >>> import ibex
         >>>
@@ -52,8 +53,10 @@ class FrameMixin(object):
         ...            base.TransformerMixin, # (2)
         ...            ibex.FrameMixin): # (3)
         ...
-        ...     def fit(self, X, _=None):
+        ...     def fit(self, X, y=None):
         ...         self.x_columns = X.columns # (4)
+        ...         if y is not None and isinstance(y, pd.DataFrame):
+        ...             self.y_columns = y.columns
         ...         return self
         ...
         ...     def transform(self, X, *args, **kwargs):
@@ -67,7 +70,8 @@ class FrameMixin(object):
 
         3. We subclass :class:`ibex.FrameMixin`, as this estimator deals with ``pandas`` entities.
 
-        4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_columns`; this will ensure that the
+        4. In ``fit``, we make sure to set :py:attr:`ibex.FrameMixin.x_columns`;, and, if relevant,
+        :py:attr:`ibex.FrameMixin.y_columns` (if ``y`` is a :class:`pandas.DataFrame`); this will ensure that the
         transformer will "remember" the columns it should see in further calls.
 
         5. In ``transform``, we first use ``x_columns``. This will verify the columns of ``X``, and also reorder
@@ -125,19 +129,38 @@ class FrameMixin(object):
     @property
     def x_columns(self):
         """
-        The columns set in the last call to fit.
+        The X columns set in the last call to fit.
 
         Set this property at fit, and call it in other methods:
 
         """
         try:
-            return self.__cols
+            return self.__x_cols
         except AttributeError:
             raise exceptions.NotFittedError()
 
     @x_columns.setter
     def x_columns(self, columns):
-        self.__cols = columns
+        self.__x_cols = columns
+
+    @property
+    def y_columns(self):
+        """
+        The y columns set in the last call to fit.
+
+        Set this property at fit, and call it in other methods:
+
+        .. versionadded:: 0.1.2
+
+        """
+        try:
+            return self.__y_cols
+        except AttributeError:
+            raise exceptions.NotFittedError()
+
+    @y_columns.setter
+    def y_columns(self, columns):
+        self.__y_cols = columns
 
     def __or__(self, other):
         """
