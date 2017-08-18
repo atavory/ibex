@@ -301,6 +301,21 @@ def _generate_components_test(X, y, est, pd_est):
     return test
 
 
+def _generate_coef_intercept_test(X, y, est, pd_est):
+    def test(self):
+        pd_est.fit(X, y)
+        est.fit(X.as_matrix(), y.values)
+        try:
+            comps = est.coef_
+        except AttributeError:
+            return
+        pd_est.coef_
+        return
+        self.assertTrue(isinstance(pd_est.coef_, pd.DataFrame))
+        np.testing.assert_allclose(pd_est.components_, comps)
+    return test
+
+
 def _generate_str_repr_test(pd_est):
     def test(self):
         # Tmp Ami - check it starts with Adapter
@@ -585,6 +600,10 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_components_%s_%d' % (name, test_i),
             _generate_components_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_coef_intercept_%s_%d' % (name, test_i),
+            _generate_coef_intercept_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),

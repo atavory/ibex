@@ -52,18 +52,20 @@ _extra_doc = """
 
 
 def coef_(self, base_ret):
-    if self.y_columns is not None:
-        for _ in range(20):
-            print(base_ret, self.x_columns, self.y_columns)
-        fff
-    return base_ret
+    if len(base_ret.shape) == 1:
+        return pd.Series(base_ret, index=self.x_columns)
+
+    if len(base_ret.shape) == 2:
+        return pd.DataFrame(base_ret, columns=self.x_columns)
+
+    raise RuntimeError
 
 
 def intercept_(self, base_ret):
+    ggg
     if self.y_columns is not None:
         for _ in range(20):
             print(base_ret, self.x_columns, self.y_columns)
-        ggg
     return base_ret
 
 
@@ -75,6 +77,9 @@ def update_module(module):
             getattr(orig, est.__name__),
             extra_attribs=[coef_, intercept_])
         setattr(module, est.__name__, est)
+
+    # Tmp Ami
+    # getattr(module, 'LinearRegression')().coef_
 
 
 
