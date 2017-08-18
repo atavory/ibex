@@ -115,6 +115,9 @@ class _NewModuleLoader(object):
         if orig == 'feature_selection':
             from ._feature_selection import update_module as _feature_selection_update_module
             _feature_selection_update_module(mod)
+        if orig == 'linear_model':
+            from ._linear_model import update_module as _linear_model_update_module
+            _linear_model_update_module(mod)
         if orig == 'pipeline':
             from ._pipeline import update_module as _pipeline_update_module
             _pipeline_update_module(mod)

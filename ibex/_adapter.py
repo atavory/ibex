@@ -13,12 +13,13 @@ from ._utils import verify_x_type, verify_y_type
 from ._utils import update_method_wrapper, update_class_wrapper
 from ._utils import wrapped_fn_names
 from ._utils import get_wrapped_y
+from ._base import InOpChecker
 
 
 __all__ = []
 
 
-_in_op_flag = '_ibex_adapter_in_op_%s' % hash(os.path.abspath(__file__))
+_in_ops = InOpChecker(__file__)
 
 
 def _from_pickle(
@@ -51,7 +52,7 @@ def make_adapter(
             return self.__repr__()
 
         def aic(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).aic,
                 'aic',
                 X,
@@ -59,7 +60,7 @@ def make_adapter(
                 **kwargs)
 
         def apply(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).apply,
                 'apply',
                 X,
@@ -67,7 +68,7 @@ def make_adapter(
                 **kwargs)
 
         def decision_function(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).decision_function,
                 'decision_function',
                 X,
@@ -75,7 +76,7 @@ def make_adapter(
                 **kwargs)
 
         def bic(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).bic,
                 'bic',
                 X,
@@ -83,7 +84,7 @@ def make_adapter(
                 **kwargs)
 
         def fit(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).fit,
                 'fit',
                 X,
@@ -91,7 +92,7 @@ def make_adapter(
                 **kwargs)
 
         def fit_predict(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).fit_predict,
                 'fit_predict',
                 X,
@@ -99,7 +100,7 @@ def make_adapter(
                 **kwargs)
 
         def fit_transform(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).fit_transform,
                 'fit_transform',
                 X,
@@ -107,7 +108,7 @@ def make_adapter(
                 **kwargs)
 
         def inverse_transform(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).inverse_transform,
                 'inverse_transform',
                 X,
@@ -115,7 +116,7 @@ def make_adapter(
                 **kwargs)
 
         def kneighbors(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).kneighbors,
                 'kneighbors',
                 X,
@@ -123,7 +124,7 @@ def make_adapter(
                 **kwargs)
 
         def partial_fit(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).partial_fit,
                 'partial_fit',
                 X,
@@ -131,7 +132,7 @@ def make_adapter(
                 **kwargs)
 
         def perplexity(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).perplexity,
                 'perplexity',
                 X,
@@ -139,7 +140,7 @@ def make_adapter(
                 **kwargs)
 
         def predict(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).predict,
                 'predict',
                 X,
@@ -147,29 +148,29 @@ def make_adapter(
                 **kwargs)
 
         def predict_log_proba(self, X, *args, **kwargs):
-            res = self.__run(super
+            res = self.__adapter_run(super
                 (_Adapter, self).predict_log_proba,
                 'predict_log_proba',
                 X,
                 *args,
                 **kwargs)
-            if not hasattr(self, _in_op_flag) and hasattr(self, 'classes_'):
+            if self not in _in_ops and hasattr(self, 'classes_'):
                 res.columns = self.classes_
             return res
 
         def predict_proba(self, X, *args, **kwargs):
-            res = self.__run(super
+            res = self.__adapter_run(super
                 (_Adapter, self).predict_proba,
                 'predict_proba',
                 X,
                 *args,
                 **kwargs)
-            if not hasattr(self, _in_op_flag) and hasattr(self, 'classes_'):
+            if self not in _in_ops and hasattr(self, 'classes_'):
                 res.columns = self.classes_
             return res
 
         def radius_neighbors(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).radius_neighbors,
                 'radius_neighbors',
                 X,
@@ -177,7 +178,7 @@ def make_adapter(
                 **kwargs)
 
         def sample_y(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).sample_y,
                 'sample_y',
                 X,
@@ -185,7 +186,7 @@ def make_adapter(
                 **kwargs)
 
         def score_samples(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).score_samples,
                 'score_samples',
                 X,
@@ -193,7 +194,7 @@ def make_adapter(
                 **kwargs)
 
         def staged_decision_function(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).staged_decision_function,
                 'staged_decision_function',
                 X,
@@ -201,14 +202,14 @@ def make_adapter(
                 **kwargs)
 
         def staged_predict(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).staged_predict,
                 'staged_predict',
                 X, *args,
                 **kwargs)
 
         def staged_predict_proba(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).staged_predict_proba,
                 'staged_predict_proba',
                 X,
@@ -216,7 +217,7 @@ def make_adapter(
                 **kwargs)
 
         def score(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).score,
                 'score',
                 X,
@@ -224,15 +225,15 @@ def make_adapter(
                 **kwargs)
 
         def transform(self, X, *args, **kwargs):
-            return self.__run(
+            return self.__adapter_run(
                 super(_Adapter, self).transform,
                 'transform',
                 X,
                 *args,
                 **kwargs)
 
-        def __run(self, fn, name, X, *args, **kwargs):
-            if hasattr(self, _in_op_flag):
+        def __adapter_run(self, fn, name, X, *args, **kwargs):
+            if self in _in_ops:
                 return fn(X, *args, **kwargs)
 
             if not isinstance(X, pd.DataFrame):
@@ -247,17 +248,18 @@ def make_adapter(
             if y is not None and not X.index.equals(y.index):
                 raise ValueError('Indexes do not match')
             if y is not None:
-                self.y_columns = y.columns if isinstance(y, pd.DataFrame) else None
+                if name.startswith('fit'):
+                    self.y_columns = y.columns if isinstance(y, pd.DataFrame) else None
 
             inv = name == 'inverse_transform'
 
-            setattr(self, _in_op_flag, True)
+            _in_ops.add(self)
             try:
                 res = fn(self.__x(inv, X), *args, **kwargs)
             finally:
-                delattr(self, _in_op_flag)
+                _in_ops.remove(self)
 
-            ret = self.__process_wrapped_call_res(inv, X, res)
+            ret = self.__adapter_process_wrapped_call_res(inv, X, res)
 
             if name in extra_methods_d:
                 ret = extra_methods_d[name](self, ret)
@@ -268,7 +270,7 @@ def make_adapter(
         def __x(self, inv, X):
             return X[self.x_columns] if not inv else X
 
-        def __process_wrapped_call_res(self, inv, X, res):
+        def __adapter_process_wrapped_call_res(self, inv, X, res):
             if hasattr(self, '_ibex_in_op'):
                 return res
 
@@ -289,13 +291,13 @@ def make_adapter(
                     return pd.DataFrame(res, index=X.index, columns=columns)
 
             if isinstance(res, types.GeneratorType):
-                return (self.__process_wrapped_call_res(False, X, r) for r in res)
+                return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
 
             return res
 
         def __getattribute__(self, name):
             base_ret = est.__getattribute__(self, name)
-            if name in extra_attribs_d:
+            if self not in _in_ops and name in extra_attribs_d:
                 return extra_attribs_d[name](self, base_ret)
             return base_ret
 

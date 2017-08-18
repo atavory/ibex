@@ -10,9 +10,10 @@ import numpy as np
 import pandas as pd
 
 from ._utils import get_wrapped_y, update_wrapped_y
+from ._base import InOpChecker
 
 
-_in_op_flag = '_ibex_xy_estimator_in_op_%s' % hash(os.path.abspath(__file__))
+_in_ops = InOpChecker(__file__)
 
 
 def make_estimator(estimator, ind):
@@ -40,7 +41,7 @@ def make_estimator(estimator, ind):
             return self.__run(super(_Adapter, self).fit_predict, 'fit_predict', X, *args, **kwargs)
 
         def __run(self, fn, name, X, *args, **kwargs):
-            if hasattr(self, _in_op_flag):
+            if self in _in_ops:
                 return fn(X, *args, **kwargs)
 
             op_ind = ind[X[:, 0].astype(int)]
@@ -54,11 +55,11 @@ def make_estimator(estimator, ind):
                 else:
                     update_wrapped_y(args, pd.DataFrame(y, index=op_ind))
 
-            setattr(self, _in_op_flag, True)
+            _in_ops.add(self)
             try:
                 res = fn(X_, *args, **kwargs)
             finally:
-                delattr(self, _in_op_flag)
+                _in_ops.remove(self)
 
             return self.__process_wrapped_call_res(res)
 

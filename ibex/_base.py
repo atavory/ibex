@@ -4,6 +4,8 @@ from __future__ import absolute_import
 import collections
 import functools
 import itertools
+import os
+import threading
 
 import pandas as pd
 from sklearn import base
@@ -368,6 +370,22 @@ __all__ += ['FeatureUnion']
 
 class Pipeline(pipeline.Pipeline, FrameMixin):
     pass
+
+
+
+class InOpChecker(object):
+    def __init__(self, f_name):
+        flag = '_ibex_adapter_in_op_%s' % hash(os.path.abspath(f_name))
+        self.__set = getattr(threading.local(), flag, set())
+
+    def __contains__(self, est):
+        return id(est) in self.__set
+
+    def add(self, est):
+        self.__set.add(id(est))
+
+    def remove(self, est):
+        self.__set.remove(id(est))
 
 
 __all__ += ['Pipeline']
