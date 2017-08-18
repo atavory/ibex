@@ -23,8 +23,6 @@ Examples
 
     This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances). Pandas excels (no pun intended) in these kinds of operations.
 
-.. `Nonnegative Matrix Factorization Multiple-Row Features In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_nmf.ipynb>`_
+`Nonnegative Matrix Farcotization In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_nmf.ipynb>`_
 
-        This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances); this time using [NMF]()j.
-
-
+    This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances), this time using `nonnegative matrix factorization <https://en.wikipedia.org/wiki/Non-negative_matrix_factorization>`_.
