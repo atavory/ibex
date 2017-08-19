@@ -316,6 +316,18 @@ def _generate_coef_intercept_test(X, y, est, pd_est):
     return test
 
 
+def _generate_fit_dataframe_test(X, y, est, pd_est):
+    def test(self):
+        try:
+            est.fit(X.as_matrix(), X.as_matrix()).predict(X.as_matrix())
+        except (ValueError, AttributeError):
+            return
+        pd_est.fit(X, X).predict(X)
+        for _ in range(20):
+            print(est)
+    return test
+
+
 def _generate_str_repr_test(pd_est):
     def test(self):
         # Tmp Ami - check it starts with Adapter
@@ -604,6 +616,11 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _EstimatorTest,
             'test_coef_intercept_%s_%d' % (name, test_i),
             _generate_coef_intercept_test(X, y, est, pd_est))
+        setattr(
+            _EstimatorTest,
+            'test_fit_dataframe_test_%s_%d' % (name, test_i),
+            _generate_fit_dataframe_test(X, y, est, pd_est))
+
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),
