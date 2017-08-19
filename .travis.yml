@@ -15,6 +15,7 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
+  - conda config --add channels conda-forge
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
