@@ -52,6 +52,7 @@ setup(
     packages=[
         'ibex',
         'ibex.sklearn',
+        'ibex.xgboost',
     ],
     license='bsd',
     description='Pandas Adapters For Scikit-Learn',

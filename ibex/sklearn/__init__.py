@@ -2,7 +2,7 @@
 Wrappers for :mod:`sklearn`.
 
 
-This module loads corresponding modules in ``sklearn`` by demand, just
+This module loads corresponding modules in ``sklearn`` on demand, just
 as ``sklearn`` does. Its contents depend on those of the ``sklearn``
 in your system when it is loaded.
 

@@ -19,6 +19,7 @@ Contents
     pipelines
     feature_union
     sklearn
+    xgboost
     extending
     examples
     api

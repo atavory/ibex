@@ -316,15 +316,19 @@ def _generate_coef_intercept_test(X, y, est, pd_est):
     return test
 
 
-def _generate_fit_dataframe_test(X, y, est, pd_est):
+def _generate_fit_matrix_test(X, y, est, pd_est):
     def test(self):
+        Y = pd.concat([X.copy(), X.copy()], axis=1)
+        Y.columns = [('cc%d' % i) for i in range(len(Y.columns))]
         try:
-            est.fit(X.as_matrix(), X.as_matrix()).predict(X.as_matrix())
+            est.fit(X.as_matrix(), Y.as_matrix()).predict(X.as_matrix())
         except (ValueError, AttributeError):
             return
-        pd_est.fit(X, X).predict(X)
-        for _ in range(20):
-            print(est)
+        pd_est.fit(X, Y).predict(X)
+        try:
+            coef = est.coef_
+        except AttributeError:
+            return
     return test
 
 
@@ -618,9 +622,8 @@ for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_fea
             _generate_coef_intercept_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
-            'test_fit_dataframe_test_%s_%d' % (name, test_i),
-            _generate_fit_dataframe_test(X, y, est, pd_est))
-
+            'test_fit_matrix_test_%s_%d' % (name, test_i),
+            _generate_fit_matrix_test(X, y, est, pd_est))
         setattr(
             _EstimatorTest,
             'test_array_bad_fit_%s_%d' % (name, test_i),
@@ -939,6 +942,9 @@ def load_tests(loader, tests, ignore):
 
     for f_name in glob(os.path.join(_this_dir, '../ibex/sklearn/_*.py')):
         tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
+
+    f_name = os.path.join(_this_dir, '../ibex/xgboost/__init__.py')
+    tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     doc_f_names += [os.path.join(_this_dir, '../README.rst')]

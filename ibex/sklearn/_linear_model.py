@@ -56,7 +56,8 @@ def coef_(self, base_ret):
         return pd.Series(base_ret, index=self.x_columns)
 
     if len(base_ret.shape) == 2:
-        return pd.DataFrame(base_ret, columns=self.x_columns)
+        index = self.y_columns if self.y_columns is not None else self.classes_
+        return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
 
     raise RuntimeError
 

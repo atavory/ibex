@@ -127,3 +127,10 @@ Notable Members
 
 
 
+``xgboost``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ibex.xgboost

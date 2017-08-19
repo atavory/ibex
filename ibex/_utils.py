@@ -36,12 +36,18 @@ def verify_y_type(y):
 
 def update_class_wrapper(new_class, orig_class):
     if six.PY3:
-        new_class.__doc__ = _wrap_msg + orig_class.__doc__
+        orig_doc = orig_class.__doc__
+        if orig_doc is None:
+            orig_doc = ''
+        new_class.__doc__ = _wrap_msg + orig_doc
 
 
 def update_method_wrapper(new_class, orig_class, method_name):
     functools.update_wrapper(getattr(new_class, method_name), getattr(orig_class, method_name))
-    getattr(new_class, method_name).__doc__ = _wrap_msg + getattr(orig_class, method_name).__doc__
+    orig_doc = getattr(orig_class, method_name).__doc__
+    if orig_doc is None:
+        orig_doc = ''
+    getattr(new_class, method_name).__doc__ = _wrap_msg + orig_doc
 
 
 _have_y_fn_names = [
