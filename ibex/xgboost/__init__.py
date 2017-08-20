@@ -58,5 +58,8 @@ XGBClassifier = frame(xgboost.XGBClassifier)
 XGBRegressor = frame(xgboost.XGBRegressor)
 
 
+__all__ = ['XGBClassifier', 'XGBRegressor']
+
+
 
 

@@ -52,6 +52,11 @@ setup(
     packages=[
         'ibex',
         'ibex.sklearn',
+        'ibex.tensorflow',
+        'ibex.tensorflow.contrib',
+        'ibex.tensorflow.contrib.keras',
+        'ibex.tensorflow.contrib.keras.wrappers',
+        'ibex.tensorflow.contrib.keras.wrappers.scikit_learn',
         'ibex.xgboost',
     ],
     license='bsd',

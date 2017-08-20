@@ -6,6 +6,7 @@ import json
 import pickle
 
 import six
+import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 from ibex import frame
@@ -44,10 +45,22 @@ except ImportError:
     from sklearn.cross_validation import cross_val_predict
 from sklearn import datasets
 from sklearn.externals import joblib
-import pandas as pd
-import numpy as np
+# Tmp Ami - xgboost?
+if False:
+	from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
+	from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
+	from tensorflow.contrib import keras
 
 from ibex import *
+
+
+def _build_nn():
+    model = keras.models.Sequential()
+    model.add(keras.models.Dense(20, input_dim=13, init='normal', activation='relu'))
+    model.add(Dense(1, init='normal'))
+
+    model.compile(loss='mean_squared_error', optimizer='adam')
+    return model
 
 
 _this_dir = os.path.dirname(__file__)
@@ -205,6 +218,16 @@ _estimators.append(
     decomposition.NMF(random_state=42))
 _pd_estimators.append(
     pd_decomposition.NMF(random_state=42))
+# Tmp Ami
+if False:
+	_estimators.append(
+		keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
+	_pd_estimators.append(
+		PdKerasClassifier(_build_nn))
+	_estimators.append(
+		keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
+	_pd_estimators.append(
+		PdKerasRegressor(_build_nn))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
@@ -939,10 +962,15 @@ def load_tests(loader, tests, ignore):
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
 
-    for f_name in glob(os.path.join(_this_dir, '../ibex/sklearn/_*.py')):
+    # Tmp Ami - use os.walk or something instead of this mess.
+
+    for f_name in glob(os.path.join(_this_dir, '../ibex/sklearn/*.py')):
         tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
 
     f_name = os.path.join(_this_dir, '../ibex/xgboost/__init__.py')
+    tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
+
+    f_name = os.path.join(_this_dir, '../ibex/tensorflow/contrib/keras/wrappers/scikit_learn/__init__.py')
     tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import inspect
 import types
+import re
 
 import six
 import numpy as np
@@ -19,6 +20,22 @@ __all__ = []
 
 
 _in_ops = InOpChecker(__file__)
+
+
+def _inject_to_str_repr(rpr):
+    _repr_re = re.compile(r'<(.+) at (0x[^>]+)>')
+    m = _repr_re.match(rpr)
+    if m is not None:
+        groups = m.groups()
+        return 'Adapter[' + groups[0] + '] at ' + groups[1]
+
+    _sig_re = re.compile(r'([^\(]+)\(([^\)]+)\)')
+    m = _sig_re.match(rpr)
+    if m is not None:
+        groups = m.groups()
+        return 'Adapter[' + groups[0] + '](' + groups[1] + ')'
+
+    return 'Adapter[' + repr + ']'
 
 
 def _from_pickle(
@@ -42,11 +59,16 @@ def make_adapter(
 
     class _Adapter(est, FrameMixin):
         def __repr__(self):
-            parts = est.__repr__(self).split('(', 1)
-            return 'Adapter[' + parts[0] + '](' + parts[1]
+            ret = _inject_to_str_repr(est.__repr__(self))
+            if '__repr__ ' in extra_attribs_d:
+                return extra_attribs_d['__repr'](self, ret)
+            return ret
 
         def __str__(self):
-            return self.__repr__()
+            ret = self.__repr__()
+            if '__str__ ' in extra_attribs_d:
+                return extra_attribs_d['__str__'](self, ret)
+            return ret
 
         def aic(self, X, *args, **kwargs):
             return self.__adapter_run(
