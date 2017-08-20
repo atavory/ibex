@@ -306,13 +306,12 @@ def _generate_coef_intercept_test(X, y, est, pd_est):
         pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
         try:
-            comps = est.coef_
+            coef = est.coef_
+            intercept = est.intercept_
         except AttributeError:
             return
-        pd_est.coef_
-        return
-        self.assertTrue(isinstance(pd_est.coef_, pd.DataFrame))
-        np.testing.assert_allclose(pd_est.components_, comps)
+        np.testing.assert_allclose(pd_est.coef_, coef)
+        np.testing.assert_allclose(pd_est.intercept_, intercept)
     return test
 
 

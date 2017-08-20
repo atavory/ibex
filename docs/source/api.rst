@@ -133,4 +133,10 @@ Notable Members
 Module Doc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+.. note::
+
+    Ibex does not *require* the installation of :mod:`xgboost`. If ``xgboost`` is not installed on the system, though, then this module will not be available.
+
+
 .. automodule:: ibex.xgboost

@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 
 
-import inspect
-
 import pandas as pd
 from sklearn import base
 from sklearn import linear_model as orig
@@ -15,14 +13,15 @@ _extra_doc = """
 
 .. tip::
 
-    Transformers in this module label their columns as ``comp_0``, ``comp_1``, and so on.
+    Estimators in this module have ``coef_`` and ``intercept_`` attributes following a
+    call to ``fit*``.
 
-    Example
+    Example:
 
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.decomposition import PCA as PDPCA
+        >>> from ibex.sklearn.linear_model import LinearRegression as PDLinearRegression
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -39,14 +38,33 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> PDPCA(n_components=2).fit(iris[features], iris['class']).transform(iris[features])
-            comp_0    comp_1
-        0   -2.684207  0.326607
-        1   -2.715391 -0.169557
-        2   -2.889820 -0.137346
-        3   -2.746437 -0.311124
-        4   -2.728593  0.333925
-        ...
+        >>> prd =  PDLinearRegression().fit(iris[features], iris['class'])
+        >>>
+        >>> prd.coef_
+        sepal length (cm)   -0.109741
+        sepal width (cm)    -0.044240
+        petal length (cm)    0.227001
+        petal width (cm)     0.609894
+        dtype: float64
+        >>>
+        >>> prd.intercept_
+        0.19208...
+
+    Example:
+
+        >>> from ibex.sklearn.linear_model import LogisticRegression as PDLogisticRegression
+
+        >>> clf =  PDLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf.coef_
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0           0.414988          1.461297          -2.262141         -1.029095
+        1           0.416640         -1.600833           0.577658         -1.385538
+        2          -1.707525         -1.534268           2.470972          2.555382
+        >>> clf.intercept_
+        0    0.265606
+        1    1.085424
+        2   -1.214715
+        dtype: float64
 
 """
 
@@ -59,15 +77,18 @@ def coef_(self, base_ret):
         index = self.y_columns if self.y_columns is not None else self.classes_
         return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
 
-    raise RuntimeError
+    raise RuntimeError()
 
 
 def intercept_(self, base_ret):
-    ggg
-    if self.y_columns is not None:
-        for _ in range(20):
-            print(base_ret, self.x_columns, self.y_columns)
-    return base_ret
+    # Tmp Ami - replace next by is_nummeric or is_scalar
+    if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
+        return base_ret
+
+    if len(base_ret.shape) == 1:
+        return pd.Series(base_ret)
+
+    raise RuntimeError()
 
 
 def update_module(module):

@@ -268,9 +268,6 @@ def make_adapter(
             return X[self.x_columns] if not inv else X
 
         def __adapter_process_wrapped_call_res(self, inv, X, res):
-            if hasattr(self, '_ibex_in_op'):
-                return res
-
             if inv:
                 return pd.DataFrame(res, index=X.index, columns=self.x_columns)
 

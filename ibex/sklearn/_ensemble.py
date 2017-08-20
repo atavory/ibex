@@ -15,14 +15,15 @@ _extra_doc = """
 
 .. tip::
 
-    Transformers in this module label their columns as ``comp_0``, ``comp_1``, and so on.
+    Estimators in this module have a ``feature_importances_`` attribute following a
+    call to ``fit*``.
 
-    Example
+    Example:
 
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.decomposition import PCA as PDPCA
+        >>> from ibex.sklearn.ensemble import RandomForestClassifier as PDRandomForestClassifier
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -39,14 +40,30 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> PDPCA(n_components=2).fit(iris[features], iris['class']).transform(iris[features])
-            comp_0    comp_1
-        0   -2.684207  0.326607
-        1   -2.715391 -0.169557
-        2   -2.889820 -0.137346
-        3   -2.746437 -0.311124
-        4   -2.728593  0.333925
-        ...
+        >>> clf =  PDRandomForestClassifier(random_state=42).fit(iris[features], iris['class'])
+        >>>
+        >>> clf.feature_importances_
+        sepal length (cm)    0.129268
+        sepal width (cm)     0.015822
+        petal length (cm)    0.444740
+        petal width (cm)     0.410169
+        dtype: float64
+
+    Example:
+
+        >>> from ibex.sklearn.linear_model import LogisticRegression as PDLogisticRegression
+
+        >>> clf =  PDLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf.coef_
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0           0.414988          1.461297          -2.262141         -1.029095
+        1           0.416640         -1.600833           0.577658         -1.385538
+        2          -1.707525         -1.534268           2.470972          2.555382
+        >>> clf.intercept_
+        0    0.265606
+        1    1.085424
+        2   -1.214715
+        dtype: float64
 
 """
 
