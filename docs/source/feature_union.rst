@@ -26,8 +26,8 @@ In this chapter we'll use the following Iris dataset:
 
 We'll also use PCA and univariate feature selection:
 
-	>>> from ibex.sklearn.decomposition import PCA as PDPCA
-	>>> from ibex.sklearn.feature_selection import SelectKBest as PDSelectKBest
+	>>> from ibex.sklearn.decomposition import PCA as PdPCA
+	>>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
 
 
 ``sklearn`` Alternative
@@ -37,7 +37,7 @@ Using :class:`sklearn.pipeline.FeatureUnion`, we can create a feature-union of s
 
     >>> from sklearn.pipeline import FeatureUnion
     >>> 
-    >>> trn = FeatureUnion([('pca', PDPCA(n_components=2)), ('best', PDSelectKBest(k=1))])
+    >>> trn = FeatureUnion([('pca', PdPCA(n_components=2)), ('best', PdSelectKBest(k=1))])
 
 Note how the step names can be exactly specified. The name of the second step is ``'best'``, even though that is unrelated to the name of the class.
 
@@ -56,11 +56,11 @@ Pipeline-Syntax Alternative
 
 Using the pipeline syntax, we can use ``+`` to create a pipeline:
 
-	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
+	>>> trn = PdPCA(n_components=2) + PdSelectKBest(k=1)
 
 The output using this, however, discards the meaning of the columns:
 
-	>>> trn = PDPCA(n_components=2) + PDSelectKBest(k=1)
+	>>> trn = PdPCA(n_components=2) + PdSelectKBest(k=1)
     >>> trn.fit_transform(iris[features], iris['class'])
               pca                 selectkbest
            comp_0    comp_1 petal length (cm)
@@ -75,7 +75,7 @@ A better way would be to combine this with :func:`ibex.trans`:
 
 	>>> from ibex import trans
 	>>> 
-	>>> trn = trans(PDPCA(n_components=2), out_cols=['pc1', 'pc2']) + trans(PDSelectKBest(k=1), out_cols='best', pass_y=True)
+	>>> trn = trans(PdPCA(n_components=2), out_cols=['pc1', 'pc2']) + trans(PdSelectKBest(k=1), out_cols='best', pass_y=True)
     >>> trn.fit_transform(iris[features], iris['class'])
         functiontransformer_0           functiontransformer_1
                           pc1       pc2                  best

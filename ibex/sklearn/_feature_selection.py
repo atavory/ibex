@@ -24,7 +24,7 @@ _extra_doc = """
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.feature_selection import SelectKBest as PDSelectKBest
+        >>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -41,7 +41,7 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> PDSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
+        >>> PdSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
             petal length (cm)
         0                  1.4
         1                  1.4

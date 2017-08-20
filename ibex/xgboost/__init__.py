@@ -10,8 +10,8 @@ Example:
     >>> import pandas as pd
     >>> import numpy as np
     >>> from ibex.sklearn import datasets
-    >>> from ibex.xgboost import XGBRegressor as PDXGBRegressor
-    >>> from ibex.xgboost import XGBClassifier as PDXGBClassifier
+    >>> from ibex.xgboost import XGBRegressor as PdXGBRegressor
+    >>> from ibex.xgboost import XGBClassifier as PdXGBClassifier
 
     >>> iris = datasets.load_iris()
     >>> features = iris['feature_names']
@@ -28,7 +28,7 @@ Example:
     4                5.0               3.6                1.4               0.2
     ...
 
-    >>> PDXGBRegressor().fit(iris[features], iris['class']).predict(iris[features])
+    >>> PdXGBRegressor().fit(iris[features], iris['class']).predict(iris[features])
     0      0.000140
     1      0.013568
     2     -0.004346
@@ -36,7 +36,7 @@ Example:
     4      0.000140
 	...
 
-    >>> PDXGBClassifier().fit(iris[features], iris['class']).predict(iris[features])
+    >>> PdXGBClassifier().fit(iris[features], iris['class']).predict(iris[features])
     0      0...
     1      0...
     2      0...

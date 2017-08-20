@@ -32,35 +32,35 @@ We can use ``frame`` to adapt an object:
 
 We can use ``frame`` to adapt a class:
 
-    >>> PDLinearRegression = frame(linear_model.LinearRegression)
-    >>> PDStandardScaler = frame(preprocessing.StandardScaler)
+    >>> PdLinearRegression = frame(linear_model.LinearRegression)
+    >>> PdStandardScaler = frame(preprocessing.StandardScaler)
 
 Once we adapt a class, it behaves pretty much like the underlying one. We can construct it in whatever ways it the underlying class supports, for example:
 
-    >>> PDLinearRegression()
+    >>> PdLinearRegression()
     Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
-    >>> PDLinearRegression(fit_intercept=False)
+    >>> PdLinearRegression(fit_intercept=False)
     Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
 
 It has the same name as the underlying class:
 
-    >>> PDLinearRegression.__name__
+    >>> PdLinearRegression.__name__
     'LinearRegression'
 
 It subclasses the same mixins of the underlying class:
 
-    >>> isinstance(PDLinearRegression(), base.RegressorMixin)
+    >>> isinstance(PdLinearRegression(), base.RegressorMixin)
     True
-    >>> isinstance(PDLinearRegression(), base.TransformerMixin)
+    >>> isinstance(PdLinearRegression(), base.TransformerMixin)
     False
-    >>> isinstance(PDStandardScaler(), base.RegressorMixin)
+    >>> isinstance(PdStandardScaler(), base.RegressorMixin)
     False
-    >>> isinstance(PDStandardScaler(), base.TransformerMixin)
+    >>> isinstance(PdStandardScaler(), base.TransformerMixin)
     True
 
 As can be seen above, though, the string and representation is modified, to signify this is an adapted type:
 
-    >>> PDLinearRegression()
+    >>> PdLinearRegression()
     Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
     >>> linear_model.LinearRegression()
     LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)

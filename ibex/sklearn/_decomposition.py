@@ -22,7 +22,7 @@ _extra_doc = """
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.decomposition import PCA as PDPCA
+        >>> from ibex.sklearn.decomposition import PCA as PdPCA
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -39,7 +39,7 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> PDPCA(n_components=2).fit(iris[features], iris['class']).transform(iris[features])
+        >>> PdPCA(n_components=2).fit(iris[features], iris['class']).transform(iris[features])
             comp_0    comp_1
         0   -2.684207  0.326607
         1   -2.715391 -0.169557

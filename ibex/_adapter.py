@@ -364,11 +364,11 @@ def frame(est):
 
         We can use ``frame`` to adapt a class:
 
-        >>> PDLinearRegression = frame(linear_model.LinearRegression)
-        >>> PDLinearRegression()
+        >>> PdLinearRegression = frame(linear_model.LinearRegression)
+        >>> PdLinearRegression()
         Adapter[LinearRegression](copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
 
-        >>> PDLinearRegression(fit_intercept=False)
+        >>> PdLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
     return frame_ex(est, extra_methods=(), extra_attribs=())

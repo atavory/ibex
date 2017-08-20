@@ -23,7 +23,7 @@ _extra_doc = """
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.cluster import KMeans as PDKMeans
+        >>> from ibex.sklearn.cluster import KMeans as PdKMeans
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -40,7 +40,7 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> clt = PDKMeans(n_clusters=3, random_state=1).fit(iris[features])
+        >>> clt = PdKMeans(n_clusters=3, random_state=1).fit(iris[features])
         >>> clt.transform(iris[features])
             0         1         2
         0    3.419251  0.146942  5.059542

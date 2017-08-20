@@ -32,7 +32,7 @@ from sklearn import cluster
 from ibex.sklearn import cluster as pd_cluster
 from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
-from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
+from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
 from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
 try:
     from sklearn.model_selection import cross_val_score
@@ -177,7 +177,7 @@ _estimators.append(
         param_grid=param_grid,
         verbose=0))
 _pd_estimators.append(
-    PDGridSearchCV(
+    PdGridSearchCV(
         pd_svm.SVC(kernel="linear", random_state=42, probability=True),
         param_grid=param_grid,
         verbose=0))
@@ -195,7 +195,7 @@ _estimators.append(
         return_train_score=False,
         verbose=0))
 _pd_estimators.append(
-    PDGridSearchCV(
+    PdGridSearchCV(
         pd_pipeline.make_pipeline(
             pd_linear_model.LogisticRegression()),
         param_grid=param_grid,
@@ -910,7 +910,7 @@ class _PickleTest(unittest.TestCase):
         iris, features = _load_iris()
 
         clf = SVC()
-        clf = PDGridSearchCV(
+        clf = PdGridSearchCV(
             clf,
             {'kernel':('linear', 'rbf'), 'C':[1, 10]},
             n_jobs=1)

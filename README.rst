@@ -62,9 +62,9 @@ We first load the Iris dataset into a pandas ``DataFrame``.
 
 Now, we import the relevant steps. Note that, in this example, we import them from `ibex.sklearn` rather than `sklearn`.
 
-	>>> from ibex.sklearn.svm import SVC as PDSVC
-	>>> from ibex.sklearn.feature_selection import SelectKBest as PDSelectKBest
-	>>> from ibex.sklearn.decomposition import PCA as PDPCA
+	>>> from ibex.sklearn.svm import SVC as PdSVC
+	>>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
+	>>> from ibex.sklearn.decomposition import PCA as PdPCA
 
 (Of course, it's possible to import steps from `sklearn` as well, and use them alongside and together with the steps of `ibex.sklearn`.)
 
@@ -74,7 +74,7 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 * then, passes the result to a support-vector machine classifier outputting a pandas series:
 
 
-	>>> clf = PDPCA(n_components=2) + PDSelectKBest(k=1) | PDSVC(kernel="linear")
+	>>> clf = PdPCA(n_components=2) + PdSelectKBest(k=1) | PdSVC(kernel="linear")
 
 ``clf`` is now a ``pandas``-ware classifier, but otherwise can be used pretty much like all ``sklearn`` estimator. For example,  
 
@@ -82,8 +82,8 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
     ...     featureunion__pca__n_components=[1, 2, 3],
     ...     featureunion__selectkbest__k=[1, 2],
     ...     svc__C=[0.1, 1, 10])
-    >>> from ibex.sklearn.model_selection import GridSearchCV as PDGridSearchCV
-    >>> PDGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class']) # doctest: +SKIP 
+    >>> from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
+    >>> PdGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class']) # doctest: +SKIP 
     ...
 
 So what does this add to the original version?

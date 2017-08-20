@@ -19,7 +19,7 @@ _extra_doc = """
     >>> import pandas as pd
     >>> import numpy as np
     >>> from ibex.sklearn import datasets
-    >>> from ibex.sklearn.linear_model import LogisticRegression as PDLogisticRegression
+    >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
     >>>
     >>> iris = datasets.load_iris()
     >>> features = iris['feature_names']
@@ -27,7 +27,7 @@ _extra_doc = """
     ...     np.c_[iris['data'], iris['target']],
     ...     columns=features+['class'])
 
-    >>> clf = PDLogisticRegression().fit(iris[features], iris['class'])
+    >>> clf = PdLogisticRegression().fit(iris[features], iris['class'])
     >>> clf.classes_
     array([ 0.,  1.,  2.])
 

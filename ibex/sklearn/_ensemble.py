@@ -23,7 +23,7 @@ _extra_doc = """
         >>> import pandas as pd
         >>> import numpy as np
         >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.ensemble import RandomForestClassifier as PDRandomForestClassifier
+        >>> from ibex.sklearn.ensemble import RandomForestClassifier as PdRandomForestClassifier
 
         >>> iris = datasets.load_iris()
         >>> features = iris['feature_names']
@@ -40,7 +40,7 @@ _extra_doc = """
         4                5.0               3.6                1.4               0.2
         ...
 
-        >>> clf =  PDRandomForestClassifier(random_state=42).fit(iris[features], iris['class'])
+        >>> clf =  PdRandomForestClassifier(random_state=42).fit(iris[features], iris['class'])
         >>>
         >>> clf.feature_importances_
         sepal length (cm)    0.129268
@@ -51,9 +51,9 @@ _extra_doc = """
 
     Example:
 
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PDLogisticRegression
+        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
 
-        >>> clf =  PDLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
         >>> clf.coef_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
         0           0.414988          1.461297          -2.262141         -1.029095
