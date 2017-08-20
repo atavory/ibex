@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 
 import inspect
-import os
 import types
 
 import six
@@ -38,10 +37,8 @@ def make_adapter(
         extra_attribs):
     from ._base import FrameMixin
 
-
     extra_attribs_d = {fn.__name__: fn for fn in extra_attribs}
     extra_methods_d = {fn.__name__: fn for fn in extra_methods}
-
 
     class _Adapter(est, FrameMixin):
         def __repr__(self):
@@ -148,8 +145,8 @@ def make_adapter(
                 **kwargs)
 
         def predict_log_proba(self, X, *args, **kwargs):
-            res = self.__adapter_run(super
-                (_Adapter, self).predict_log_proba,
+            res = self.__adapter_run(
+                super(_Adapter, self).predict_log_proba,
                 'predict_log_proba',
                 X,
                 *args,
@@ -159,8 +156,8 @@ def make_adapter(
             return res
 
         def predict_proba(self, X, *args, **kwargs):
-            res = self.__adapter_run(super
-                (_Adapter, self).predict_proba,
+            res = self.__adapter_run(
+                super(_Adapter, self).predict_proba,
                 'predict_proba',
                 X,
                 *args,
@@ -309,7 +306,7 @@ def make_adapter(
     return _Adapter
 
 
-def frame_ex(est, extra_methods=[], extra_attribs=[]):
+def frame_ex(est, extra_methods=(), extra_attribs=()):
     from ._base import FrameMixin
 
     if isinstance(est, FrameMixin):
@@ -378,5 +375,6 @@ def frame(est):
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
     return frame_ex(est, extra_methods=(), extra_attribs=())
+
 
 __all__ += ['frame']
