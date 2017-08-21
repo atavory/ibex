@@ -49,22 +49,6 @@ _extra_doc = """
         petal width (cm)     0.410169
         dtype: float64
 
-    Example:
-
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
-        >>> clf.coef_
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0           0.414988          1.461297          -2.262141         -1.029095
-        1           0.416640         -1.600833           0.577658         -1.385538
-        2          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
-
 """
 
 
