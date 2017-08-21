@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+
+
 def get_matching_estimators(module, base):
     ests = []
     for name in dir(module):

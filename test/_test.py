@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+
+
 import unittest
 import os
 from glob import glob
@@ -46,10 +49,9 @@ except ImportError:
 from sklearn import datasets
 from sklearn.externals import joblib
 # Tmp Ami - xgboost?
-if False:
-	from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
-	from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
-	from tensorflow.contrib import keras
+from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
+from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
+from tensorflow.contrib import keras
 
 from ibex import *
 
