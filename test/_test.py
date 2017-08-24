@@ -555,8 +555,8 @@ def _generate_fit_predict_test(X, y, est, pd_est):
 
 def _generate_attr_test(X, y, est, pd_est):
     def test(self):
-        pd_est.fit(X, y)
         est.fit(X.as_matrix(), y.values)
+        pd_est.fit(X, y)
         self.assertEqual(
             hasattr(est, 'coef_'),
             hasattr(pd_est, 'coef_'))
