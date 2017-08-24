@@ -8,6 +8,8 @@ Wrappers for :mod:`tensorflow.contrib.keras.wrappers.sklearn`.
 
 from __future__ import absolute_import
 
+import functools
+
 from sklearn import base
 from tensorflow.contrib import keras
 
@@ -23,12 +25,26 @@ def __repr__(self, _):
     return 'Adapter[' + cls_name + '](' + str(self.get_params()) + ')'
 
 
+def _make_fit(fn):
+    @functools.wraps(fn)
+    def wrapped(self, X, y):
+        self.history_ = fn(self, X, y)
+        return self
+    return wrapped
+
+
+def _correct(cls):
+    cls.fit = _make_fit(cls.fit)
+
+
 KerasClassifier = frame_ex(
     keras.wrappers.scikit_learn.KerasClassifier,
-    extra_methods=[__str__, __repr__])
+    extra_methods=[__str__, __repr__],
+    post_op=_correct)
 KerasRegressor = frame_ex(
     keras.wrappers.scikit_learn.KerasRegressor,
-    extra_methods=[__str__, __repr__])
+    extra_methods=[__str__, __repr__],
+    post_op=_correct)
 
 
 __all__ = ['KerasClassifier', 'KerasRegressor']

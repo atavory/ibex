@@ -49,9 +49,9 @@ except ImportError:
 from sklearn import datasets
 from sklearn.externals import joblib
 # Tmp Ami - xgboost?
-# from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
-# from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
-# from tensorflow.contrib import keras
+from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
+from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
+from tensorflow.contrib import keras
 
 from ibex import *
 
@@ -220,16 +220,14 @@ _estimators.append(
     decomposition.NMF(random_state=42))
 _pd_estimators.append(
     pd_decomposition.NMF(random_state=42))
-# Tmp Ami
-if False:
-	_estimators.append(
-		keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
-	_pd_estimators.append(
-		PdKerasClassifier(_build_nn))
-	_estimators.append(
-		keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
-	_pd_estimators.append(
-		PdKerasRegressor(_build_nn))
+_estimators.append(
+	keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
+_pd_estimators.append(
+	PdKerasClassifier(_build_nn))
+_estimators.append(
+	keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
+_pd_estimators.append(
+	PdKerasRegressor(_build_nn))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
