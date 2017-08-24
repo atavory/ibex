@@ -272,6 +272,9 @@ def make_adapter(
 
             inv = name == 'inverse_transform'
 
+            for _ in range(20):
+                print(X.head())
+
             _in_ops.add(self)
             try:
                 res = fn(self.__x(inv, X), *args, **kwargs)
