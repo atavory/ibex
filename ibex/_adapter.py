@@ -42,8 +42,9 @@ def _from_pickle(
         est,
         params,
         extra_methods,
-        extra_attribs):
-    cls = frame_ex(est, extra_methods, extra_attribs)
+        extra_attribs,
+	post_op):
+    cls = frame_ex(est, extra_methods, extra_attribs, post_op)
     est = cls(**params)
     return est
 
@@ -51,7 +52,8 @@ def _from_pickle(
 def make_adapter(
         est,
         extra_methods,
-        extra_attribs):
+        extra_attribs,
+	post_op):
     from ._base import FrameMixin
 
     extra_attribs_d = {fn.__name__: fn for fn in extra_attribs}
@@ -272,9 +274,6 @@ def make_adapter(
 
             inv = name == 'inverse_transform'
 
-            for _ in range(20):
-                print(X.head())
-
             _in_ops.add(self)
             try:
                 res = fn(self.__x(inv, X), *args, **kwargs)
@@ -323,12 +322,15 @@ def make_adapter(
         def __reduce__(self):
             if not self.__module__.startswith('ibex'):
                 raise TypeError('Cannot serialize a subclass of this type; please use composition instead')
-            return (_from_pickle, (est, self.get_params(deep=True), extra_methods, extra_attribs))
+            return (_from_pickle, (est, self.get_params(deep=True), extra_methods, extra_attribs, post_op))
+
+    if post_op is not None:
+        post_op(_Adapter)
 
     return _Adapter
 
 
-def frame_ex(est, extra_methods=(), extra_attribs=()):
+def frame_ex(est, extra_methods=(), extra_attribs=(), post_op=None):
     from ._base import FrameMixin
 
     if isinstance(est, FrameMixin):
@@ -339,7 +341,7 @@ def frame_ex(est, extra_methods=(), extra_attribs=()):
         f = frame(type(est))(**params)
         return f
 
-    _Adapter = make_adapter(est, extra_methods, extra_attribs)
+    _Adapter = make_adapter(est, extra_methods, extra_attribs, post_op)
 
     update_class_wrapper(_Adapter, est)
 

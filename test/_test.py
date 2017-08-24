@@ -222,14 +222,17 @@ _estimators.append(
     decomposition.NMF(random_state=42))
 _pd_estimators.append(
     pd_decomposition.NMF(random_state=42))
-_estimators.append(
-    tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
-_pd_estimators.append(
-    PdKerasClassifier(_build_nn))
-_estimators.append(
-    tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
-_pd_estimators.append(
-    PdKerasRegressor(_build_nn))
+if _level > 0:
+    # Tmp Ami
+    if False:
+        _estimators.append(
+            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
+        _pd_estimators.append(
+            PdKerasClassifier(_build_nn))
+        _estimators.append(
+            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
+        _pd_estimators.append(
+            PdKerasRegressor(_build_nn))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
