@@ -20,25 +20,16 @@ from ......_base import FrameMixin
 class _KeraseEstimator(base.BaseEstimator, FrameMixin):
     def fit(self, X, y, **fit_params):
         self.x_columns = X.columns
+        # Tmp Ami - should go in utils
+        if y is not None and not X.index.equals(y.index):
+            raise ValueError('Indexes do not match')
         uX = self._x(False, X)
-        uX = self._y(y)
+        uy = self._y(y)
         self.history_ = KerasRegressor.__KerasBase.fit(self, uX, uy, **fit_params)
         return self
 
     def _x(self, inv, X):
         return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
-
-    def __repr__(self):
-        ret = _inject_to_str_repr(est.__repr__(self))
-        if '__repr__ ' in extra_attribs_d:
-            return extra_attribs_d['__repr'](self, ret)
-        return ret
-
-    def __str__(self):
-        ret = self.__repr__()
-        if '__str__ ' in extra_attribs_d:
-            return extra_attribs_d['__str__'](self, ret)
-        return ret
 
     def aic(self, X, *args, **kwargs):
         return self.__adapter_run(
@@ -68,14 +59,6 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
         return self.__adapter_run(
             super(_Adapter, self).bic,
             'bic',
-            X,
-            *args,
-            **kwargs)
-
-    def fit(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).fit,
-            'fit',
             X,
             *args,
             **kwargs)
@@ -276,21 +259,21 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
 
     def _repr(self):
         params = ','.join('%s=%s' % (k, v) for (k, v) in self.get_params().items())
-        return type(self).__name__ + '(' + params + ')'
+        return 'Adapter[' + type(self).__name__ + '](' + params + ')'
 
     def _str(self):
         return self._repr()
 
 
 class KerasClassifier(
-        keras.wrappers.scikit_learn.KerasClassifier,
-        _KeraseEstimator):
+        _KeraseEstimator,
+        keras.wrappers.scikit_learn.KerasClassifier):
     pass
 
 
 class KerasRegressor(
-        keras.wrappers.scikit_learn.KerasRegressor,
-        _KeraseEstimator):
+        _KeraseEstimator,
+        keras.wrappers.scikit_learn.KerasRegressor):
 
     __KerasBase = keras.wrappers.scikit_learn.KerasRegressor
 
@@ -334,13 +317,6 @@ class KerasRegressor(
             X,
             *args,
             **kwargs)
-
-    def fit(self, X, y, **fit_params):
-        self.x_columns = X.columns
-        uX = self._x(False, X)
-        uy = self._y(y)
-        self.history_ = KerasRegressor.__KerasBase.fit(self, uX, uy, **fit_params)
-        return self
 
     def fit_transform(self, X, *args, **kwargs):
         return self.__adapter_run(

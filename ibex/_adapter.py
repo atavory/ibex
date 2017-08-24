@@ -266,6 +266,7 @@ def make_adapter(
 
             y = get_wrapped_y(name, args)
             verify_y_type(y)
+            # Tmp Ami - should go in utils
             if y is not None and not X.index.equals(y.index):
                 raise ValueError('Indexes do not match')
             if y is not None:

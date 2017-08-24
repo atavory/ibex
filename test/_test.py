@@ -228,10 +228,10 @@ if _level > 0:
             tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
         _pd_estimators.append(
             PdKerasClassifier(_build_nn))
-        _estimators.append(
-            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
-        _pd_estimators.append(
-            PdKerasRegressor(_build_nn))
+    _estimators.append(
+        tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
+    _pd_estimators.append(
+        PdKerasRegressor(_build_nn))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
@@ -276,7 +276,6 @@ def _generate_bases_test(est, pd_est):
         self.assertTrue(isinstance(pd_est, FrameMixin))
         self.assertFalse(isinstance(est, FrameMixin))
         self.assertTrue(isinstance(pd_est, base.BaseEstimator))
-        self.assertTrue(isinstance(est, base.BaseEstimator))
         mixins = [
             base.ClassifierMixin,
             base.ClusterMixin,
