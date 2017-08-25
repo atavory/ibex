@@ -47,7 +47,6 @@ except ImportError:
     from sklearn.cross_validation import GridSearchCV
     from sklearn.cross_validation import cross_val_predict
 from sklearn import datasets
-from sklearn.externals import joblib
 # Tmp Ami - xgboost?
 import tensorflow
 from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
@@ -397,7 +396,8 @@ def _generate_predict_test(X, y, est, pd_est):
         pd_y_hat = pd_est.fit(X, y).predict(X)
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
         self.assertTrue(pd_y_hat.index.equals(X.index))
-        y_hat = est.fit(X.as_matrix(), y.values).predict(X.as_matrix())
+        est.fit(X.as_matrix(), y.values)
+        y_hat = est.predict(X.as_matrix())
         np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 

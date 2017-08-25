@@ -10,35 +10,41 @@ from __future__ import absolute_import
 
 import functools
 
+import pandas as pd
 from sklearn import base
 from tensorflow.contrib import keras
 
 from ......_adapter import frame_ex
-from ......_base import FrameMixin
+from ......_base import FrameMixin, verify_x_type, verify_y_type
 
 
 class _KeraseEstimator(base.BaseEstimator, FrameMixin):
     def fit(self, X, y, **fit_params):
+        verify_x_type(X)
+        verify_y_type(y)
         self.x_columns = X.columns
         # Tmp Ami - should go in utils
         if y is not None and not X.index.equals(y.index):
             raise ValueError('Indexes do not match')
         uX = self._x(False, X)
         uy = self._y(y)
-        self.history_ = self._fit(uX, uy, **fit_params)
+        self.history_ = self._fit(X, uX, y, uy, **fit_params)
         return self
 
     def predict(self, X):
+        verify_x_type(X)
         uX = self._x(False, X)
-        return self._predict(uX)
+        return self._predict(X, uX)
 
     def score(self, X, y, **kwargs):
+        verify_x_type(X)
+        verify_y_type(y)
         # Tmp Ami - should go in utils
         if y is not None and not X.index.equals(y.index):
             raise ValueError('Indexes do not match')
         uX = self._x(False, X)
         uy = self._y(y)
-        return self._score(uX, uy, **kwargs)
+        return self._score(X, uX, y, uy, **kwargs)
 
     def _x(self, inv, X):
         return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
@@ -228,14 +234,16 @@ class KerasRegressor(
     def __str__(self):
         return _KeraseEstimator._str(self)
 
-    def _fit(self, X, y, **fit_params):
-        return KerasRegressor.__KerasBase.fit(self, X, y, **fit_params)
+    def _fit(self, X, uX, y, uy, **fit_params):
+        return KerasRegressor.__KerasBase.fit(self, uX, uy, **fit_params)
 
-    def _score(self, X, y, **kwargs):
-        return KerasRegressor.__KerasBase.score(self, X, y, **kwargs)
+    def _score(self, X, uX, y, uy, **kwargs):
+        return KerasRegressor.__KerasBase.score(self, uX, uy, **kwargs)
 
-    def _predict(self, X):
-        return KerasRegressor.__KerasBase.predict(self, X)
+    def _predict(self, X, uX):
+        return pd.Series(
+            KerasRegressor.__KerasBase.predict(self, uX),
+            index=X.index)
 
     def aic(self, X, *args, **kwargs):
         return self.__adapter_run(
