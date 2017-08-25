@@ -43,7 +43,7 @@ def _from_pickle(
         params,
         extra_methods,
         extra_attribs,
-	post_op):
+    post_op):
     cls = frame_ex(est, extra_methods, extra_attribs, post_op)
     est = cls(**params)
     return est
@@ -53,7 +53,7 @@ def make_adapter(
         est,
         extra_methods,
         extra_attribs,
-	post_op):
+    post_op):
     from ._base import FrameMixin
 
     extra_attribs_d = {fn.__name__: fn for fn in extra_attribs}

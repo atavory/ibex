@@ -228,10 +228,10 @@ if _level > 0:
             tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
         _pd_estimators.append(
             PdKerasClassifier(_build_nn))
-    _estimators.append(
-        tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
-    _pd_estimators.append(
-        PdKerasRegressor(_build_nn))
+        _estimators.append(
+            tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
+        _pd_estimators.append(
+            PdKerasRegressor(_build_nn))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
@@ -411,7 +411,8 @@ def _generate_score_test(X, y, est, pd_est):
             return
         pd_score = pd_est.fit(X, y).score(X, y)
         # Tmp Ami - what is the type of score?
-        score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values)
+        est.fit(X.as_matrix(), y.values)
+        score = est.score(X.as_matrix(), y.values)
         np.testing.assert_allclose(pd_score, score)
     return test
 
@@ -444,7 +445,8 @@ def _generate_score_weight_test(X, y, est, pd_est):
         except TypeError:
             pd_score = None
         try:
-            score = est.fit(X.as_matrix(), y.values).score(X.as_matrix(), y.values, sample_weight=weight)
+            est.fit(X.as_matrix(), y.values)
+            score = est.score(X.as_matrix(), y.values, sample_weight=weight)
         except TypeError:
             score = None
         if score is not None:

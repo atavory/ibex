@@ -25,8 +25,20 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
             raise ValueError('Indexes do not match')
         uX = self._x(False, X)
         uy = self._y(y)
-        self.history_ = KerasRegressor.__KerasBase.fit(self, uX, uy, **fit_params)
+        self.history_ = self._fit(uX, uy, **fit_params)
         return self
+
+    def predict(self, X):
+        uX = self._x(False, X)
+        return self._predict(uX)
+
+    def score(self, X, y, **kwargs):
+        # Tmp Ami - should go in utils
+        if y is not None and not X.index.equals(y.index):
+            raise ValueError('Indexes do not match')
+        uX = self._x(False, X)
+        uy = self._y(y)
+        return self._score(uX, uy, **kwargs)
 
     def _x(self, inv, X):
         return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
@@ -63,14 +75,6 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
             *args,
             **kwargs)
 
-    def fit_transform(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).fit_transform,
-            'fit_transform',
-            X,
-            *args,
-            **kwargs)
-
     def inverse_transform(self, X, *args, **kwargs):
         return self.__adapter_run(
             super(_Adapter, self).inverse_transform,
@@ -95,56 +99,10 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
             *args,
             **kwargs)
 
-    def perplexity(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).perplexity,
-            'perplexity',
-            X,
-            *args,
-            **kwargs)
-
-    def predict(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).predict,
-            'predict',
-            X,
-            *args,
-            **kwargs)
-
-    def predict_log_proba(self, X, *args, **kwargs):
-        res = self.__adapter_run(
-            super(_Adapter, self).predict_log_proba,
-            'predict_log_proba',
-            X,
-            *args,
-            **kwargs)
-        if self not in _in_ops and hasattr(self, 'classes_'):
-            res.columns = self.classes_
-        return res
-
-    def predict_proba(self, X, *args, **kwargs):
-        res = self.__adapter_run(
-            super(_Adapter, self).predict_proba,
-            'predict_proba',
-            X,
-            *args,
-            **kwargs)
-        if self not in _in_ops and hasattr(self, 'classes_'):
-            res.columns = self.classes_
-        return res
-
     def radius_neighbors(self, X, *args, **kwargs):
         return self.__adapter_run(
             super(_Adapter, self).radius_neighbors,
             'radius_neighbors',
-            X,
-            *args,
-            **kwargs)
-
-    def sample_y(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).sample_y,
-            'sample_y',
             X,
             *args,
             **kwargs)
@@ -170,22 +128,6 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
             super(_Adapter, self).staged_predict,
             'staged_predict',
             X, *args,
-            **kwargs)
-
-    def staged_predict_proba(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).staged_predict_proba,
-            'staged_predict_proba',
-            X,
-            *args,
-            **kwargs)
-
-    def score(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).score,
-            'score',
-            X,
-            *args,
             **kwargs)
 
     def transform(self, X, *args, **kwargs):
@@ -286,6 +228,15 @@ class KerasRegressor(
     def __str__(self):
         return _KeraseEstimator._str(self)
 
+    def _fit(self, X, y, **fit_params):
+        return KerasRegressor.__KerasBase.fit(self, X, y, **fit_params)
+
+    def _score(self, X, y, **kwargs):
+        return KerasRegressor.__KerasBase.score(self, X, y, **kwargs)
+
+    def _predict(self, X):
+        return KerasRegressor.__KerasBase.predict(self, X)
+
     def aic(self, X, *args, **kwargs):
         return self.__adapter_run(
             super(_Adapter, self).aic,
@@ -318,14 +269,6 @@ class KerasRegressor(
             *args,
             **kwargs)
 
-    def fit_transform(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).fit_transform,
-            'fit_transform',
-            X,
-            *args,
-            **kwargs)
-
     def inverse_transform(self, X, *args, **kwargs):
         return self.__adapter_run(
             super(_Adapter, self).inverse_transform,
@@ -350,56 +293,10 @@ class KerasRegressor(
             *args,
             **kwargs)
 
-    def perplexity(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).perplexity,
-            'perplexity',
-            X,
-            *args,
-            **kwargs)
-
-    def predict(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).predict,
-            'predict',
-            X,
-            *args,
-            **kwargs)
-
-    def predict_log_proba(self, X, *args, **kwargs):
-        res = self.__adapter_run(
-            super(_Adapter, self).predict_log_proba,
-            'predict_log_proba',
-            X,
-            *args,
-            **kwargs)
-        if self not in _in_ops and hasattr(self, 'classes_'):
-            res.columns = self.classes_
-        return res
-
-    def predict_proba(self, X, *args, **kwargs):
-        res = self.__adapter_run(
-            super(_Adapter, self).predict_proba,
-            'predict_proba',
-            X,
-            *args,
-            **kwargs)
-        if self not in _in_ops and hasattr(self, 'classes_'):
-            res.columns = self.classes_
-        return res
-
     def radius_neighbors(self, X, *args, **kwargs):
         return self.__adapter_run(
             super(_Adapter, self).radius_neighbors,
             'radius_neighbors',
-            X,
-            *args,
-            **kwargs)
-
-    def sample_y(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).sample_y,
-            'sample_y',
             X,
             *args,
             **kwargs)
@@ -425,22 +322,6 @@ class KerasRegressor(
             super(_Adapter, self).staged_predict,
             'staged_predict',
             X, *args,
-            **kwargs)
-
-    def staged_predict_proba(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).staged_predict_proba,
-            'staged_predict_proba',
-            X,
-            *args,
-            **kwargs)
-
-    def score(self, X, *args, **kwargs):
-        return self.__adapter_run(
-            super(_Adapter, self).score,
-            'score',
-            X,
-            *args,
             **kwargs)
 
     def transform(self, X, *args, **kwargs):
