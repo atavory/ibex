@@ -4,7 +4,7 @@ from setuptools import setup, Command
 import subprocess
 
 
-_py2 = sys.version_info[0] < 3
+_python = 'python' + '.'.join((str(n) for n in sys.version_info[: 2]))
 
 
 class _TestCommand(Command):
@@ -18,11 +18,9 @@ class _TestCommand(Command):
         pass
 
     def run(self):
-        run_str = "%s -m unittest discover test *test.py" % ('python' if _py2 else 'python3')
+        run_str = "%s -m unittest discover test *test.py" % _python
         level = os.getenv('IBEX_TEST_LEVEL')
-        subprocess.check_call(
-            run_str.split(' '),
-            env={'IBEX_TEST_LEVEL': level if level is not None else '1'})
+        os.system(run_str)
 
 
 class _DocumentCommand(Command):

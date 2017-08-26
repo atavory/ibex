@@ -18,7 +18,10 @@ from ......_adapter import frame_ex
 from ......_base import FrameMixin, verify_x_type, verify_y_type
 
 
-class _KeraseEstimator(base.BaseEstimator, FrameMixin):
+class KeraseEstimator(base.BaseEstimator, FrameMixin):
+    def __init__(self, build_fn, cls, **sk_params):
+        self._build_fn, self._cls, self._sk_params = build_fn, cls, sk_params
+
     def fit(self, X, y, **fit_params):
         verify_x_type(X)
         verify_y_type(y)
@@ -28,13 +31,15 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
             raise ValueError('Indexes do not match')
         uX = self._x(False, X)
         uy = self._y(y)
-        self.history_ = self._fit(X, uX, y, uy, **fit_params)
+        self._est = keras.wrappers.scikit_learn.KerasRegressor(self._build_fn, **self._sk_params)
+        self.history_ = self._est.fit(uX, uy, **fit_params)
         return self
 
     def predict(self, X):
         verify_x_type(X)
         uX = self._x(False, X)
-        return self._predict(X, uX)
+        res = self._est.predict(uX)
+        return res
 
     def score(self, X, y, **kwargs):
         verify_x_type(X)
@@ -213,20 +218,14 @@ class _KeraseEstimator(base.BaseEstimator, FrameMixin):
         return self._repr()
 
 
-class KerasClassifier(
-        _KeraseEstimator,
-        keras.wrappers.scikit_learn.KerasClassifier):
+class KerasClassifier(KeraseEstimator):
     pass
 
 
-class KerasRegressor(
-        _KeraseEstimator,
-        keras.wrappers.scikit_learn.KerasRegressor):
-
-    __KerasBase = keras.wrappers.scikit_learn.KerasRegressor
+class KerasRegressor(KeraseEstimator):
 
     def __init__(self, build_fn=None, **sk_params):
-        KerasRegressor.__KerasBase.__init__(self, build_fn, **sk_params)
+        KeraseEstimator.__init__(self, build_fn, keras.wrappers.scikit_learn.KerasRegressor, **sk_params)
 
     def __repr__(self):
         return _KeraseEstimator._repr(self)

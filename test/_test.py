@@ -102,124 +102,125 @@ _dataset_names.append('iris_str_index')
 _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
 
-_estimators, _pd_estimators = [], []
-_estimators.append(preprocessing.StandardScaler())
-_pd_estimators.append(
-    pd_preprocessing.StandardScaler())
-_estimators.append(decomposition.PCA())
-_pd_estimators.append(
-    pd_decomposition.PCA())
-_estimators.append(
-    linear_model.LinearRegression())
-_pd_estimators.append(
-    frame(pd_linear_model.LinearRegression()))
-_estimators.append(
-    linear_model.LinearRegression())
-_pd_estimators.append(
-    pd_linear_model.LinearRegression())
-_estimators.append(
-    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_decomposition.PCA() | pd_linear_model.LinearRegression())
-_estimators.append(
-    pipeline.make_pipeline(feature_selection.SelectKBest(k=2), decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_feature_selection.SelectKBest(k=2) | pd_decomposition.PCA() | pd_linear_model.LinearRegression())
-_estimators.append(
-    pipeline.make_pipeline(feature_selection.SelectKBest(k=2), decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_feature_selection.SelectKBest(k=2) | (pd_decomposition.PCA() | pd_linear_model.LinearRegression()))
-_estimators.append(
-    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()))
-_pd_estimators.append(
-    pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()))
-_estimators.append(
-    linear_model.LogisticRegression())
-_pd_estimators.append(
-    pd_linear_model.LogisticRegression())
-_estimators.append(
-    cluster.KMeans(random_state=42))
-_pd_estimators.append(
-    pd_cluster.KMeans(random_state=42))
-_estimators.append(
-    cluster.KMeans(random_state=42))
-_pd_estimators.append(
-    pickle.loads(pickle.dumps(pd_cluster.KMeans(random_state=42))))
-_estimators.append(
-    neighbors.KNeighborsClassifier())
-_pd_estimators.append(
-    pd_neighbors.KNeighborsClassifier())
-_estimators.append(
-    ensemble.GradientBoostingClassifier(random_state=42))
-_pd_estimators.append(
-    pd_ensemble.GradientBoostingClassifier(random_state=42))
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
-_estimators.append(
+_estimators = []
+_estimators.append((
+    preprocessing.StandardScaler(),
+    pd_preprocessing.StandardScaler(),
+    True))
+_estimators.append((
+    decomposition.PCA(),
+    pd_decomposition.PCA(),
+    True))
+_estimators.append((
+    linear_model.LinearRegression(),
+    frame(pd_linear_model.LinearRegression()),
+    True))
+_estimators.append((
+    linear_model.LinearRegression(),
+    pd_linear_model.LinearRegression(),
+    True))
+_estimators.append((
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()),
+    pd_decomposition.PCA() | pd_linear_model.LinearRegression(),
+    True))
+_estimators.append((
+    pipeline.make_pipeline(feature_selection.SelectKBest(k=2), decomposition.PCA(), linear_model.LinearRegression()),
+    pd_feature_selection.SelectKBest(k=2) | pd_decomposition.PCA() | pd_linear_model.LinearRegression(),
+    True))
+_estimators.append((
+    pipeline.make_pipeline(feature_selection.SelectKBest(k=2), decomposition.PCA(), linear_model.LinearRegression()),
+    pd_feature_selection.SelectKBest(k=2) | (pd_decomposition.PCA() | pd_linear_model.LinearRegression()),
+    True))
+_estimators.append((
+    pipeline.make_pipeline(decomposition.PCA(), linear_model.LinearRegression()),
+    pd_pipeline.make_pipeline(pd_decomposition.PCA(), pd_linear_model.LinearRegression()),
+    True))
+_estimators.append((
+    linear_model.LogisticRegression(),
+    pd_linear_model.LogisticRegression(),
+    True))
+_estimators.append((
+    cluster.KMeans(random_state=42),
+    pd_cluster.KMeans(random_state=42),
+    True))
+_estimators.append((
+    cluster.KMeans(random_state=42),
+    pickle.loads(pickle.dumps(pd_cluster.KMeans(random_state=42))),
+    True))
+_estimators.append((
+    neighbors.KNeighborsClassifier(),
+    pd_neighbors.KNeighborsClassifier(),
+    True))
+_estimators.append((
+    ensemble.GradientBoostingClassifier(random_state=42),
+    pd_ensemble.GradientBoostingClassifier(random_state=42),
+    True))
+_estimators.append((
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
+    pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1),
+    True))
+_estimators.append((
     pipeline.FeatureUnion(
         [('pca', decomposition.PCA(n_components=2)), ('kbest', feature_selection.SelectKBest(k=1))],
-        transformer_weights={'pca': 3, 'kbest': 4}))
-_pd_estimators.append(
+        transformer_weights={'pca': 3, 'kbest': 4}),
     pd_pipeline.FeatureUnion(
         [('pca', pd_decomposition.PCA(n_components=2)), ('kbest', pd_feature_selection.SelectKBest(k=1))],
-        transformer_weights={'pca': 3, 'kbest': 4}))
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_decomposition.PCA(n_components=1) + pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1))
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_decomposition.PCA(n_components=1) + (pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1)))
-_estimators.append(
-    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)))
-_pd_estimators.append(
-    pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)))
+        transformer_weights={'pca': 3, 'kbest': 4}),
+        True))
+_estimators.append((
+    pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
+    pd_decomposition.PCA(n_components=1) + pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1),
+    True))
+_estimators.append((
+    pipeline.make_union(decomposition.PCA(n_components=1), decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
+    pd_decomposition.PCA(n_components=1) + (pd_decomposition.PCA(n_components=2) + pd_feature_selection.SelectKBest(k=1)),
+    True))
+_estimators.append((
+    pipeline.make_union(decomposition.PCA(n_components=2), feature_selection.SelectKBest(k=1)),
+    pd_pipeline.make_union(pd_decomposition.PCA(n_components=2), pd_feature_selection.SelectKBest(k=1)),
+    True))
 # Tmp Ami - fails without probability=True
-_estimators.append(
+_estimators.append((
     pipeline.make_pipeline(
-        feature_selection.SelectKBest(k=1),
-        svm.SVC(kernel="linear", random_state=42, probability=True)))
-_pd_estimators.append(
-    pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True))
+        feature_selection.SelectKBest(k=1), svm.SVC(kernel="linear", random_state=42, probability=True)),
+    pd_feature_selection.SelectKBest(k=1) | pd_svm.SVC(kernel="linear", random_state=42, probability=True),
+    True))
 param_grid = dict(
     C=[0.1, 1, 10])
-_estimators.append(
+_estimators.append((
     GridSearchCV(
         svm.SVC(kernel="linear", random_state=42, probability=True),
         param_grid=param_grid,
-        verbose=0))
-_pd_estimators.append(
+        verbose=0),
     PdGridSearchCV(
         pd_svm.SVC(kernel="linear", random_state=42, probability=True),
         param_grid=param_grid,
-        verbose=0))
-_estimators.append(
-    gaussian_process.GaussianProcessRegressor())
-_pd_estimators.append(
-    pd_gaussian_process.GaussianProcessRegressor())
+        verbose=0),
+    True))
+_estimators.append((
+    gaussian_process.GaussianProcessRegressor(),
+    pd_gaussian_process.GaussianProcessRegressor(),
+    True))
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
-_estimators.append(
+_estimators.append((
     GridSearchCV(
         pipeline.make_pipeline(
             linear_model.LogisticRegression()),
         param_grid=param_grid,
         return_train_score=False,
-        verbose=0))
-_pd_estimators.append(
+        verbose=0),
     PdGridSearchCV(
         pd_pipeline.make_pipeline(
             pd_linear_model.LogisticRegression()),
         param_grid=param_grid,
         return_train_score=False,
-        verbose=0))
-_estimators.append(
-    decomposition.NMF(random_state=42))
-_pd_estimators.append(
-    pd_decomposition.NMF(random_state=42))
+        verbose=0),
+    True))
+_estimators.append((
+    decomposition.NMF(random_state=42),
+    pd_decomposition.NMF(random_state=42),
+    True))
 if _level > 0:
     # Tmp Ami
     if False:
@@ -234,36 +235,36 @@ if _level > 0:
 
 
 _feature_selectors, _pd_feature_selectors = [], []
-_feature_selectors.append(
-    feature_selection.SelectKBest(k=1))
-_pd_feature_selectors.append(
-    pd_feature_selection.SelectKBest(k=1))
-_feature_selectors.append(
-    feature_selection.SelectKBest(k=1))
-_pd_feature_selectors.append(
-    pickle.loads(pickle.dumps(pd_feature_selection.SelectKBest(k=1))))
-_feature_selectors.append(
-    feature_selection.SelectKBest(k=2))
-_pd_feature_selectors.append(
-    pd_feature_selection.SelectKBest(k=2))
-_feature_selectors.append(
-    feature_selection.SelectPercentile())
-_pd_feature_selectors.append(
-    pd_feature_selection.SelectPercentile())
-_feature_selectors.append(
-    feature_selection.SelectFdr())
-_pd_feature_selectors.append(
-    pd_feature_selection.SelectFdr())
-_feature_selectors.append(
-    feature_selection.SelectFwe())
-_pd_feature_selectors.append(
-    pd_feature_selection.SelectFwe())
+_feature_selectors.append((
+    feature_selection.SelectKBest(k=1),
+    pd_feature_selection.SelectKBest(k=1),
+    True))
+_feature_selectors.append((
+    feature_selection.SelectKBest(k=1),
+    pickle.loads(pickle.dumps(pd_feature_selection.SelectKBest(k=1))),
+    True))
+_feature_selectors.append((
+    feature_selection.SelectKBest(k=2),
+    pd_feature_selection.SelectKBest(k=2),
+    True))
+_feature_selectors.append((
+    feature_selection.SelectPercentile(),
+    pd_feature_selection.SelectPercentile(),
+    True))
+_feature_selectors.append((
+    feature_selection.SelectFdr(),
+    pd_feature_selection.SelectFdr(),
+    True))
+_feature_selectors.append((
+    feature_selection.SelectFwe(),
+    pd_feature_selection.SelectFwe(),
+    True))
 # Tmp Ami
 if False:
-    _feature_selectors.append(
-        feature_selection.RFE(linear_model.LogisticRegression()))
-    _pd_feature_selectors.append(
-        pd_feature_selection.RFE(pd_linear_model.LogisticRegression()))
+    _feature_selectors.append((
+        feature_selection.RFE(linear_model.LogisticRegression()),
+        pd_feature_selection.RFE(pd_linear_model.LogisticRegression()),
+        True))
 
 
 class _EstimatorTest(unittest.TestCase):
@@ -613,7 +614,7 @@ def _generate_fit_transform_test(X, y, est, pd_est):
 test_i = 0
 
 
-for pd_est in _pd_estimators + _pd_feature_selectors:
+for _, pd_est, _ in _estimators + _feature_selectors:
     name = type(pd_est).__name__.lower()
     setattr(
         _EstimatorTest,
@@ -621,8 +622,7 @@ for pd_est in _pd_estimators + _pd_feature_selectors:
         _generate_str_repr_test(pd_est))
 
 
-for estimators in zip(_estimators + _feature_selectors, _pd_estimators + _pd_feature_selectors):
-    est, pd_est = estimators
+for est, pd_est, must_match in _estimators + _feature_selectors:
     name = type(est).__name__.lower()
     setattr(
         _EstimatorTest,
