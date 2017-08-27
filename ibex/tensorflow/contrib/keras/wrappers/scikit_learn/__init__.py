@@ -39,7 +39,7 @@ class KeraseEstimator(base.BaseEstimator, FrameMixin):
         verify_x_type(X)
         uX = self._x(False, X)
         res = self._est.predict(uX)
-        return res
+        return self.__keras_estimator_process_wrapped_call_res(False, X, res)
 
     def score(self, X, y, **kwargs):
         verify_x_type(X)
@@ -49,10 +49,8 @@ class KeraseEstimator(base.BaseEstimator, FrameMixin):
             raise ValueError('Indexes do not match')
         uX = self._x(False, X)
         uy = self._y(y)
-        return self._score(X, uX, y, uy, **kwargs)
-
-    def _x(self, inv, X):
-        return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
+        res = self._est.score(uX, uy)
+        return res
 
     def aic(self, X, *args, **kwargs):
         return self.__adapter_run(
@@ -210,12 +208,12 @@ class KeraseEstimator(base.BaseEstimator, FrameMixin):
             raise TypeError('Cannot serialize a subclass of this type; please use composition instead')
         return (_from_pickle, (est, self.get_params(deep=True), extra_methods, extra_attribs, post_op))
 
-    def _repr(self):
+    def __repr__(self):
         params = ','.join('%s=%s' % (k, v) for (k, v) in self.get_params().items())
         return 'Adapter[' + type(self).__name__ + '](' + params + ')'
 
-    def _str(self):
-        return self._repr()
+    def __str__(self):
+        return self.__repr__()
 
 
 class KerasClassifier(KeraseEstimator):
@@ -226,12 +224,6 @@ class KerasRegressor(KeraseEstimator):
 
     def __init__(self, build_fn=None, **sk_params):
         KeraseEstimator.__init__(self, build_fn, keras.wrappers.scikit_learn.KerasRegressor, **sk_params)
-
-    def __repr__(self):
-        return _KeraseEstimator._repr(self)
-
-    def __str__(self):
-        return _KeraseEstimator._str(self)
 
     def _fit(self, X, uX, y, uy, **fit_params):
         return KerasRegressor.__KerasBase.fit(self, uX, uy, **fit_params)
@@ -373,7 +365,13 @@ class KerasRegressor(KeraseEstimator):
 
         return ret
 
-    def __adapter_process_wrapped_call_res(self, inv, X, res):
+    def _x(self, inv, X):
+        return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
+
+    def _y(self, y):
+        return y.values
+
+    def __keras_estimator_process_wrapped_call_res(self, inv, X, res):
         if inv:
             return pd.DataFrame(res, index=X.index, columns=self.x_columns)
 
@@ -394,10 +392,6 @@ class KerasRegressor(KeraseEstimator):
             return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
 
         return res
-
-    def _y(self, y):
-        return y.values
-
 
 __all__ = ['KerasClassifier', 'KerasRegressor']
 

@@ -224,14 +224,14 @@ _estimators.append((
 if _level > 0:
     # Tmp Ami
     if False:
-        _estimators.append(
-            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn))
-        _pd_estimators.append(
-            PdKerasClassifier(_build_nn))
-        _estimators.append(
-            tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn))
-        _pd_estimators.append(
-            PdKerasRegressor(_build_nn))
+        _estimators.append((
+            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn),
+            PdKerasClassifier(_build_nn),
+            False))
+    _estimators.append((
+        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
+        PdKerasRegressor(_build_nn),
+        False))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
@@ -433,7 +433,7 @@ def _generate_cross_val_predict_test(X, y, est, pd_est):
     return test
 
 
-def _generate_score_weight_test(X, y, est, pd_est):
+def _generate_score_weight_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'score'),
@@ -442,7 +442,7 @@ def _generate_score_weight_test(X, y, est, pd_est):
             return
         weight = np.abs(np.random.randn(len(y)))
         try:
-            pd_score = pd_est.fit(X, y).score(X, y, weight)
+            pd_score = pd_est.fit(X, y).score(X, y, sample_weight=weight)
         except TypeError:
             pd_score = None
         try:
@@ -450,7 +450,7 @@ def _generate_score_weight_test(X, y, est, pd_est):
             score = est.score(X.as_matrix(), y.values, sample_weight=weight)
         except TypeError:
             score = None
-        if score is not None:
+        if must_match and score is not None:
             self.assertNotEqual(pd_score, None, pd_est)
             self.assertTrue(np.isclose(score, pd_score))
     return test
@@ -682,7 +682,7 @@ for est, pd_est, must_match in _estimators + _feature_selectors:
         setattr(
             _EstimatorTest,
             'test_score_weight_%s_%d' % (name, test_i),
-            _generate_score_weight_test(X, y, est, pd_est))
+            _generate_score_weight_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_sample_y__%s_%d' % (name, test_i),
