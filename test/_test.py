@@ -228,10 +228,10 @@ if _level > 0:
             tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn),
             PdKerasClassifier(_build_nn),
             False))
-    _estimators.append((
-        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
-        PdKerasRegressor(_build_nn),
-        False))
+        _estimators.append((
+            tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
+            PdKerasRegressor(_build_nn),
+            False))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
