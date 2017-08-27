@@ -10,6 +10,7 @@ from __future__ import absolute_import
 
 import functools
 
+import numpy as np
 import pandas as pd
 from sklearn import base
 from tensorflow.contrib import keras
@@ -215,6 +216,40 @@ class KeraseEstimator(base.BaseEstimator, FrameMixin):
     def __str__(self):
         return self.__repr__()
 
+    def __keras_estimator_process_wrapped_call_res(self, inv, X, res):
+        if inv:
+            return pd.DataFrame(res, index=X.index, columns=self.x_columns)
+
+        X = X[self.x_columns]
+
+        if isinstance(res, np.ndarray):
+            if len(res.shape) == 1:
+                return pd.Series(res, index=X.index)
+
+            if len(res.shape) == 2:
+                if len(X.columns) == res.shape[1]:
+                    columns = X.columns
+                else:
+                    columns = [' ' for _ in range(res.shape[1])]
+                return pd.DataFrame(res, index=X.index, columns=columns)
+
+        if isinstance(res, types.GeneratorType):
+            return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
+
+        return res
+
+    def get_params(self, deep=False):
+        d = self._sk_params.copy()
+        d['build_fn'] = self._build_fn
+        return d
+
+    # Tmp Ami
+    def set_params(self, **sk_params):
+        gg
+
+    # Tmp Ami
+    # Use this http://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimatorhttp://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimator
+
 
 class KerasClassifier(KeraseEstimator):
     pass
@@ -370,28 +405,6 @@ class KerasRegressor(KeraseEstimator):
 
     def _y(self, y):
         return y.values
-
-    def __keras_estimator_process_wrapped_call_res(self, inv, X, res):
-        if inv:
-            return pd.DataFrame(res, index=X.index, columns=self.x_columns)
-
-        X = X[self.x_columns]
-
-        if isinstance(res, np.ndarray):
-            if len(res.shape) == 1:
-                return pd.Series(res, index=X.index)
-
-            if len(res.shape) == 2:
-                if len(X.columns) == res.shape[1]:
-                    columns = X.columns
-                else:
-                    columns = [' ' for _ in range(res.shape[1])]
-                return pd.DataFrame(res, index=X.index, columns=columns)
-
-        if isinstance(res, types.GeneratorType):
-            return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
-
-        return res
 
 __all__ = ['KerasClassifier', 'KerasRegressor']
 

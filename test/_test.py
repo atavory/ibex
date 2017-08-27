@@ -228,10 +228,10 @@ if _level > 0:
             tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn),
             PdKerasClassifier(_build_nn),
             False))
-        _estimators.append((
-            tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
-            PdKerasRegressor(_build_nn),
-            False))
+    _estimators.append((
+        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
+        PdKerasRegressor(_build_nn),
+        False))
 
 
 _feature_selectors, _pd_feature_selectors = [], []
@@ -387,7 +387,7 @@ def _generate_index_mismatch_bad_fit_test(X, y, pd_est):
     return test
 
 
-def _generate_predict_test(X, y, est, pd_est):
+def _generate_predict_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'predict'),
@@ -399,11 +399,12 @@ def _generate_predict_test(X, y, est, pd_est):
         self.assertTrue(pd_y_hat.index.equals(X.index))
         est.fit(X.as_matrix(), y.values)
         y_hat = est.predict(X.as_matrix())
-        np.testing.assert_allclose(pd_y_hat, y_hat)
+        if must_match:
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
-def _generate_score_test(X, y, est, pd_est):
+def _generate_score_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'score'),
@@ -414,11 +415,12 @@ def _generate_score_test(X, y, est, pd_est):
         # Tmp Ami - what is the type of score?
         est.fit(X.as_matrix(), y.values)
         score = est.score(X.as_matrix(), y.values)
-        np.testing.assert_allclose(pd_score, score)
+        if must_match:
+            np.testing.assert_allclose(pd_score, score)
     return test
 
 
-def _generate_cross_val_predict_test(X, y, est, pd_est):
+def _generate_cross_val_predict_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'predict'),
@@ -429,7 +431,8 @@ def _generate_cross_val_predict_test(X, y, est, pd_est):
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
         self.assertTrue(pd_y_hat.index.equals(X.index))
         y_hat = cross_val_predict(est, X.as_matrix(), y.values)
-        np.testing.assert_allclose(pd_y_hat, y_hat)
+        if must_match:
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -670,15 +673,15 @@ for est, pd_est, must_match in _estimators + _feature_selectors:
         setattr(
             _EstimatorTest,
             'test_predict_%s_%d' % (name, test_i),
-            _generate_predict_test(X, y, est, pd_est))
+            _generate_predict_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_cross_val_predict_%s_%d' % (name, test_i),
-            _generate_cross_val_predict_test(X, y, est, pd_est))
+            _generate_cross_val_predict_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_score_%s_%d' % (name, test_i),
-            _generate_score_test(X, y, est, pd_est))
+            _generate_score_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_score_weight_%s_%d' % (name, test_i),
