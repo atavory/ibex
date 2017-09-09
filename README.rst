@@ -35,8 +35,8 @@ approach.)
 The full documentation at |github_pages_ibex|_ defines these matters in detail, but the library has an extremely-small `interface <https://atavory.github.io/ibex/overview.html>`_.
 
 
-.. |github_pages_ibex| image:: https://atavory.github.io/ibex/_static/github_pages.png
-.. _github_pages_ibex: http://ibex.readthedocs.io/en/latest/?badge=latest
+.. |github_pages_ibex| image:: http://ibex.readthedocs.io/en/latest/_static/github-pages.png
+.. _github_pages_ibex: https://atavory.github.io/ibex/
 
 
 TL;DR
