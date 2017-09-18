@@ -23,33 +23,6 @@ class KerasEstimator(base.BaseEstimator, FrameMixin):
     def __init__(self, build_fn, cls, **sk_params):
         self._build_fn, self._cls, self._sk_params = build_fn, cls, sk_params
 
-    def __adapter_process_wrapped_call_res(self, inv, X, res):
-        if inv:
-            return pd.DataFrame(res, index=X.index, columns=self.x_columns)
-
-        X = X[self.x_columns]
-
-        if isinstance(res, np.ndarray):
-            if len(res.shape) == 1:
-                return pd.Series(res, index=X.index)
-
-            if len(res.shape) == 2:
-                if len(X.columns) == res.shape[1]:
-                    columns = X.columns
-                else:
-                    columns = [' ' for _ in range(res.shape[1])]
-                return pd.DataFrame(res, index=X.index, columns=columns)
-
-        if isinstance(res, types.GeneratorType):
-            return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
-
-        return res
-
-    def __reduce__(self):
-        if not self.__module__.startswith('ibex'):
-            raise TypeError('Cannot serialize a subclass of this type; please use composition instead')
-        return (_from_pickle, (est, self.get_params(deep=True), extra_methods, extra_attribs, post_op))
-
     def __repr__(self):
         params = ','.join('%s=%s' % (k, v) for (k, v) in self.get_params().items())
         return 'Adapter[' + type(self).__name__ + '](' + params + ')'
