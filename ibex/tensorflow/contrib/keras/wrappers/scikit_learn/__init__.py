@@ -23,40 +23,6 @@ class KerasEstimator(base.BaseEstimator, FrameMixin):
     def __init__(self, build_fn, cls, **sk_params):
         self._build_fn, self._cls, self._sk_params = build_fn, cls, sk_params
 
-    def __adapter_run(self, fn, name, X, *args, **kwargs):
-        if self in _in_ops:
-            return fn(X, *args, **kwargs)
-
-        if not isinstance(X, pd.DataFrame):
-            verify_x_type(X)
-
-        # Tmp Ami - why not in function adapter? where are uts?
-        if name.startswith('fit'):
-            self.x_columns = X.columns
-
-        y = get_wrapped_y(name, args)
-        verify_y_type(y)
-        if y is not None and not X.index.equals(y.index):
-            raise ValueError('Indexes do not match')
-        if y is not None:
-            if name.startswith('fit'):
-                self.y_columns = y.columns if isinstance(y, pd.DataFrame) else None
-
-        inv = name == 'inverse_transform'
-
-        _in_ops.add(self)
-        try:
-            res = fn(self.__x(inv, X), *args, **kwargs)
-        finally:
-            _in_ops.remove(self)
-
-        ret = self.__adapter_process_wrapped_call_res(inv, X, res)
-
-        if name in extra_methods_d:
-            ret = extra_methods_d[name](self, ret)
-
-        return ret
-
     def __adapter_process_wrapped_call_res(self, inv, X, res):
         if inv:
             return pd.DataFrame(res, index=X.index, columns=self.x_columns)
@@ -141,7 +107,7 @@ class KerasClassifier(KerasEstimator):
         uX = self._x(False, X)
         res = self._est.predict(uX)
         res = pd.DataFrame(res, index=X.index, columns=self._y_columns).idxmax(axis=1)
-        return self._process_wrapped_call_res(False, X, res)
+        return res
 
     def predict_proba(self, X, *args, **kwargs):
         verify_x_type(X)
@@ -165,28 +131,6 @@ class KerasClassifier(KerasEstimator):
         d = {k: dummies[k] if k in dummies.columns else 0 for k in self._classes}
         df = pd.DataFrame(d)[list(self._classes)]
         return df
-
-    def _process_wrapped_call_res(self, inv, X, res):
-        if inv:
-            return pd.DataFrame(res, index=X.index, columns=self.x_columns)
-
-        X = X[self.x_columns]
-
-        if isinstance(res, np.ndarray):
-            if len(res.shape) == 1:
-                return pd.Series(res, index=X.index)
-
-            if len(res.shape) == 2:
-                if len(X.columns) == res.shape[1]:
-                    columns = X.columns
-                else:
-                    columns = [' ' for _ in range(res.shape[1])]
-                return pd.DataFrame(res, index=X.index, columns=columns)
-
-        if isinstance(res, types.GeneratorType):
-            return (self.__adapter_process_wrapped_call_res(False, X, r) for r in res)
-
-        return res
 
 
 class KerasRegressor(KerasEstimator):
