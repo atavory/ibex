@@ -893,7 +893,7 @@ class _NBsTest(unittest.TestCase):
 
 def _generate_nb_tests(name):
     def test(self):
-        cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s --ExecutePreprocessor.timeout=7200' % (name, name)
+        cmd = 'jupyter-nbconvert --to notebook --execute %s --output %s --ExecutePreprocessor.timeout=7200' % (name, os.path.split(name)[1])
 
         try:
             self.assertEqual(os.system(cmd), 0)
