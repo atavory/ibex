@@ -54,14 +54,24 @@ from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor a
 from ibex import *
 
 
-def _build_nn():
+def _build_regressor_nn():
+    np.random.seed(7)
     model = tensorflow.contrib.keras.models.Sequential()
     model.add(
         tensorflow.contrib.keras.layers.Dense(20, input_dim=4, activation='relu'))
     model.add(
         tensorflow.contrib.keras.layers.Dense(1))
 
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    model.compile(loss='mean_squared_error', optimizer='adagrad')
+    return model
+
+
+def _build_classifier_nn():
+    np.random.seed(7)
+    model = tensorflow.contrib.keras.models.Sequential()
+    model.add(tensorflow.contrib.keras.layers.Dense(8, input_dim=4, activation='relu'))
+    model.add(tensorflow.contrib.keras.layers.Dense(3, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adagrad', metrics=['accuracy'])
     return model
 
 
@@ -69,7 +79,7 @@ _this_dir = os.path.dirname(__file__)
 
 
 _level = os.getenv('IBEX_TEST_LEVEL')
-_level = 0 if _level is None else int(_level)
+_level = 1 if _level is None else int(_level)
 
 
 def _load_iris():
@@ -222,15 +232,13 @@ _estimators.append((
     pd_decomposition.NMF(random_state=42),
     True))
 if _level > 0:
-    # Tmp Ami
-    if False:
-        _estimators.append((
-            tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_nn),
-            PdKerasClassifier(_build_nn),
-            False))
     _estimators.append((
-        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_nn),
-        PdKerasRegressor(_build_nn),
+        tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_classifier_nn, verbose=0),
+        PdKerasClassifier(_build_classifier_nn, _load_iris()[0]['class'].unique(), verbose=0),
+        False))
+    _estimators.append((
+        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_regressor_nn, verbose=0),
+        PdKerasRegressor(_build_regressor_nn, verbose=0),
         False))
 
 
@@ -430,8 +438,8 @@ def _generate_cross_val_predict_test(X, y, est, pd_est, must_match):
         pd_y_hat = pd_cross_val_predict(pd_est, X, y)
         self.assertTrue(isinstance(pd_y_hat, pd.Series))
         self.assertTrue(pd_y_hat.index.equals(X.index))
-        y_hat = cross_val_predict(est, X.as_matrix(), y.values)
         if must_match:
+            y_hat = cross_val_predict(est, X.as_matrix(), y.values)
             np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
@@ -472,7 +480,7 @@ def _generate_sample_y_test(X, y, est, pd_est):
     return test
 
 
-def _generate_predict_proba_test(X, y, est, pd_est):
+def _generate_predict_proba_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'predict_proba'),
@@ -487,8 +495,10 @@ def _generate_predict_proba_test(X, y, est, pd_est):
         if False and hasattr(est, 'classes_'):
             # Tmp Ami - unreached
             self.assertTrue(pd_y_hat.columns.equals(pd_est.classes_), pd_est)
-        y_hat = est.fit(X.as_matrix(), y.values).predict_proba(X.as_matrix())
-        np.testing.assert_allclose(pd_y_hat, y_hat)
+        est.fit(X.as_matrix(), y.values)
+        y_hat = est.predict_proba(X.as_matrix())
+        if must_match:
+            np.testing.assert_allclose(pd_y_hat, y_hat)
     return test
 
 
@@ -526,7 +536,7 @@ def _generate_staged_predict_proba_test(X, y, est, pd_est):
     return test
 
 
-def _generate_predict_log_proba_test(X, y, est, pd_est):
+def _generate_predict_log_proba_test(X, y, est, pd_est, must_match):
     def test(self):
         self.assertEqual(
             hasattr(est, 'predict_log_proba'),
@@ -697,7 +707,7 @@ for est, pd_est, must_match in _estimators + _feature_selectors:
         setattr(
             _EstimatorTest,
             'test_predict_proba_%s_%d' % (name, test_i),
-            _generate_predict_proba_test(X, y, est, pd_est))
+            _generate_predict_proba_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_staged_predict_proba_%s_%d' % (name, test_i),
@@ -705,7 +715,7 @@ for est, pd_est, must_match in _estimators + _feature_selectors:
         setattr(
             _EstimatorTest,
             'test_predict_log_proba_%s_%d' % (name, test_i),
-            _generate_predict_log_proba_test(X, y, est, pd_est))
+            _generate_predict_log_proba_test(X, y, est, pd_est, must_match))
         setattr(
             _EstimatorTest,
             'test_transform_%s_%d' % (name, test_i),
@@ -898,6 +908,7 @@ def _generate_nb_tests(name):
 nb_f_names = list(glob(os.path.join(_this_dir, '../examples/*.ipynb')))
 nb_f_names = [n for n in nb_f_names if '.nbconvert.' not in n]
 for n in nb_f_names:
+    # Tmp Ami - missing boston_cv_preds.ipynb
     with (open(n, encoding='utf-8') if six.PY3 else open(n)) as f:
         cnt = json.loads(f.read(), encoding='utf-8')
     metadata = cnt['metadata']
