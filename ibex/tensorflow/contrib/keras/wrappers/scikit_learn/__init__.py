@@ -14,9 +14,7 @@ import numpy as np
 import pandas as pd
 from sklearn import base
 from tensorflow.contrib import keras
-from sklearn import metrics
 
-from ......_adapter import frame_ex
 from ......_base import FrameMixin, verify_x_type, verify_y_type
 
 
@@ -39,9 +37,6 @@ class KerasEstimator(base.BaseEstimator, FrameMixin):
     def set_params(self, **sk_params):
         self._build_fn = sk_params['build_fn']
 
-    # Tmp Ami
-    # Use this http://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimatorhttp://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimator
-
     def _x(self, inv, X):
         return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
 
@@ -61,8 +56,6 @@ class KerasClassifier(KerasEstimator, base.ClassifierMixin):
         self._classes = sk_params['classes']
 
     def fit(self, X, y, **fit_params):
-        # Tmp Ami
-        np.random.seed(7)
         verify_x_type(X)
         verify_y_type(y)
         self.x_columns = X.columns
@@ -119,17 +112,6 @@ class KerasRegressor(KerasEstimator, base.RegressorMixin):
         res = self._est.predict(uX)
         return self._process_wrapped_call_res(False, X, res)
 
-    def score(self, X, y, **kwargs):
-        verify_x_type(X)
-        verify_y_type(y)
-        # Tmp Ami - should go in utils
-        if y is not None and not X.index.equals(y.index):
-            raise ValueError('Indexes do not match')
-        uX = self._x(False, X)
-        uy = self._y(y)
-        res = self._est.score(uX, uy)
-        return res
-
     def _y(self, y):
         return y.values
 
@@ -156,4 +138,3 @@ class KerasRegressor(KerasEstimator, base.RegressorMixin):
         return res
 
 __all__ = ['KerasClassifier', 'KerasRegressor']
-

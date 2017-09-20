@@ -120,6 +120,7 @@ _dataset_names.append('iris_str_index')
 _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
 
+
 _estimators = []
 _estimators.append((
     preprocessing.StandardScaler(),
@@ -239,18 +240,9 @@ _estimators.append((
     decomposition.NMF(random_state=42),
     pd_decomposition.NMF(random_state=42),
     True))
-if _level > 0:
-    _estimators.append((
-        KerasClassifier(_build_classifier_nn, verbose=0),
-        PdKerasClassifier(_build_classifier_nn, _load_iris()[0]['class'].unique(), verbose=0),
-        False))
-    _estimators.append((
-        KerasRegressor(_build_regressor_nn, verbose=0),
-        PdKerasRegressor(_build_regressor_nn, verbose=0),
-        False))
 
 
-_feature_selectors, _pd_feature_selectors = [], []
+_feature_selectors = []
 _feature_selectors.append((
     feature_selection.SelectKBest(k=1),
     pd_feature_selection.SelectKBest(k=1),
@@ -281,6 +273,18 @@ if False:
         feature_selection.RFE(linear_model.LogisticRegression()),
         pd_feature_selection.RFE(pd_linear_model.LogisticRegression()),
         True))
+
+
+_keras_estimators = []
+if _level > 0:
+    _keras_estimators.append((
+        KerasClassifier(_build_classifier_nn, verbose=0),
+        PdKerasClassifier(_build_classifier_nn, _load_iris()[0]['class'].unique(), verbose=0),
+        False))
+    _keras_estimators.append((
+        KerasRegressor(_build_regressor_nn, verbose=0),
+        PdKerasRegressor(_build_regressor_nn, verbose=0),
+        False))
 
 
 class _EstimatorTest(unittest.TestCase):
@@ -635,7 +639,7 @@ def _generate_fit_transform_test(X, y, est, pd_est):
 test_i = 0
 
 
-for _, pd_est, _ in _estimators + _feature_selectors:
+for _, pd_est, _ in _estimators + _feature_selectors + _keras_estimators:
     name = type(pd_est).__name__.lower()
     setattr(
         _EstimatorTest,
@@ -643,7 +647,7 @@ for _, pd_est, _ in _estimators + _feature_selectors:
         _generate_str_repr_test(pd_est))
 
 
-for est, pd_est, must_match in _estimators + _feature_selectors:
+for est, pd_est, must_match in _estimators + _feature_selectors + _keras_estimators:
     name = type(est).__name__.lower()
     setattr(
         _EstimatorTest,
@@ -753,9 +757,7 @@ class _FeatureSelectorTest(unittest.TestCase):
     pass
 
 
-for estimators in zip( _feature_selectors,  _pd_feature_selectors):
-    est, pd_est = estimators
-    name = type(est).__name__.lower()
+for est, pd_est, must_match in _feature_selectors:
     for dataset in zip(_dataset_names, _Xs, _ys):
         dataset_name, X, y = dataset
         name = dataset_name + '_' + type(est).__name__.lower()
@@ -763,6 +765,28 @@ for estimators in zip( _feature_selectors,  _pd_feature_selectors):
             _FeatureSelectorTest,
             'test_feature_selection_transform_%s_%d' % (name, test_i),
             _generate_feature_selection_transform_test(X, y, pd_est))
+
+        test_i += 1
+
+
+class _KerasTest(unittest.TestCase):
+    pass
+
+
+def _generate_keras_history_test(X, y, pd_est):
+    def test(self):
+        pd_est.fit(X, y)
+        self.assertIn('history_', pd_est.__dict__)
+
+    return test
+
+
+for est, pd_est, must_match in _keras_estimators:
+    for dataset in zip(_dataset_names, _Xs, _ys):
+        setattr(
+            _KerasTest,
+            'test_keras_history_%s_%d' % (name, test_i),
+            _generate_keras_history_test(X, y, pd_est))
 
         test_i += 1
 
