@@ -7,3 +7,4 @@ pyenchant
 sphinxcontrib-spelling
 sphinxcontrib-fulltoc
 sphinxcontrib-plantuml
+xgboost
