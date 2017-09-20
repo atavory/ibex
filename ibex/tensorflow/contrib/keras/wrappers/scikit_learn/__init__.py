@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 from sklearn import base
 from tensorflow.contrib import keras
+from sklearn import metrics
 
 from ......_adapter import frame_ex
 from ......_base import FrameMixin, verify_x_type, verify_y_type
@@ -45,7 +46,7 @@ class KerasEstimator(base.BaseEstimator, FrameMixin):
         return X[self.x_columns].as_matrix() if not inv else X.as_matrix()
 
 
-class KerasClassifier(KerasEstimator):
+class KerasClassifier(KerasEstimator, base.ClassifierMixin):
     def __init__(self, build_fn, classes, **sk_params):
         KerasEstimator.__init__(self, build_fn, keras.wrappers.scikit_learn.KerasClassifier, **sk_params)
         self._classes = classes
@@ -88,17 +89,6 @@ class KerasClassifier(KerasEstimator):
         res = self._est.predict(uX.values)
         return pd.DataFrame(res, index=X.index, columns=self._y_columns)
 
-    def score(self, X, y, **kwargs):
-        verify_x_type(X)
-        verify_y_type(y)
-        # Tmp Ami - should go in utils
-        if y is not None and not X.index.equals(y.index):
-            raise ValueError('Indexes do not match')
-        uX = self._x(False, X)
-        uy = self._y(y)
-        res = self._est.score(uX, uy.values)
-        return res
-
     def _y(self, y):
         dummies = pd.get_dummies(y)
         d = {k: dummies[k] if k in dummies.columns else 0 for k in self._classes}
@@ -106,7 +96,7 @@ class KerasClassifier(KerasEstimator):
         return df
 
 
-class KerasRegressor(KerasEstimator):
+class KerasRegressor(KerasEstimator, base.RegressorMixin):
     def __init__(self, build_fn, **sk_params):
         KerasEstimator.__init__(self, build_fn, keras.wrappers.scikit_learn.KerasRegressor, **sk_params)
 

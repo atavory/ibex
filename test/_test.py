@@ -75,6 +75,14 @@ def _build_classifier_nn():
     return model
 
 
+class KerasClassifier(tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier, base.ClassifierMixin):
+    pass
+
+
+class KerasRegressor(tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor, base.RegressorMixin):
+    pass
+
+
 _this_dir = os.path.dirname(__file__)
 
 
@@ -233,11 +241,11 @@ _estimators.append((
     True))
 if _level > 0:
     _estimators.append((
-        tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier(_build_classifier_nn, verbose=0),
+        KerasClassifier(_build_classifier_nn, verbose=0),
         PdKerasClassifier(_build_classifier_nn, _load_iris()[0]['class'].unique(), verbose=0),
         False))
     _estimators.append((
-        tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(_build_regressor_nn, verbose=0),
+        KerasRegressor(_build_regressor_nn, verbose=0),
         PdKerasRegressor(_build_regressor_nn, verbose=0),
         False))
 
