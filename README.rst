@@ -88,10 +88,10 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 
 So what does this add to the original version?
 
-#. The estimators perform `verification and processing <http://ibex.readthedocs.io/en/latest/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
+#. The estimators perform `verification and processing <https://atavory.github.io/ibex/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
 
-#. It allows `writing Pandas-munging estimators <http://ibex.readthedocs.io/en/latest/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
+#. It allows `writing Pandas-munging estimators <https://atavory.github.io/ibex/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
 
 #. Using ``DataFrame`` metadata, it allows writing more complex meta-learning algorithms, such as stacking and nested labeled and stratified cross validation.
 
-#. The pipeline syntax is succinct and clear (see `Motivation For Shorter Combinations <http://ibex.readthedocs.io/en/latest/pipeline_motivation.html>`_).
+#. The pipeline syntax is succinct and clear (see `Motivation For Shorter Combinations <https://atavory.github.io/ibex/pipeline_motivation.html>`_).
