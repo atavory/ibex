@@ -111,7 +111,7 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
         ...     build_fn=build_regressor_nn, 
         ...     verbose=0)
         >>> prd.fit(iris[features], iris['class'])
-        Adapter[KerasRegressor](verbose=0,build_fn=<function build_regressor_nn at ...)
+        Adapter[KerasRegressor](...build_fn=<function build_regressor_nn at ...)
         >>> prd.history_
         <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
         >>> prd.fit(iris[features], iris['class']).predict(iris[features])
