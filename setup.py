@@ -35,10 +35,13 @@ class _DocumentCommand(Command):
         pass
 
     def run(self):
+        from distutils.dir_util import copy_tree
+
         run_str = "make html"
         if not self.reduced_checks:
             run_str += ' spelling lint linkcheck'
         subprocess.check_call(run_str.split(' '), cwd='docs')
+        copy_tree('docs/build/html', '../atavory.github.io/ibex/')
 
 
 setup(

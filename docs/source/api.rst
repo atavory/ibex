@@ -79,8 +79,7 @@ Module Doc
 
 
 ``model_selection``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
 Module Doc
 ******************************************
@@ -125,6 +124,39 @@ Notable Members
 
 * :class:`ibex.sklearn.preprocessing.FunctionTransformer`
 
+
+
+``tensorflow``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. note::
+
+    Ibex does not *require* the installation of :mod:`tensorflow`. If ``tensorflow`` is not installed on the system, though, then this module will not be available.
+
+
+.. automodule:: ibex.tensorflow
+
+
+``contrib.keras.wrappers.scikit_learn``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Module Doc
+******************************************
+
+.. automodule:: ibex.tensorflow.contrib.keras.wrappers.scikit_learn
+
+
+Notable Members
+******************************************
+
+* :class:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier`
+
+* :class:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor`
 
 
 ``xgboost``
