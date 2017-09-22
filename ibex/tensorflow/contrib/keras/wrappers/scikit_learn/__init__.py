@@ -94,7 +94,7 @@ class KerasClassifier(KerasEstimator, base.ClassifierMixin):
         ...     classes=iris['class'].unique(),
         ...     verbose=0)
         >>> clf.fit(iris[features], iris['class'])
-        Adapter[KerasClassifier](verbose=0,build_fn=<function _build_classifier_nn at ...>,classes=[ 0.  1.  2.]...)
+        Adapter[KerasClassifier](...classes=[ 0.  1.  2.]...)
         >>> clf.history_
         <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
         >>> clf.fit(iris[features], iris['class']).predict(iris[features])
