@@ -21,10 +21,33 @@ def _process_cols(cols):
 # Tmp Ami - add kw_args, inverse shit
 class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin):
     """
-    Transforms them functions.
+    Transforms using a function.
+
+    Arguments:
+
+        func: One of:
+
+            * ``None``
+            * a callable
+            * a step
+
+        in_cols: One of:
+
+            * ``None``
+            * a string
+            * a list of strings
+
+        out_cols:
+
+        pass_y: Boolean indicating whether to pass the ``y`` argument to
+
+        kw_args:
+
+    Returns:
+
+        An :py:class:`sklearn.preprocessing.FunctionTransformer` object.
     """
-    # Tmp Ami - This is now a public class; make params take defaults
-    def __init__(self, func, in_cols, out_cols, pass_y, kw_args):
+    def __init__(self, func=None, in_cols=None, out_cols=None, pass_y=None, kw_args=None):
         FrameMixin.__init__(self)
 
         params = {

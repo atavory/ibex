@@ -55,7 +55,6 @@ from ibex import *
 
 
 def _build_regressor_nn():
-    np.random.seed(7)
     model = tensorflow.contrib.keras.models.Sequential()
     model.add(
         tensorflow.contrib.keras.layers.Dense(20, input_dim=4, activation='relu'))
@@ -67,7 +66,6 @@ def _build_regressor_nn():
 
 
 def _build_classifier_nn():
-    np.random.seed(7)
     model = tensorflow.contrib.keras.models.Sequential()
     model.add(tensorflow.contrib.keras.layers.Dense(8, input_dim=4, activation='relu'))
     model.add(tensorflow.contrib.keras.layers.Dense(3, activation='softmax'))
@@ -775,8 +773,7 @@ class _KerasTest(unittest.TestCase):
 
 def _generate_keras_history_test(X, y, pd_est):
     def test(self):
-        pd_est.fit(X, y)
-        self.assertIn('history_', pd_est.__dict__)
+        pd_est.fit(X, y).history_
 
     return test
 

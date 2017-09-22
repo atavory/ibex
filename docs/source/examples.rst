@@ -1,3 +1,5 @@
+.. _examples:
+
 Examples
 ========
 
@@ -26,3 +28,8 @@ Examples
 `Nonnegative Matrix Farcotization In The Movielens Dataset <https://github.com/atavory/ibex/blob/master/examples/movielens_nmf.ipynb>`_
 
     This shows how to use :mod:`pandas`-munging estimators utilizing features which span multiple rows (instances), this time using `nonnegative matrix factorization <https://en.wikipedia.org/wiki/Non-negative_matrix_factorization>`_.
+
+
+`Tensorflow/Keras Classification In The Iris Dataset <https://github.com/atavory/ibex/blob/master/examples/iris_tensorflow.ipynb>`_
+
+    This example shows how to use :class:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier`.

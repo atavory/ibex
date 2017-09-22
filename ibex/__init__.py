@@ -28,7 +28,7 @@ def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
     """
     Arguments:
 
-        func: One of a:
+        func: One of:
 
             * ``None``
             * a callable

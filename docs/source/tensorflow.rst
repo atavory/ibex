@@ -25,6 +25,11 @@ Ibex wraps :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`, which has only
     Ibex does not modify the code of ``tensorflow`` in any way. It is absolutely possibly to ``import`` and use both ``tensorflow`` and ``ibex.tensorflow`` simultaneously.
 
 
+.. seealso::
+
+    * See :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn` in :ref:`api`.
+
+    * See `Tensorflow/Keras Classification In The Iris Dataset <https://github.com/atavory/ibex/blob/master/examples/iris_tensorflow.ipynb>`_ in :ref:`examples`.
 
 
 .. _tensorflow_diffs:
@@ -34,7 +39,7 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
 
 :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn` differs from the estimators of :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`, which it wraps, in three ways:
 
-1. In :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn`, :class:`KerasRegressor` subclasses :class:`sklearn.base.RegressorMixin`, and :class:`KerasRegressor` subclasses :class:`sklearn.base.RegressorMixin`.
+1. In :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn`, :class:`KerasClassifier` subclasses :class:`sklearn.base.ClassifierMixin`, and :class:`KerasClassifier` subclasses :class:`sklearn.base.ClassifierMixin`.
 
     .. uml::
         :caption: Use and absense of subclassing mixins from :mod:`sklearn.base`.
@@ -92,10 +97,10 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
 
         This differs from the usual convention in :mod:`sklearn`:
 
-        >>> prd.fit(iris[features].values, iris['class'].values).score(iris[features].values, iris['class'].values)
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        >>> prd.fit(iris[features].values, iris['class'].values).predict(iris[features].values)
+        Traceback (most recent call last):
         ...
-        AttributeError: 'History' object has no attribute 'score'
+        AttributeError: 'History' object has no attribute 'predict'
 
         This differs from the usual convention in :mod:`sklearn` of allowing chained methods:
 
@@ -105,10 +110,38 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
         >>> prd = ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor(
         ...     build_fn=build_regressor_nn, 
         ...     verbose=0)
-        Adapter[KerasRegressor](verbose=0,build_fn=<function build_regressor_nn at ...>)
         >>> prd.fit(iris[features], iris['class'])
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        Adapter[KerasRegressor](verbose=0,build_fn=<function build_regressor_nn at ...>)
         >>> prd.history_
-        >>> prd.fit(iris[features], iris['class']).score(iris[features], iris['class'])
-        ...
+        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        >>> prd.fit(iris[features], iris['class']).predict(iris[features])
+        0      ...
+        1      ...
+        2      ...
+        3      ...
+        4      ...
+
+3. In :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn`, :class:`KerasClassifier` takes a one-hot encoding of the dependent variable. For example, using the above dataset, if we have
+
+        >>> iris['class'].head()
+		0    0.0
+		1    0.0
+		2    0.0
+		3    0.0
+		4    0.0
+		Name: class, dtype: float64
+
+        then `fit` needs to be used on something like
+
+        >>> pd.get_dummies(iris['class']).head()
+			    0.0  1.0  2.0
+		0    1    0    0
+		1    1    0    0
+		2    1    0    0
+		3    1    0    0
+		4    1    0    0
+
+        which is nonstandard.
+
+        Conversely, in :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn`, the dependent variable is a :clas:`pandas.Series` (see ee `Tensorflow/Keras Classification In The Iris Dataset <https://github.com/atavory/ibex/blob/master/examples/iris_tensorflow.ipynb>`_ in :ref:`examples`).
 

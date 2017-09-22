@@ -206,8 +206,7 @@ def make_adapter(
                 *args,
                 **kwargs)
 
-        def score_samples(self, X, *args, **kwargs):
-            return self.__adapter_run(
+        def score_samples(self, X, *args, **kwargs): return self.__adapter_run(
                 super(_Adapter, self).score_samples,
                 'score_samples',
                 X,

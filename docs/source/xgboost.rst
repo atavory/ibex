@@ -19,4 +19,8 @@ Wrapping up :mod:`xgboost` is straightforward (it has only two scikit-learn type
     Ibex does not modify the code of ``xgboost`` in any way. It is absolutely possibly to ``import`` and use both ``xgboost`` and ``ibex.xgboost`` simultaneously.
 
 
+.. seealso::
+
+    See :mod:`ibex.xgboost` in :ref:`api`.
+
 
