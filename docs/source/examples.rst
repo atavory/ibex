@@ -15,7 +15,7 @@ Examples
 
 `Plotting Cross-Validated Predictions In The Boston Dataset <https://github.com/atavory/ibex/blob/master/examples/boston_plotting_cv_preds.ipynb>`_
 
-    This is a version of the :mod:`sklearn` example `Plotting Cross-Validated Predictions <http://scikit-learn.org/stable/auto_examples/plot_cv_predict.html#sphx-glr-auto-examples-plot-cv-predict-py>`_. It further illustrates the consistent use of :mod:`pandas` data structures and :mod:`seaborn`.
+    This is a version of the :mod:`sklearn` example `Plotting Cross-Validated Predictions <http://scikit-learn.org/stable/auto_examples/plot_cv_predict.html#sphx-glr-auto-examples-plot-cv-predict-py>`_. It further illustrates the consistent use of :mod:`pandas` data structures and :mod:`seaborn`, as well as using :mod:`ibex.xgboost`.
 
 `Confidence Intervals In The Digits Dataset <https://github.com/atavory/ibex/blob/master/examples/digits_confidence_intervals.ipynb>`_
 
