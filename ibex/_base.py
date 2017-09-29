@@ -10,8 +10,11 @@ import threading
 import pandas as pd
 from sklearn import base
 from sklearn import pipeline
-from sklearn import exceptions
 from sklearn.externals import joblib
+try:
+    from sklearn.exceptions import NotFittedError
+except ImportError:
+    from sklearn.utils.validation import NotFittedError # Older Versions
 
 from ._utils import verify_x_type, verify_y_type
 
@@ -104,10 +107,13 @@ class FrameMixin(object):
 
         The following ``transform`` will fail, as the estimator was not fitted:
 
-        >>> from sklearn import exceptions
+        >>> try:
+        ...     from sklearn.exceptions import NotFittedError
+        ... except ImportError:
+        ...     from sklearn.utils.validation import NotFittedError # Older Versions
         >>> try:
         ...     Id().transform(X_2)
-        ... except exceptions.NotFittedError:
+        ... except NotFittedError:
         ...     print('caught')
         caught
 
@@ -139,7 +145,7 @@ class FrameMixin(object):
         try:
             return self.__x_cols
         except AttributeError:
-            raise exceptions.NotFittedError()
+            raise NotFittedError()
 
     @x_columns.setter
     def x_columns(self, columns):
@@ -158,7 +164,7 @@ class FrameMixin(object):
         try:
             return self.__y_cols
         except AttributeError:
-            raise exceptions.NotFittedError()
+            raise NotFittedError()
 
     @y_columns.setter
     def y_columns(self, columns):
