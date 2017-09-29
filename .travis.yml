@@ -21,7 +21,7 @@ install:
   - sudo pip install python-coveralls
   - sudo pip install codecov
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas=0.18.1 coverage jupyter seaborn xgboost tensorflow;
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas=0.17 coverage jupyter seaborn xgboost tensorflow;
     else
       conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION six numpy scipy scikit-learn pandas coverage jupyter seaborn xgboost tensorflow;
     fi
