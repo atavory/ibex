@@ -135,11 +135,11 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
 
         >>> pd.get_dummies(iris['class']).head()
 			    0.0  1.0  2.0
-		0    1    0    0
-		1    1    0    0
-		2    1    0    0
-		3    1    0    0
-		4    1    0    0
+		0    1...   0...    0...
+		1    1...   0...    0...		
+		2    1...   0...    0...
+		3    1...   0...    0...		
+		4    1...   0...    0...		
 
         which is nonstandard.
 
