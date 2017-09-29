@@ -13,7 +13,10 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 from ibex import frame
-from ibex.sklearn import exceptions
+try:
+    from sklearn.exceptions import NotFittedError
+except ImportError:
+    from sklearn.utils.validation import NotFittedError # Older Versions
 from ibex.sklearn import preprocessing as pd_preprocessing
 from sklearn import pipeline
 from ibex.sklearn import pipeline as pd_pipeline
@@ -851,7 +854,7 @@ class _TransTest(unittest.TestCase):
 
         trans().fit(X).transform(X)
 
-        with self.assertRaises(exceptions.NotFittedError):
+        with self.assertRaises(NotFittedError):
             trans().transform(X)
 
         trans().fit_transform(X)
