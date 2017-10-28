@@ -308,15 +308,26 @@ def _generate_bases_test(est, pd_est):
         self.assertTrue(isinstance(pd_est, FrameMixin))
         self.assertFalse(isinstance(est, FrameMixin))
         self.assertTrue(isinstance(pd_est, base.BaseEstimator))
-        mixins = [
-            base.ClassifierMixin,
-            base.ClusterMixin,
-            base.BiclusterMixin,
-            base.TransformerMixin,
-            base.DensityMixin,
-            base.MetaEstimatorMixin,
-            base.ClassifierMixin,
-            base.RegressorMixin]
+        try:
+            mixins = [
+                base.ClassifierMixin,
+                base.ClusterMixin,
+                base.BiclusterMixin,
+                base.TransformerMixin,
+                base.DensityMixin,
+                base.MetaEstimatorMixin,
+                base.ClassifierMixin,
+                base.RegressorMixin]
+        except:
+            # Tmp Ami - should be only for 0.17
+            mixins = [
+                base.ClassifierMixin,
+                base.ClusterMixin,
+                base.BiclusterMixin,
+                base.TransformerMixin,
+                base.MetaEstimatorMixin,
+                base.ClassifierMixin,
+                base.RegressorMixin]
         for mixin in mixins:
             self.assertEqual(
                 isinstance(pd_est, mixin),
