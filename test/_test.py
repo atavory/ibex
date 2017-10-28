@@ -230,24 +230,28 @@ except:
     pass
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
-_estimators.append((
-    GridSearchCV(
-        pipeline.make_pipeline(
-            linear_model.LogisticRegression()),
-        param_grid=param_grid,
-        return_train_score=False,
-        verbose=0),
-    PdGridSearchCV(
-        pd_pipeline.make_pipeline(
-            pd_linear_model.LogisticRegression()),
-        param_grid=param_grid,
-        return_train_score=False,
-        verbose=0),
-    True))
-_estimators.append((
-    decomposition.NMF(random_state=42),
-    pd_decomposition.NMF(random_state=42),
-    True))
+try:
+    _estimators.append((
+        GridSearchCV(
+            pipeline.make_pipeline(
+                linear_model.LogisticRegression()),
+            param_grid=param_grid,
+            return_train_score=False,
+            verbose=0),
+        PdGridSearchCV(
+            pd_pipeline.make_pipeline(
+                pd_linear_model.LogisticRegression()),
+            param_grid=param_grid,
+            return_train_score=False,
+            verbose=0),
+        True))
+    _estimators.append((
+        decomposition.NMF(random_state=42),
+        pd_decomposition.NMF(random_state=42),
+        True))
+except:
+    # Tmp Ami - should be only for 0.17
+    pass
 
 
 _feature_selectors = []
