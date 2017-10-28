@@ -56,17 +56,17 @@ Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.$mod_name`.
 """
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import as _absolute_import
 
 
-import inspect
+import inspect as _inspect
 
-import sklearn
+import sklearn as _sklearn
 try:
     from sklearn import $mod_name as _orig
     _orig_all = _orig.__all__
-except ImportError:
-    _ver = int(sklearn.__version__.split('.')[1])
+except (ImportError, NameError):
+    _ver = int(_sklearn.__version__.split('.')[1])
     if _ver < 18 and $mod_name in ['model_selection']:
         _orig_all = []
     else:
@@ -81,7 +81,7 @@ for name in _orig_all:
         continue
     est = getattr(_orig, name)
     try:
-        if inspect.isclass(est) and issubclass(est, base.BaseEstimator):
+        if _inspect.isclass(est) and issubclass(est, base.BaseEstimator):
             globals()[name] = ibex.frame(est)
         else:
             globals()[name] = est
