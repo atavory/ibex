@@ -39,13 +39,15 @@ from sklearn import cluster
 from ibex.sklearn import cluster as pd_cluster
 from sklearn import decomposition
 from ibex.sklearn import decomposition as pd_decomposition
-from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
-from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
 try:
+    from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
+    from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
     from sklearn.model_selection import cross_val_score
     from sklearn.model_selection import GridSearchCV
     from sklearn.model_selection import cross_val_predict
 except ImportError:
+    from ibex.sklearn.grid_search import GridSearchCV as PdGridSearchCV
+    from ibex.sklearn.cross_validation import cross_val_predict as pd_cross_val_predict
     from sklearn.cross_validation import cross_val_score
     from sklearn.cross_validation import GridSearchCV
     from sklearn.cross_validation import cross_val_predict
