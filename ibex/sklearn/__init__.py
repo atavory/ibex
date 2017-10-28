@@ -66,8 +66,8 @@ try:
     from sklearn import $mod_name as _orig
     _orig_all = _orig.__all__
 except (ImportError, NameError):
-    _ver = int(_sklearn.__version__.split('.')[1])
-    if _ver < 18 and $mod_name in ['model_selection']:
+    ver = int(_sklearn.__version__.split('.')[1])
+    if ver < 18 and $mod_name in ['model_selection']:
         _orig_all = []
     else:
         raise

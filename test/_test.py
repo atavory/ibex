@@ -11,6 +11,7 @@ import pickle
 import six
 import pandas as pd
 import numpy as np
+import sklearn
 from sklearn import preprocessing
 from ibex import frame
 try:
@@ -219,10 +220,14 @@ _estimators.append((
         param_grid=param_grid,
         verbose=0),
     True))
-_estimators.append((
-    gaussian_process.GaussianProcessRegressor(),
-    pd_gaussian_process.GaussianProcessRegressor(),
-    True))
+try:
+    _estimators.append((
+        gaussian_process.GaussianProcessRegressor(),
+        pd_gaussian_process.GaussianProcessRegressor(),
+        True))
+except:
+    if int(sklearn.__version__.split('.')[1]) > 0.17:
+        raise
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
 _estimators.append((
