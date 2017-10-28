@@ -61,13 +61,22 @@ from __future__ import absolute_import
 
 import inspect
 
-from sklearn import $mod_name as _orig
+import sklearn
+try:
+    from sklearn import $mod_name as _orig
+    _orig_all = _orig.__all__
+except ImportError:
+    _ver = int(sklearn.__version__.split('.')[1])
+    if _ver < 18 and $mod_name in ['model_selection']:
+        _orig_all = []
+    else:
+        raise
 from sklearn import base
 
 import ibex
 
 
-for name in _orig.__all__:
+for name in _orig_all:
     if name.startswith('_'):
         continue
     est = getattr(_orig, name)
