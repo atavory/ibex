@@ -47,7 +47,7 @@ try:
     from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
 except (ImportError, NameError):
     from sklearn.cross_validation import cross_val_score
-    from sklearn.cross_validation import GridSearchCV
+    from sklearn.grid_search import GridSearchCV
     from sklearn.cross_validation import cross_val_predict
     from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
     from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
