@@ -25,7 +25,7 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
 
 This library aims for two (somewhat independent) goals:
 
-* providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the sickit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
+* providing `pandas <http://pandas.pydata.org/>`_ adapters for `estimators conforming to the scikit-learn protocol <http://scikit-learn.org/stable/developers/contributing.html#apis-of-scikit-learn-objects>`_, in particular those of `scikit-learn <http://scikit-learn.org/stable/>`_ itself
 
 * providing easier, and more succinct ways of combining estimators, features, and pipelines
 
