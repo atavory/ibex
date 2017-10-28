@@ -62,15 +62,8 @@ from __future__ import absolute_import as _absolute_import
 import inspect as _inspect
 
 import sklearn as _sklearn
-try:
-    from sklearn import $mod_name as _orig
-    _orig_all = _orig.__all__
-except (ImportError, NameError):
-    ver = int(_sklearn.__version__.split('.')[1])
-    if ver < 18 and $mod_name in ['model_selection']:
-        _orig_all = []
-    else:
-        raise
+from sklearn import $mod_name as _orig
+_orig_all = _orig.__all__
 from sklearn import base
 
 import ibex

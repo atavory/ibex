@@ -226,8 +226,8 @@ try:
         pd_gaussian_process.GaussianProcessRegressor(),
         True))
 except:
-    if int(sklearn.__version__.split('.')[1]) > 0.17:
-        raise
+    # Tmp Ami - should be only for 0.17
+    pass
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
 _estimators.append((
