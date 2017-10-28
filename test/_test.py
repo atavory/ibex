@@ -49,8 +49,8 @@ except (ImportError, NameError):
     from sklearn.cross_validation import cross_val_score
     from sklearn.grid_search import GridSearchCV
     from sklearn.cross_validation import cross_val_predict
-    from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
-    from ibex.sklearn.model_selection import cross_val_predict as pd_cross_val_predict
+    from ibex.sklearn.grid_search import GridSearchCV as PdGridSearchCV
+    from ibex.sklearn.cross_validation import cross_val_predict as pd_cross_val_predict
 from sklearn import datasets
 # Tmp Ami - xgboost?
 import tensorflow
