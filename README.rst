@@ -82,7 +82,10 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
     ...     featureunion__pca__n_components=[1, 2, 3],
     ...     featureunion__selectkbest__k=[1, 2],
     ...     svc__C=[0.1, 1, 10])
-    >>> from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
+    >>> try:
+    ...     from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
+    ... except: # Accomodate older versions of sklearn
+    ...     from ibex.sklearn.cross_validation import GridSearchCV as PdGridSearchCV
     >>> PdGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class']) # doctest: +SKIP 
     ...
 
