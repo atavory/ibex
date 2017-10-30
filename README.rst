@@ -85,7 +85,7 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
     >>> try:
     ...     from ibex.sklearn.model_selection import GridSearchCV as PdGridSearchCV
     ... except: # Accomodate older versions of sklearn
-    ...     from ibex.sklearn.cross_validation import GridSearchCV as PdGridSearchCV
+    ...     from ibex.sklearn.grid_search import GridSearchCV as PdGridSearchCV
     >>> PdGridSearchCV(clf, param_grid=param_grid).fit(iris[features], iris['class']) # doctest: +SKIP 
     ...
 
