@@ -101,9 +101,12 @@ We can now use this as a regular step. If we fit it on ``df`` and transform it o
 
 We can, however, now use it for fitting on one ``DataFrame``, and transforming another:
 
-    >>> from sklearn import model_selection
+    >>> try:
+    ...     from sklearn.model_selection import train_test_split
+    ... except: # Older sklearn versions
+    ...     from ibex.sklearn.cross_val_predict import train_test_split
     >>>
-    >>> tr, te = model_selection.train_test_split(df, random_state=3)
+    >>> tr, te = train_test_split(df, random_state=3)
     >>> GroupbyAggregator('a').fit(tr).transform(te)
          b    c
     0  0...  2...

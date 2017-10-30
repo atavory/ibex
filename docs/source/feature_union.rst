@@ -64,11 +64,11 @@ The output using this, however, discards the meaning of the columns:
     >>> trn.fit_transform(iris[features], iris['class'])
               pca                 selectkbest
            comp_0    comp_1 petal length (cm)
-    0   -2.684207  0.326607               1.4
-    1   -2.715391 -0.169557               1.4
-    2   -2.889820 -0.137346               1.3
-    3   -2.746437 -0.311124               1.5
-    4   -2.728593  0.333925               1.4
+    0   -2.684207 ...0.326607               1.4
+    1   -2.715391 ...0.169557               1.4
+    2   -2.889820 ...0.137346               1.3
+    3   -2.746437 ...0.311124               1.5
+    4   -2.728593 ...0.333925               1.4
 	...
 
 A better way would be to combine this with :func:`ibex.trans`:
@@ -79,11 +79,11 @@ A better way would be to combine this with :func:`ibex.trans`:
     >>> trn.fit_transform(iris[features], iris['class'])
         functiontransformer_0           functiontransformer_1
                           pc1       pc2                  best
-    0               -2.684207  0.326607                   1.4
-    1               -2.715391 -0.169557                   1.4
-    2               -2.889820 -0.137346                   1.3
-    3               -2.746437 -0.311124                   1.5
-    4               -2.728593  0.333925                   1.4
+    0               -2.684207 ...0.326607                   1.4
+    1               -2.715391 ...0.169557                   1.4
+    2               -2.889820 ...0.137346                   1.3
+    3               -2.746437 ...0.311124                   1.5
+    4               -2.728593 ...0.333925                   1.4
 	...
  
 

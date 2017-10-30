@@ -83,8 +83,11 @@ def cross_val_predict(
     Example:
 
         >>> import pandas as pd
-        >>> from ibex.sklearn import model_selection as pd_model_selection
-        >>> from ibex.sklearn import linear_model as pd_linear_model
+        >>> from ibex.sklearn.linear_model import LinearRegression
+        >>> try:
+        ...     from ibex.sklearn.model_selection import cross_val_predict
+        ... except: # Older sklearn versions
+        ...     from ibex.sklearn.cross_val_predict import cross_val_predict
 
         >>> df = pd.DataFrame({
         ...         'x': range(100),
@@ -92,8 +95,8 @@ def cross_val_predict(
         ...     },
         ...     index=['i%d' % i for i in range(100)])
 
-        >>> pd_model_selection.cross_val_predict(
-        ...     pd_linear_model.LinearRegression(),
+        >>> cross_val_predict(
+        ...     LinearRegression(),
         ...     df[['x']],
         ...     df['y'])
         i0     ...
