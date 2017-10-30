@@ -10,6 +10,12 @@ from .._xy_estimator import make_estimator, make_xy
 from .._utils import verify_x_type, verify_y_type
 
 
+# Tmp Ami
+import sklearn
+for _ in range(2000):
+    print(sklearn.__version__)
+
+
 def cross_val_predict(
         estimator,
         X,
