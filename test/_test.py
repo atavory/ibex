@@ -226,8 +226,8 @@ try:
         pd_gaussian_process.GaussianProcessRegressor(),
         True))
 except:
-    # Tmp Ami - should be only for 0.17
-    pass
+    if ibex.sklearn._sklearn_ver > 17:
+        raise
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
 try:
@@ -250,8 +250,8 @@ try:
         pd_decomposition.NMF(random_state=42),
         True))
 except:
-    # Tmp Ami - should be only for 0.17
-    pass
+    if ibex.sklearn._sklearn_ver > 17:
+        raise
 
 
 _feature_selectors = []
@@ -319,7 +319,8 @@ def _generate_bases_test(est, pd_est):
                 base.ClassifierMixin,
                 base.RegressorMixin]
         except:
-            # Tmp Ami - should be only for 0.17
+            if ibex.sklearn._sklearn_ver > 17:
+                raise
             mixins = [
                 base.ClassifierMixin,
                 base.ClusterMixin,

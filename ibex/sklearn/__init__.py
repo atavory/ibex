@@ -50,6 +50,9 @@ import sklearn
 __all__ = sklearn.__all__
 
 
+_sklearn_ver = int(sklearn.__version__.split('.')[1])
+
+
 _code = string.Template('''
 """
 Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.$mod_name`.

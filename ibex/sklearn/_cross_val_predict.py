@@ -8,12 +8,7 @@ import pandas as pd
 
 from .._xy_estimator import make_estimator, make_xy
 from .._utils import verify_x_type, verify_y_type
-
-
-# Tmp Ami
-import sklearn
-for _ in range(2000):
-    print(sklearn.__version__)
+from .__init__ import _sklearn_ver
 
 
 def cross_val_predict(
@@ -115,17 +110,32 @@ def cross_val_predict(
 
     est = make_estimator(estimator, X.index)
     X_, y_ = make_xy(X, y)
-    y_hat = _orig_cross_val_predict(
-        est,
-        X_,
-        y_,
-        groups,
-        cv,
-        n_jobs,
-        verbose,
-        fit_params,
-        pre_dispatch,
-        method)
+    if _sklearn_ver > 17:
+        y_hat = _orig_cross_val_predict(
+            est,
+            X_,
+            y_,
+            groups,
+            cv,
+            n_jobs,
+            verbose,
+            fit_params,
+            pre_dispatch,
+            method)
+    else:
+        if groups is not None:
+            raise ValueError('groups not supported for cross_val_predict in this version of sklearn')
+        if method != 'predict':
+            raise ValueError('method not supported for cross_val_predict in this version of sklearn')
+        y_hat = _orig_cross_val_predict(
+            est,
+            X_,
+            y_,
+            cv,
+            n_jobs,
+            verbose,
+            fit_params,
+            pre_dispatch)
 
     if len(y_hat.shape) == 1:
         return pd.Series(y_hat, index=y.index)
