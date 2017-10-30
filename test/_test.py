@@ -14,6 +14,7 @@ import numpy as np
 import sklearn
 from sklearn import preprocessing
 from ibex import frame
+from ibex.sklearn import _sklearn_ver
 try:
     from sklearn.exceptions import NotFittedError
 except ImportError:
@@ -226,7 +227,7 @@ try:
         pd_gaussian_process.GaussianProcessRegressor(),
         True))
 except:
-    if ibex.sklearn._sklearn_ver > 17:
+    if _sklearn_ver > 17:
         raise
 param_grid = dict(
     logisticregression__C=[0.1, 1, 10])
@@ -250,7 +251,7 @@ try:
         pd_decomposition.NMF(random_state=42),
         True))
 except:
-    if ibex.sklearn._sklearn_ver > 17:
+    if _sklearn_ver > 17:
         raise
 
 
@@ -319,7 +320,7 @@ def _generate_bases_test(est, pd_est):
                 base.ClassifierMixin,
                 base.RegressorMixin]
         except:
-            if ibex.sklearn._sklearn_ver > 17:
+            if _sklearn_ver > 17:
                 raise
             mixins = [
                 base.ClassifierMixin,
