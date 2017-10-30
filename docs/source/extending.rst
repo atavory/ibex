@@ -104,7 +104,7 @@ We can, however, now use it for fitting on one ``DataFrame``, and transforming a
     >>> try:
     ...     from sklearn.model_selection import train_test_split
     ... except: # Older sklearn versions
-    ...     from ibex.sklearn.cross_val_predict import train_test_split
+    ...     from ibex.sklearn.cross_validation import train_test_split
     >>>
     >>> tr, te = train_test_split(df, random_state=3)
     >>> GroupbyAggregator('a').fit(tr).transform(te)

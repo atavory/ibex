@@ -87,7 +87,7 @@ def cross_val_predict(
         >>> try:
         ...     from ibex.sklearn.model_selection import cross_val_predict
         ... except: # Older sklearn versions
-        ...     from ibex.sklearn.cross_val_predict import cross_val_predict
+        ...     from ibex.sklearn.cross_validation import cross_val_predict
 
         >>> df = pd.DataFrame({
         ...         'x': range(100),
