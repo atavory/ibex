@@ -1,10 +1,63 @@
 import os
 import importlib
 import inspect
+import ast
+import re
 
 import six
 import sklearn
 from sklearn import base
+
+
+_identifier_re = re.compile(r'[^\d\W][\w\d_]*_$')
+print(_identifier_re.match('foo'))
+print(_identifier_re.match('_foo'))
+print(_identifier_re.match('foo_'))
+print(_identifier_re.match('foo_bar'))
+print(_identifier_re.match('foo_bar_'))
+
+
+class ClassLister(ast.NodeVisitor):
+
+    def __init__(self):
+        self._cur_class = None
+        self._cur_attr = None
+
+        self._found = set()
+
+    def visit_ClassDef(self, node):
+        self._cur_class = node.name
+        self.generic_visit(node)
+        self._cur_class = None
+
+    def visit_Attribute(self, node):
+        if self._cur_class is None:
+            return
+        if _identifier_re.match(node.attr) is None:
+            return
+        self._cur_attr = node.attr
+        self.generic_visit(node)
+        self._cur_attr = None
+
+    def visit_Name(self, node):
+        if self._cur_attr is None:
+            return
+        if node.id != 'self':
+            return
+        self._found.add((self._cur_class, self._cur_attr))
+        self.generic_visit(node)
+
+    @property
+    def found(self):
+        return self._found
+
+
+tree = ast.parse(open('/usr/local/lib/python3.6/site-packages/sklearn/linear_model/base.py').read())
+v = ClassLister()
+v.visit(tree)
+print(v.found)
+ff:w
+
 
 
 m_names = set()
