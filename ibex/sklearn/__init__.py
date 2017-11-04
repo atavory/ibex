@@ -126,16 +126,16 @@ for name in _orig_all:
         globals()[name] = est
         continue
     try:
+        extra_attribs = []
+    except:
+        extra_attribs = []
+    try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),
-            extra_attribs=[])
+            extra_attribs=extra_attribs)
     except TypeError as e:
         globals()[name] = est
 ''')
-
-def _manipulate_module_attribs(orig):
-    for est in get_matching_estimators(_orig, base.BaseEstimator):
-        _get_estimator_manip_attribs(orig, est)
 
 
 class _NewModuleLoader(object):
