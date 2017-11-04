@@ -84,14 +84,18 @@ def intercept_(self, base_ret):
     raise RuntimeError()
 
 
-def _get_estimator_manip_attribs(orig, est):
+def _get_estimator_extras(orig, est):
     orig_attrs = set(dir(est()))
-    final_attrs = set(dir(est().fit(_X, _y)))
+    try:
+        final_attrs = set(dir(est().fit(_X, _y)))
+    except TypeError:
+        final_attrs = set(dir(est().fit(_X)))
     delta_attrs = final_attrs.difference(orig_attrs)
     delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
     delta_attrs = [a for a in delta_attrs if not a.startswith('n_')]
-    for attr in delta_attrs:
-        print(est, attr)
+    return {
+        'attribs': []
+    }
 
 
 
@@ -103,7 +107,7 @@ Auto-generated :mod:`ibex.sklearn` wrapper for :mod:`sklearn.$mod_name`.
 
 from __future__ import absolute_import as _absolute_import
 
-
+import traceback as _traceback
 import inspect as _inspect
 
 import sklearn as _sklearn
@@ -126,14 +130,17 @@ for name in _orig_all:
         globals()[name] = est
         continue
     try:
-        extra_attribs = []
+        extras = ibex.sklearn._get_estimator_extras(_orig, est)
+        extra_attribs = extras['attribs']
     except:
+        # _traceback.print_exc()
         extra_attribs = []
     try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),
             extra_attribs=extra_attribs)
     except TypeError as e:
+        # _traceback.print_exc()
         globals()[name] = est
 ''')
 
@@ -184,8 +191,6 @@ class _NewModuleLoader(object):
             _preprocessing_update_module(mod)
         from ._predict_star_proba import update_module as _predict_star_proba_update_module
         _predict_star_proba_update_module(mod)
-
-        _manipulate_module_attribs
 
         return mod
 
