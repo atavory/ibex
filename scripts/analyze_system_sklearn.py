@@ -3,18 +3,24 @@ import importlib
 import inspect
 import ast
 import re
+import glob2
 
 import six
 import sklearn
+import pandas as pd
 from sklearn import base
 
 
 _identifier_re = re.compile(r'[^\d\W][\w\d_]*_$')
-print(_identifier_re.match('foo'))
-print(_identifier_re.match('_foo'))
-print(_identifier_re.match('foo_'))
-print(_identifier_re.match('foo_bar'))
-print(_identifier_re.match('foo_bar_'))
+if False:
+    print(_identifier_re.match('foo'))
+    print(_identifier_re.match('_foo'))
+    print(_identifier_re.match('foo_'))
+    print(_identifier_re.match('foo_bar'))
+    print(_identifier_re.match('foo_bar_'))
+attr_blacklist = [
+    'X_',
+    'you_should_not_set_this_']
 
 
 class ClassLister(ast.NodeVisitor):
@@ -35,6 +41,10 @@ class ClassLister(ast.NodeVisitor):
             return
         if _identifier_re.match(node.attr) is None:
             return
+        if node.attr in attr_blacklist:
+            return
+        if node.attr.startswith('_') or node.attr.startswith('n_'):
+            return
         self._cur_attr = node.attr
         self.generic_visit(node)
         self._cur_attr = None
@@ -52,12 +62,37 @@ class ClassLister(ast.NodeVisitor):
         return self._found
 
 
-tree = ast.parse(open('/usr/local/lib/python3.6/site-packages/sklearn/linear_model/base.py').read())
-v = ClassLister()
-v.visit(tree)
-print(v.found)
-ff:w
+from sklearn import datasets
+iris = datasets.load_iris()
 
+
+class _EstimatorAnalyzer(object):
+    def __init__(self):
+        pass
+
+    def analyze(self, est):
+        print(est)
+        orig = est()
+        print(set(dir(est().fit(iris['data'], iris['target']))).difference(
+            set(dir(orig))))
+
+
+analyzer = _EstimatorAnalyzer()
+from sklearn import ensemble
+analyzer.analyze(ensemble.RandomForestClassifier)
+ff
+
+
+base_dir = '/usr/local/lib/python3.6/site-packages/sklearn/'
+found = []
+for f_name in glob2.glob(os.path.join(base_dir, '**/*.py')):
+    tree = ast.parse(open(f_name).read())
+    v = ClassLister()
+    v.visit(tree)
+    found.extend([((f_name.split('/')[7], ) + t) for t in v.found])
+found = pd.DataFrame(found, columns=['module', 'class', 'attr'])
+print(found.attr.value_counts().head(300))
+ff
 
 
 m_names = set()

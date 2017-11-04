@@ -17,7 +17,7 @@ __all__ += ['__version__']
 
 __all__ += ['FrameMixin']
 
-__all__ += ['frame']
+__all__ += ['frame', 'frame_ex']
 
 __all__ += ['trans']
 

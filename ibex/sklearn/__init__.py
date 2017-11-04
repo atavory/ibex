@@ -45,12 +45,54 @@ import string
 
 import six
 import sklearn
+import numpy as np
+import pandas as pd
+from sklearn import base
+
+from ._utils import get_matching_estimators
 
 
 __all__ = sklearn.__all__
 
 
 _sklearn_ver = int(sklearn.__version__.split('.')[1])
+
+
+_X = pd.DataFrame({'a': [1, 0, 0], 'b': [0, 1, 0], 'c': [0, 0, 1]})
+_y = pd.Series([1, 0, 1])
+
+
+def coef_(self, base_ret):
+    if len(base_ret.shape) == 1:
+        return pd.Series(base_ret, index=self.x_columns)
+
+    if len(base_ret.shape) == 2:
+        index = self.y_columns if self.y_columns is not None else self.classes_
+        return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
+
+    raise RuntimeError()
+
+
+def intercept_(self, base_ret):
+    # Tmp Ami - replace next by is_nummeric or is_scalar
+    if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
+        return base_ret
+
+    if len(base_ret.shape) == 1:
+        return pd.Series(base_ret)
+
+    raise RuntimeError()
+
+
+def _get_estimator_manip_attribs(orig, est):
+    orig_attrs = set(dir(est()))
+    final_attrs = set(dir(est().fit(_X, _y)))
+    delta_attrs = final_attrs.difference(orig_attrs)
+    delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
+    delta_attrs = [a for a in delta_attrs if not a.startswith('n_')]
+    for attr in delta_attrs:
+        print(est, attr)
+
 
 
 _code = string.Template('''
@@ -77,12 +119,23 @@ for name in _orig_all:
         continue
     est = getattr(_orig, name)
     try:
-        if _inspect.isclass(est) and issubclass(est, base.BaseEstimator):
-            globals()[name] = ibex.frame(est)
-        else:
+        if not _inspect.isclass(est) or not issubclass(est, base.BaseEstimator):
             globals()[name] = est
+            continue
     except TypeError as e:
-        pass''')
+        globals()[name] = est
+        continue
+    try:
+        globals()[name] = ibex.frame_ex(
+            getattr(_orig, est.__name__),
+            extra_attribs=[])
+    except TypeError as e:
+        globals()[name] = est
+''')
+
+def _manipulate_module_attribs(orig):
+    for est in get_matching_estimators(_orig, base.BaseEstimator):
+        _get_estimator_manip_attribs(orig, est)
 
 
 class _NewModuleLoader(object):
@@ -131,6 +184,8 @@ class _NewModuleLoader(object):
             _preprocessing_update_module(mod)
         from ._predict_star_proba import update_module as _predict_star_proba_update_module
         _predict_star_proba_update_module(mod)
+
+        _manipulate_module_attribs
 
         return mod
 

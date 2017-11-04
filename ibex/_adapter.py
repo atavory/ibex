@@ -362,6 +362,9 @@ def frame_ex(est, extra_methods=(), extra_attribs=()):
     return _Adapter
 
 
+__all__ += ['frame_ex']
+
+
 def frame(est):
     """
     Arguments:
