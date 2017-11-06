@@ -45,11 +45,7 @@ import string
 
 import six
 import sklearn
-import numpy as np
 import pandas as pd
-from sklearn import base
-
-from ._utils import get_matching_estimators
 
 
 __all__ = sklearn.__all__
@@ -63,6 +59,58 @@ _y = pd.Series([1, 0, 1])
 
 
 def coef_(self, base_ret):
+    """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
+        >>>
+        >>> prd.coef_
+        sepal length (cm)   -0.109741
+        sepal width (cm)    -0.044240
+        petal length (cm)    0.227001
+        petal width (cm)     0.609894
+        dtype: float64
+        >>>
+        >>> prd.intercept_
+        0.19208...
+
+    Example:
+
+        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
+
+        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf.coef_
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0...           0.414988          1.461297          -2.262141         -1.029095
+        1...           0.416640         -1.600833           0.577658         -1.385538
+        2...          -1.707525         -1.534268           2.470972          2.555382
+        >>> clf.intercept_
+        0    0.265606
+        1    1.085424
+        2   -1.214715
+        dtype: float64
+
+    """
     if len(base_ret.shape) == 1:
         return pd.Series(base_ret, index=self.x_columns)
 
@@ -84,19 +132,63 @@ def intercept_(self, base_ret):
     raise RuntimeError()
 
 
+def feature_importances_(self, base_ret):
+    """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.ensemble import RandomForestClassifier as PdRandomForestClassifier
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+        >>> clf =  PdRandomForestClassifier(random_state=42).fit(iris[features], iris['class'])
+        >>>
+        >>> clf.feature_importances_
+        sepal length (cm)    0.129268
+        sepal width (cm)     0.015822
+        petal length (cm)    0.444740
+        petal width (cm)     0.410169
+        dtype: float64
+
+    """
+    return pd.Series(base_ret, index=self.x_columns)
+
+
 def _get_estimator_extras(orig, est):
     orig_attrs = set(dir(est()))
     try:
         final_attrs = set(dir(est().fit(_X, _y)))
     except TypeError:
+        _traceback.print_exc()
         final_attrs = set(dir(est().fit(_X)))
     delta_attrs = final_attrs.difference(orig_attrs)
     delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
     delta_attrs = [a for a in delta_attrs if not a.startswith('n_')]
+    attrs = []
+    if 'intercept_' in delta_attrs:
+        attrs.append(intercept_)
+    if 'coef_' in delta_attrs:
+        attrs.append(coef_)
+    if 'feature_importances_' in final_attrs:
+        attrs.append(feature_importances_)
     return {
-        'attribs': []
+        'attrs': attrs
     }
-
 
 
 _code = string.Template('''
@@ -131,16 +223,16 @@ for name in _orig_all:
         continue
     try:
         extras = ibex.sklearn._get_estimator_extras(_orig, est)
-        extra_attribs = extras['attribs']
+        extra_attribs = extras['attrs']
     except:
-        # _traceback.print_exc()
+        _traceback.print_exc()
         extra_attribs = []
     try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),
             extra_attribs=extra_attribs)
     except TypeError as e:
-        # _traceback.print_exc()
+        _traceback.print_exc()
         globals()[name] = est
 ''')
 
@@ -174,15 +266,9 @@ class _NewModuleLoader(object):
         if orig == 'decomposition':
             from ._decomposition import update_module as _decomposition_update_module
             _decomposition_update_module(mod)
-        if orig == 'ensemble':
-            from ._ensemble import update_module as _ensemble_update_module
-            _ensemble_update_module(mod)
         if orig == 'feature_selection':
             from ._feature_selection import update_module as _feature_selection_update_module
             _feature_selection_update_module(mod)
-        if orig == 'linear_model':
-            from ._linear_model import update_module as _linear_model_update_module
-            _linear_model_update_module(mod)
         if orig == 'pipeline':
             from ._pipeline import update_module as _pipeline_update_module
             _pipeline_update_module(mod)
