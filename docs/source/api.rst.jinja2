@@ -1,0 +1,195 @@
+.. _api:
+
+API
+===
+
+
+``ibex``
+--------
+
+Module Doc
+~~~~~~~~~~~~~
+
+.. automodule:: ibex
+
+
+Members
+~~~~~~~~~~~~~~~
+
+* :func:`ibex.frame`
+
+* :class:`ibex.FrameMixin`
+
+* :func:`ibex.trans`
+
+
+``sklearn``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ibex.sklearn
+
+
+{% for module, classes in sklearn_modules|dictsort %}
+
+``{{ module }}``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Module Doc
+******************************************
+
+.. automodule:: ibex.sklearn.{{ module }}
+
+Members
+******************************************
+
+
+{% for class in classes|sort %}
+* :class:`{{ class }}`
+{% endfor %}
+
+{% endfor %}
+
+
+`cluster``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.cluster
+
+
+`decomposition``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.decomposition
+
+
+otable Members
+*****************************************
+
+ :class:`ibex.sklearn.decomposition.NMF`
+
+
+`feature_selection``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.feature_selection
+
+
+`linear_model``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.linear_model
+
+
+`model_selection``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.model_selection
+
+
+otable Members
+*****************************************
+
+ :func:`ibex.sklearn.model_selection.cross_val_predict`
+
+
+`pipeline``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.pipeline
+
+
+otable Members
+*****************************************
+
+ :func:`ibex.sklearn.pipeline.make_union`
+
+ :class:`ibex.sklearn.pipeline.FeatureUnion`
+
+
+`preprocessing``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+odule Doc
+*****************************************
+
+. automodule:: ibex.sklearn.preprocessing
+
+otable Members
+*****************************************
+
+ :class:`ibex.sklearn.preprocessing.FunctionTransformer`
+
+
+
+``tensorflow``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. note::
+
+    Ibex does not *require* the installation of :mod:`tensorflow`. If ``tensorflow`` is not installed on the system, though, then this module will not be available.
+
+
+.. automodule:: ibex.tensorflow
+
+
+``contrib.keras.wrappers.scikit_learn``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Module Doc
+******************************************
+
+.. automodule:: ibex.tensorflow.contrib.keras.wrappers.scikit_learn
+
+
+Notable Members
+******************************************
+
+* :class:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier`
+
+* :class:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor`
+
+
+``xgboost``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Module Doc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. note::
+
+    Ibex does not *require* the installation of :mod:`xgboost`. If ``xgboost`` is not installed on the system, though, then this module will not be available.
+
+
+.. automodule:: ibex.xgboost

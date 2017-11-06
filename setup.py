@@ -37,6 +37,43 @@ class _DocumentCommand(Command):
     def run(self):
         from distutils.dir_util import copy_tree
 
+        import sklearn
+        from sklearn import base
+        from jinja2 import Template
+
+        class_template = Template(
+            open(os.path.join('docs/source/api_class.rst.jinja2')).read())
+
+        sklearn_modules =  {}
+        for mod_name in sklearn.__all__:
+            try:
+                orig = __import__('sklearn.%s' % mod_name, fromlist=[''])
+            except ModuleNotFoundError:
+                continue
+
+            sklearn_modules[mod_name] = []
+
+            for name in dir(orig):
+                c = getattr(orig, name)
+                try:
+                    if not issubclass(c, base.BaseEstimator):
+                        continue
+                except TypeError:
+                    continue
+                sklearn_modules[mod_name].append('ibex.sklearn.%s.%s' % (mod_name, name))
+                content = class_template.render(
+                    class_name=name,
+                    full_class_name='ibex.sklearn.%s.%s' % (mod_name, name))
+                f_name = 'docs/source/api_ibex_sklearn_%s_%s.rst' % (mod_name, name.lower())
+                open(f_name, 'w').write(content)
+
+        class_template = Template(
+            open(os.path.join('docs/source/api.rst.jinja2')).read())
+        content = class_template.render(
+            sklearn_modules=sklearn_modules)
+        f_name = 'docs/source/api.rst'
+        open(f_name, 'w').write(content)
+
         run_str = "make html"
         if not self.reduced_checks:
             run_str += ' spelling lint linkcheck'

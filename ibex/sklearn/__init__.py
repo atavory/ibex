@@ -174,7 +174,7 @@ def _get_estimator_extras(orig, est):
     try:
         final_attrs = set(dir(est().fit(_X, _y)))
     except TypeError:
-        _traceback.print_exc()
+        #_traceback.print_exc()
         final_attrs = set(dir(est().fit(_X)))
     delta_attrs = final_attrs.difference(orig_attrs)
     delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
@@ -225,14 +225,14 @@ for name in _orig_all:
         extras = ibex.sklearn._get_estimator_extras(_orig, est)
         extra_attribs = extras['attrs']
     except:
-        _traceback.print_exc()
+        #_traceback.print_exc()
         extra_attribs = []
     try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),
             extra_attribs=extra_attribs)
     except TypeError as e:
-        _traceback.print_exc()
+        #_traceback.print_exc()
         globals()[name] = est
 ''')
 
