@@ -48,26 +48,23 @@ def _from_pickle(
     return est
 
 
-def make_adapter(
+def _make_adapter(
         est,
         extra_methods,
         extra_attribs):
     from ._base import FrameMixin
 
-    extra_attribs_d = {fn.__name__: fn for fn in extra_attribs}
-    extra_methods_d = {fn.__name__: fn for fn in extra_methods}
-
     class _Adapter(est, FrameMixin):
         def __repr__(self):
             ret = _inject_to_str_repr(est.__repr__(self))
-            if '__repr__ ' in extra_attribs_d:
-                return extra_attribs_d['__repr'](self, ret)
+            if '__repr__ ' in extra_attribs:
+                return extra_attribs['__repr'](self, ret)
             return ret
 
         def __str__(self):
             ret = self.__repr__()
-            if '__str__ ' in extra_attribs_d:
-                return extra_attribs_d['__str__'](self, ret)
+            if '__str__ ' in extra_attribs:
+                return extra_attribs['__str__'](self, ret)
             return ret
 
         def aic(self, X, *args, **kwargs):
@@ -280,8 +277,8 @@ def make_adapter(
 
             ret = self.__adapter_process_wrapped_call_res(inv, X, res)
 
-            if name in extra_methods_d:
-                ret = extra_methods_d[name](self, ret)
+            if name in extra_methods:
+                ret = extra_methods[name](self, ret)
 
             return ret
 
@@ -313,8 +310,8 @@ def make_adapter(
 
         def __getattribute__(self, name):
             base_ret = est.__getattribute__(self, name)
-            if self not in _in_ops and name in extra_attribs_d:
-                return extra_attribs_d[name](self, base_ret)
+            if self not in _in_ops and name in extra_attribs:
+                return extra_attribs[name](self, base_ret)
             return base_ret
 
         def __reduce__(self):
@@ -325,7 +322,16 @@ def make_adapter(
     return _Adapter
 
 
-def frame_ex(est, extra_methods=(), extra_attribs=()):
+def frame_ex(
+        est,
+        extra_methods={},
+        extra_attribs={}):
+
+    if not isinstance(extra_methods, dict):
+        raise TypeError('extra_methods must be of type dict; got %s' % extra_methods)
+    if not isinstance(extra_attribs, dict):
+        raise TypeError('extra_attribs must be of type dict; got %s' % extra_attribs)
+
     from ._base import FrameMixin
 
     if isinstance(est, FrameMixin):
@@ -336,7 +342,7 @@ def frame_ex(est, extra_methods=(), extra_attribs=()):
         f = frame(type(est))(**params)
         return f
 
-    _Adapter = make_adapter(est, extra_methods, extra_attribs)
+    _Adapter = _make_adapter(est, extra_methods, extra_attribs)
 
     update_class_wrapper(_Adapter, est)
 
@@ -396,7 +402,7 @@ def frame(est):
         >>> PdLinearRegression(fit_intercept=False)
         Adapter[LinearRegression](copy_X=True, fit_intercept=False, n_jobs=1, normalize=False)
     """
-    return frame_ex(est, extra_methods=(), extra_attribs=())
+    return frame_ex(est, extra_methods={}, extra_attribs={})
 
 
 __all__ += ['frame']

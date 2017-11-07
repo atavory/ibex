@@ -46,5 +46,5 @@ As noted above, Ibex wraps the estimator classes it finds in the module:
 Differences From ``sklearn``
 ----------------------------
 
-Since :class:`pandas.DataFrame` and :class:`pandas.Series` are not identical to :class:`numpy.array` s (which is the reason to use the former), some changes are made in ``ibex.sklearn`` relative to the corresponding elements in ``sklearn``. :mod:`ibex.sklearn`` in 
+Since :class:`pandas.DataFrame` and :class:`pandas.Series` are not identical to :class:`numpy.array` s (which is the reason to use the former), some changes are made in ``ibex.sklearn`` relative to the corresponding elements in ``sklearn``. :mod:`ibex.sklearn` in 
 :ref:`api` lists the differences.

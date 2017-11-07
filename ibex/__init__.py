@@ -50,7 +50,7 @@ def trans(func=None, in_cols=None, out_cols=None, pass_y=False, kw_args=None):
 
         An :py:class:`sklearn.preprocessing.FunctionTransformer` object.
 
-    Example:
+    See the `documentation <https://atavory.github.io/ibex/function_transformer.html>`_ for examples.
     """
 
     from ibex.sklearn import preprocessing

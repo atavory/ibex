@@ -73,7 +73,7 @@ def update_module(module):
             continue
         est = frame_ex(
             getattr(orig, est.__name__),
-            extra_methods=[transform, fit_transform])
+            extra_methods={'transform': transform, 'fit_transform': fit_transform})
         setattr(module, est.__name__, est)
 
 

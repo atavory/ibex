@@ -179,13 +179,13 @@ def _get_estimator_extras(orig, est):
     delta_attrs = final_attrs.difference(orig_attrs)
     delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
     delta_attrs = [a for a in delta_attrs if not a.startswith('n_')]
-    attrs = []
+    attrs = {}
     if 'intercept_' in delta_attrs:
-        attrs.append(intercept_)
+        attrs['intercept_'] = intercept_
     if 'coef_' in delta_attrs:
-        attrs.append(coef_)
+        attrs['coef_'] = coef_
     if 'feature_importances_' in final_attrs:
-        attrs.append(feature_importances_)
+        attrs['feature_importances_'] = feature_importances_
     return {
         'attrs': attrs
     }

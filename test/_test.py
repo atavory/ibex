@@ -306,7 +306,7 @@ class _EstimatorTest(unittest.TestCase):
 
 def _generate_bases_test(est, pd_est):
     def test(self):
-        self.assertTrue(isinstance(pd_est, FrameMixin))
+        self.assertTrue(isinstance(pd_est, FrameMixin), pd_est)
         self.assertFalse(isinstance(est, FrameMixin))
         self.assertTrue(isinstance(pd_est, base.BaseEstimator))
         try:
