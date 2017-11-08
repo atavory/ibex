@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import inspect
 import types
 import re
+import textwrap
 
 import six
 import numpy as np
@@ -336,7 +337,11 @@ def frame_ex(
             '.. note::\n\n    The documentation following is of the class wrapped by this class. This class wraps the attribute ' + "``" + name + "``"
         attrib_docs += extra_attribs[name].__doc__ + '\n\n'
 
-    est.__doc__ = attrib_docs + est.__doc__
+    try:
+        est.__doc__ = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)
+    except AttributeError:
+        if int(sys.version_info[: 2]) > 2:
+            raise
 
     if not isinstance(extra_methods, dict):
         raise TypeError('extra_methods must be of type dict; got %s' % extra_methods)
