@@ -341,7 +341,7 @@ def frame_ex(
     try:
         est.__doc__ = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)
     except AttributeError:
-        if int(sys.version_info[: 2]) > 2:
+        if int(sys.version_info[0]) > 2:
             raise
 
     if not isinstance(extra_methods, dict):
