@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import inspect
 import types
 import re
+import sys
 import textwrap
 
 import six
