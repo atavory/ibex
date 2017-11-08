@@ -42,6 +42,7 @@ from __future__ import absolute_import
 import sys
 import imp
 import string
+import traceback
 
 import six
 import sklearn
@@ -122,6 +123,59 @@ def coef_(self, base_ret):
 
 
 def intercept_(self, base_ret):
+    """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
+        >>>
+        >>> prd.coef_
+        sepal length (cm)   -0.109741
+        sepal width (cm)    -0.044240
+        petal length (cm)    0.227001
+        petal width (cm)     0.609894
+        dtype: float64
+        >>>
+        >>> prd.intercept_
+        0.19208...
+
+    Example:
+
+        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
+
+        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf.coef_
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0...           0.414988          1.461297          -2.262141         -1.029095
+        1...           0.416640         -1.600833           0.577658         -1.385538
+        2...          -1.707525         -1.534268           2.470972          2.555382
+        >>> clf.intercept_
+        0    0.265606
+        1    1.085424
+        2   -1.214715
+        dtype: float64
+
+    """
+
     # Tmp Ami - replace next by is_nummeric or is_scalar
     if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
         return base_ret
@@ -226,7 +280,7 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
     except:
         #_traceback.print_exc()
-        extra_attribs = []
+        extra_attribs = {}
     try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),

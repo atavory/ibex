@@ -327,6 +327,17 @@ def frame_ex(
         extra_methods={},
         extra_attribs={}):
 
+    attrib_docs = ''
+    for name in extra_attribs:
+        if not extra_attribs[name].__doc__:
+            continue
+
+        attrib_docs +=  \
+            '.. note::\n\n    The documentation following is of the class wrapped by this class. This class wraps the attribute ' + "``" + name + "``"
+        attrib_docs += extra_attribs[name].__doc__ + '\n\n'
+
+    est.__doc__ = attrib_docs + est.__doc__
+
     if not isinstance(extra_methods, dict):
         raise TypeError('extra_methods must be of type dict; got %s' % extra_methods)
     if not isinstance(extra_attribs, dict):
