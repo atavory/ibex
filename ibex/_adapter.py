@@ -338,10 +338,10 @@ def frame_ex(
             '.. note::\n\n    The documentation following is of the class wrapped by this class. This class wraps the attribute ' + "``" + name + "``"
         attrib_docs += extra_attribs[name].__doc__ + '\n\n'
 
-    new_doc = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)
     try:
+        new_doc = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)
         est.__doc__ = new_doc
-    except AttributeError:
+    except (AttributeError, TypeError):
         if int(sys.version_info[0]) > 2:
             raise
 
