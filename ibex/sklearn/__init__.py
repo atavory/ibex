@@ -43,16 +43,101 @@ import sys
 import imp
 import string
 import traceback
+import operator
 
 import six
 import sklearn
 import pandas as pd
+
+from .._base import Pipeline as PdPipeline
+from .._base import FeatureUnion as PdFeatureUnion
 
 
 __all__ = sklearn.__all__
 
 
 _sklearn_ver = int(sklearn.__version__.split('.')[1])
+
+
+def _pipeline_make_pipeline(*estimators):
+    """
+    Creates a pipeline from estimators.
+
+    Arguments:
+
+        transformers: Iterable of estimators.
+
+    Returns:
+
+        A :class:`ibex.sklearn.pipeline.Pipeline` object.
+
+    Example:
+
+        >>> from ibex.sklearn import preprocessing
+        >>> from ibex.sklearn import linear_model
+        >>> from ibex.sklearn import pipeline
+        >>>
+        >>> pipeline.make_pipeline(preprocessing.StandardScaler(), linear_model.LinearRegression())
+        Pipeline(...)
+
+    """
+    estimators = list(estimators)
+
+    if len(estimators) > 1:
+        return six.moves.reduce(operator.or_, estimators[1:], estimators[0])
+
+    name = type(estimators[0]).__name__.lower()
+    return PdPipeline([(name, estimators[0])])
+
+
+def _pipeline_make_union(*transformers):
+    """
+    Creates a union from transformers.
+
+    Arguments:
+
+        transformers: Iterable of transformers.
+
+    Returns:
+
+        A :class:`ibex.sklearn.pipeline.FeatureUnion` object.
+
+    Example:
+
+        >>> from ibex.sklearn import preprocessing as pd_preprocessing
+        >>> from ibex.sklearn import pipeline as pd_pipeline
+
+        >>> trn = pd_pipeline.make_union(
+        ...     pd_preprocessing.StandardScaler(),
+        ...     pd_preprocessing.MaxAbsScaler())
+
+    """
+
+    transformers = list(transformers)
+
+    if len(transformers) > 1:
+        return six.moves.reduce(operator.add, transformers[1:], transformers[0])
+
+    name = type(transformers[0]).__name__.lower()
+    return PdFeatureUnion([(name, transformers[0])])
+
+
+def _replace(orig, name):
+    if orig == 'pipeline':
+        if name ==  'Pipeline':
+            return PdPipeline
+        if name == 'FeatureUnion':
+            return PdFeatureUnion
+
+
+def _add(orig):
+    if orig == 'pipeline':
+        return {
+            'make_union': _pipeline_make_union,
+            'make_pipeline': _pipeline_make_pipeline,
+        }
+
+    return {}
 
 
 _X = pd.DataFrame({'a': [1, 0, 0], 'b': [0, 1, 0], 'c': [0, 0, 1]})
@@ -116,7 +201,7 @@ def _regression_coef_(self, base_ret):
         return pd.Series(base_ret, index=self.x_columns)
 
     if len(base_ret.shape) == 2:
-        index = self.y_columns if self.y_columns is not None else self.classes_
+        index = self.y_columns
         return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
 
     raise RuntimeError()
@@ -243,7 +328,7 @@ def _classification_coef_(self, base_ret):
         return pd.Series(base_ret, index=self.x_columns)
 
     if len(base_ret.shape) == 2:
-        index = self.y_columns if self.y_columns is not None else self.classes_
+        index = self.classes_
         return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
 
     raise RuntimeError()
@@ -355,8 +440,10 @@ def _get_estimator_extras(orig, est):
     try:
         final_attrs = set(dir(est().fit(_X, _y)))
     except TypeError:
-        #_traceback.print_exc()
-        final_attrs = set(dir(est().fit(_X)))
+        try:
+            final_attrs = set(dir(est().fit(_X)))
+        except ValueError:
+            final_attrs = set(dir(est().fit(_y)))
     final_attrs = final_attrs.union(orig_attrs)
     final_attrs = [a for a in final_attrs if not a.startswith('_')]
     final_attrs = [a for a in final_attrs if not a.startswith('n_')]
@@ -391,6 +478,7 @@ from __future__ import absolute_import as _absolute_import
 
 import traceback as _traceback
 import inspect as _inspect
+import sys as _sys
 
 import sklearn as _sklearn
 from sklearn import $mod_name as _orig
@@ -404,6 +492,11 @@ for name in _orig_all:
     if name.startswith('_'):
         continue
     est = getattr(_orig, name)
+
+    if ibex.sklearn._replace('$mod_name', name):
+        globals()[name] = ibex.sklearn._replace('$mod_name', name)
+        continue
+
     try:
         if not _inspect.isclass(est) or not issubclass(est, base.BaseEstimator):
             globals()[name] = est
@@ -411,19 +504,26 @@ for name in _orig_all:
     except TypeError as e:
         globals()[name] = est
         continue
+
     try:
         extras = ibex.sklearn._get_estimator_extras(_orig, est)
         extra_attribs = extras['attrs']
     except:
-        #_traceback.print_exc()
         extra_attribs = {}
+        # _traceback.print_exc()
+        _sys.stderr.write(str(est))
+
     try:
         globals()[name] = ibex.frame_ex(
             getattr(_orig, est.__name__),
             extra_attribs=extra_attribs)
     except TypeError as e:
-        #_traceback.print_exc()
+        # _traceback.print_exc()
         globals()[name] = est
+
+_add = ibex.sklearn._add('$mod_name')
+for name in _add:
+    globals()[name] = _add[name]
 ''')
 
 
@@ -459,9 +559,6 @@ class _NewModuleLoader(object):
         if orig == 'feature_selection':
             from ._feature_selection import update_module as _feature_selection_update_module
             _feature_selection_update_module(mod)
-        if orig == 'pipeline':
-            from ._pipeline import update_module as _pipeline_update_module
-            _pipeline_update_module(mod)
         if orig == 'preprocessing':
             from ._preprocessing import update_module as _preprocessing_update_module
             _preprocessing_update_module(mod)

@@ -9,7 +9,7 @@ from .._base import Pipeline as PdPipeline
 from .._base import FeatureUnion as PdFeatureUnion
 
 
-def pd_make_pipeline(*estimators):
+def _pipeline_make_pipeline(*estimators):
     """
     Creates a pipeline from estimators.
 
@@ -40,7 +40,7 @@ def pd_make_pipeline(*estimators):
     return PdPipeline([(name, estimators[0])])
 
 
-def pd_make_union(*transformers):
+def _pipeline_make_union(*transformers):
     """
     Creates a union from transformers.
 

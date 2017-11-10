@@ -105,7 +105,12 @@ So what does this add to the original version?
 
 #. The estimators perform `verification and processing <https://atavory.github.io/ibex/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
 
-    >>> PdSVC(kernel="linear", probability=True).fit(iris[features], iris['class']).coef_
+#. The results are much more interpretable:
+
+    >>> svc = PdSVC(kernel="linear", probability=True)
+
+	Find the coefficients of the boundaries between the different classes:
+    >>> svc.fit(iris[features], iris['class']).coef_
                 sepal length (cm)  sepal width (cm)  petal length (cm)  \
     setosa              -0.046259          0.521183          -1.003045
     versicolor          -0.007223          0.178941          -0.538365
@@ -116,12 +121,24 @@ So what does this add to the original version?
     versicolor         -0.292393
     virginica          -2.006303
 
-    >>> PdSVC(kernel="linear", probability=True).fit(iris[features], iris['class']).predict_proba(iris[features])
+	Predict belonging to classes:
+    >>> svc.fit(iris[features], iris['class']).predict_proba(iris[features])
            setosa  versicolor  virginica
     0    0.97...    0.01...   0.00...
 	...
 
-#. It allows `writing Pandas-munging estimators <https://atavory.github.io/ibex/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
+	Find the coefficients of the boundaries between the different classes in a pipeline:
+	>>> clf = PdPCA(n_components=2) + PdSelectKBest(k=1) | svc
+    >>> clf.fit(iris[features], iris['class'])
+    ...
+    >>> svc.coef_
+                     pca                 selectkbest
+                  comp_0    comp_1 petal length (cm)
+    setosa     -0.757016  0.376680         -0.575197
+    versicolor -0.351218  0.141699         -0.317562
+    virginica  -1.529320  1.472771         -1.509391
+
+#. It allows `writinfitg Pandas-munging estimators <https://atavory.github.io/ibex/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
 
 #. Using ``DataFrame`` metadata, it allows writing more complex meta-learning algorithms, such as stacking and nested labeled and stratified cross validation.
 
