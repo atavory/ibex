@@ -230,13 +230,13 @@ def _get_estimator_extras(orig, est):
     except TypeError:
         #_traceback.print_exc()
         final_attrs = set(dir(est().fit(_X)))
-    delta_attrs = final_attrs.difference(orig_attrs)
-    delta_attrs = [a for a in delta_attrs if not a.startswith('_')]
-    delta_attrs = [a for a in delta_attrs if not a.startswith('n_')]
+    final_attrs = final_attrs.union(orig_attrs)
+    final_attrs = [a for a in final_attrs if not a.startswith('_')]
+    final_attrs = [a for a in final_attrs if not a.startswith('n_')]
     attrs = {}
-    if 'intercept_' in delta_attrs:
+    if 'intercept_' in final_attrs:
         attrs['intercept_'] = intercept_
-    if 'coef_' in delta_attrs:
+    if 'coef_' in final_attrs:
         attrs['coef_'] = coef_
     if 'feature_importances_' in final_attrs:
         attrs['feature_importances_'] = feature_importances_

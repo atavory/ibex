@@ -51,14 +51,26 @@ We first load the Iris dataset into a pandas ``DataFrame``.
     >>> import pandas as pd
     >>> 
     >>> iris = datasets.load_iris()
-    >>> features, iris = iris['feature_names'], pd.DataFrame(
+    >>> features, targets, iris = iris['feature_names'], iris['target_names'], pd.DataFrame(
     ...     np.c_[iris['data'], iris['target']],
     ...     columns=iris['feature_names']+['class'])
+    >>> iris['class'] = iris['class'].map(pd.Series(targets))
     >>> 
-    >>> iris.columns
-    Index([...'sepal length (cm)', ...'sepal width (cm)', ...'petal length (cm)',
-           ...'petal width (cm)', ...'class'],
-          dtype='object')
+    >>> iris.head()
+       sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
+    0                5.1               3.5                1.4               0.2
+    1                4.9               3.0                1.4               0.2
+    2                4.7               3.2                1.3               0.2
+    3                4.6               3.1                1.5               0.2
+    4                5.0               3.6                1.4               0.2
+    <BLANKLINE>
+	class
+    0  setosa
+    1  setosa
+    2  setosa
+    3  setosa
+    4  setosa
+
 
 Now, we import the relevant steps. Note that, in this example, we import them from `ibex.sklearn` rather than `sklearn`.
 
@@ -92,6 +104,26 @@ Finally, we construct a pipeline that, given a ``DataFrame`` of features:
 So what does this add to the original version?
 
 #. The estimators perform `verification and processing <https://atavory.github.io/ibex/input_verification_and_output_processing.html>`_ on the inputs and outputs. They verify column names following calls to ``fit``, and index results according to those of the inputs. This helps catch bugs.
+
+    >>> PdSVC(kernel="linear", probability=True).fit(iris[features], iris['class']).coef_
+                sepal length (cm)  sepal width (cm)  petal length (cm)  \
+    setosa              -0.046259          0.521183          -1.003045
+    versicolor          -0.007223          0.178941          -0.538365
+    virginica            0.595498          0.973900          -2.031000
+    <BLANKLINE>
+                petal width (cm)
+    setosa             -0.464130
+    versicolor         -0.292393
+    virginica          -2.006303
+
+    >>> PdSVC(kernel="linear", probability=True).fit(iris[features], iris['class']).predict_proba(iris[features])
+           setosa  versicolor  virginica
+    0    0.97...    0.01...   0.00...
+    1    0.96...    0.02...   0.01...
+    2    0.97...    0.01...   0.00...
+    3    0.95...    0.02...   0.01...
+    4    0.97...    0.01...   0.00...
+	...
 
 #. It allows `writing Pandas-munging estimators <https://atavory.github.io/ibex/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
 
