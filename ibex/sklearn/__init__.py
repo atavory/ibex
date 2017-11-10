@@ -59,7 +59,7 @@ _X = pd.DataFrame({'a': [1, 0, 0], 'b': [0, 1, 0], 'c': [0, 0, 1]})
 _y = pd.Series([1, 0, 1])
 
 
-def coef_(self, base_ret):
+def _regression_coef_(self, base_ret):
     """
     Example:
 
@@ -122,7 +122,7 @@ def coef_(self, base_ret):
     raise RuntimeError()
 
 
-def intercept_(self, base_ret):
+def _regression_intercept_(self, base_ret):
     """
     Example:
 
@@ -186,7 +186,7 @@ def intercept_(self, base_ret):
     raise RuntimeError()
 
 
-def feature_importances_(self, base_ret):
+def _feature_importances_(self, base_ret):
     """
     Example:
 
@@ -235,11 +235,11 @@ def _get_estimator_extras(orig, est):
     final_attrs = [a for a in final_attrs if not a.startswith('n_')]
     attrs = {}
     if 'intercept_' in final_attrs:
-        attrs['intercept_'] = intercept_
+        attrs['intercept_'] = _regression_intercept_
     if 'coef_' in final_attrs:
-        attrs['coef_'] = coef_
+        attrs['coef_'] = _regression_coef_
     if 'feature_importances_' in final_attrs:
-        attrs['feature_importances_'] = feature_importances_
+        attrs['feature_importances_'] = _feature_importances_
     return {
         'attrs': attrs
     }

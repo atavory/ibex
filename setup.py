@@ -83,7 +83,7 @@ class _DocumentCommand(Command):
 
 setup(
     name='ibex',
-    version='0.1.2',
+    version='0.1.25',
     author='Ami Tavory, Shahar Azulay, Tali Raveh-Sadka',
     author_email='atavory@gmail.com',
     url='https://github.com/atavory/ibex',
