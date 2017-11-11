@@ -90,375 +90,6 @@ _X = pd.DataFrame({'a': [1, 0, 0], 'b': [0, 1, 0], 'c': [0, 0, 1]})
 _y = pd.Series([1, 0, 1])
 
 
-def _regression_coef_(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
-        >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
-        dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
-
-    Example:
-
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
-        >>> clf.coef_
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
-
-    """
-    if len(base_ret.shape) == 1:
-        return pd.Series(base_ret, index=self.x_columns)
-
-    if len(base_ret.shape) == 2:
-        index = self.y_columns
-        return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
-
-    raise RuntimeError()
-
-
-def _regression_intercept_(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
-        >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
-        dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
-
-    Example:
-
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
-        >>> clf.coef_
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
-
-    """
-
-    # Tmp Ami - replace next by is_nummeric or is_scalar
-    if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
-        return base_ret
-
-    if len(base_ret.shape) == 1:
-        return pd.Series(base_ret)
-
-    raise RuntimeError()
-
-
-def _classification_coef_(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
-        >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
-        dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
-
-    Example:
-
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
-        >>> clf.coef_
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
-
-    """
-    if len(base_ret.shape) == 1:
-        return pd.Series(base_ret, index=self.x_columns)
-
-    if len(base_ret.shape) == 2:
-        index = self.classes_
-        return pd.DataFrame(base_ret, index=index, columns=self.x_columns)
-
-    raise RuntimeError()
-
-
-def _classification_intercept_(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
-        >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
-        dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
-
-    Example:
-
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
-        >>> clf.coef_
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
-
-    """
-
-    # Tmp Ami - replace next by is_nummeric or is_scalar
-    if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
-        return base_ret
-
-    if len(base_ret.shape) == 1:
-        return pd.Series(base_ret)
-
-    raise RuntimeError()
-
-
-def _feature_importances_(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.ensemble import RandomForestClassifier as PdRandomForestClassifier
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> clf =  PdRandomForestClassifier(random_state=42).fit(iris[features], iris['class'])
-        >>>
-        >>> clf.feature_importances_
-        sepal length (cm)    0.129268
-        sepal width (cm)     0.015822
-        petal length (cm)    0.444740
-        petal width (cm)     0.410169
-        dtype: float64
-
-    """
-    return pd.Series(base_ret, index=self.x_columns)
-
-
-def _feature_selection_transform(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> PdSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
-        petal length (cm)
-        0                  1.4
-        1                  1.4
-        2                  1.3
-        3                  1.5
-        4                  1.4
-        ...
-
-    """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = self.x_columns[self.get_support(indices=True)]
-    return base_ret
-
-
-def _feature_selection_fit_transform(self, base_ret):
-    """
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> PdSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
-        petal length (cm)
-        0                  1.4
-        1                  1.4
-        2                  1.3
-        3                  1.5
-        4                  1.4
-        ...
-
-    """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = self.x_columns[self.get_support(indices=True)]
-    return base_ret
-
-
 def _get_args_kwargs(orig, name):
     args = []
     kwargs = {}
@@ -494,8 +125,9 @@ def _get_estimator_extras(orig, name, est):
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
 
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
-        methods['transform'] = _feature_selection_transform
-        methods['fit_transform'] = _feature_selection_fit_transform
+        from . import _feature_selection
+        methods['transform'] = _feature_selection.transform
+        methods['fit_transform'] = _feature_selection.fit_transform
 
     if is_clusterer:
         from . import _cluster
@@ -503,17 +135,22 @@ def _get_estimator_extras(orig, name, est):
         methods['fit_transform'] = _cluster.fit_transform
 
     if 'intercept_' in final_attrs:
+        from . import _classification_coef_intercept
+        from . import _regression_coef_intercept
         if is_classifier:
-            attrs['intercept_'] = _classification_intercept_
+            attrs['intercept_'] = _classification_coef_intercept.intercept_
         else:
-            attrs['intercept_'] = _regression_intercept_
+            attrs['intercept_'] = _regression_coef_intercept.intercept_
     if 'coef_' in final_attrs:
+        from . import _classification_coef_intercept
+        from . import _regression_coef_intercept
         if is_classifier:
-            attrs['coef_'] = _classification_coef_
+            attrs['coef_'] = _classification_coef_intercept.coef_
         else:
-            attrs['coef_'] = _regression_coef_
+            attrs['coef_'] = _regression_coef_intercept.coef_
     if 'feature_importances_' in final_attrs:
-        attrs['feature_importances_'] = _feature_importances_
+        from . import _feature_importances
+        attrs['feature_importances_'] = _feature_importances.feature_importances_
 
     return {
         'attrs': attrs,
@@ -563,7 +200,7 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
-        _traceback.print_exc()
+        # _traceback.print_exc()
         _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
@@ -574,7 +211,7 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        _traceback.print_exc()
+        # _traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')
@@ -606,8 +243,6 @@ class _NewModuleLoader(object):
         if orig == 'decomposition':
             from ._decomposition import update_module as _decomposition_update_module
             _decomposition_update_module(mod)
-        from ._predict_star_proba import update_module as _predict_star_proba_update_module
-        _predict_star_proba_update_module(mod)
 
         return mod
 

@@ -136,9 +136,9 @@ So what does this add to the original version?
         >>> svc.coef_
                         pca                 selectkbest
                     comp_0    comp_1 petal length (cm)
-        setosa     -0.757016  0.376680         -0.575197
-        versicolor -0.351218  0.141699         -0.317562
-        virginica  -1.529320  1.472771         -1.509391
+        setosa     -0.757016  ...0.376680         -0.575197
+        versicolor -0.351218  ...0.141699         -0.317562
+        virginica  -1.529320  ...1.472771         -1.509391
 
 #. It allows `writinfitg Pandas-munging estimators <https://atavory.github.io/ibex/extending.html>`_ (see also `Multiple-Row Features In The Movielens Dataset <movielens_simple_row_aggregating_features.ipynb>`_).
 
