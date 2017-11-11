@@ -1,3 +1,9 @@
+from __future__ import absolute_import
+
+
+import pandas as pd
+
+
 def coef_(self, base_ret):
     """
     Example:
@@ -51,8 +57,6 @@ def coef_(self, base_ret):
         dtype: float64
 
     """
-    import pandas as pd
-
     if len(base_ret.shape) == 1:
         return pd.Series(base_ret, index=self.x_columns)
 
@@ -116,8 +120,6 @@ def intercept_(self, base_ret):
         dtype: float64
 
     """
-
-    import pandas as pd
 
     # Tmp Ami - replace next by is_nummeric or is_scalar
     if isinstance(base_ret, (type(1), type(1.), type(1 + 1j))):
