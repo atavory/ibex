@@ -43,7 +43,6 @@ import sys
 import imp
 import string
 import traceback
-import operator
 
 import six
 import sklearn
@@ -59,165 +58,29 @@ __all__ = sklearn.__all__
 _sklearn_ver = int(sklearn.__version__.split('.')[1])
 
 
-def _pipeline_make_pipeline(*estimators):
-    """
-    Creates a pipeline from estimators.
-
-    Arguments:
-
-        transformers: Iterable of estimators.
-
-    Returns:
-
-        A :class:`ibex.sklearn.pipeline.Pipeline` object.
-
-    Example:
-
-        >>> from ibex.sklearn import preprocessing
-        >>> from ibex.sklearn import linear_model
-        >>> from ibex.sklearn import pipeline
-        >>>
-        >>> pipeline.make_pipeline(preprocessing.StandardScaler(), linear_model.LinearRegression())
-        Pipeline(...)
-
-    """
-    estimators = list(estimators)
-
-    if len(estimators) > 1:
-        return six.moves.reduce(operator.or_, estimators[1:], estimators[0])
-
-    name = type(estimators[0]).__name__.lower()
-    return PdPipeline([(name, estimators[0])])
-
-
-def _pipeline_make_union(*transformers):
-    """
-    Creates a union from transformers.
-
-    Arguments:
-
-        transformers: Iterable of transformers.
-
-    Returns:
-
-        A :class:`ibex.sklearn.pipeline.FeatureUnion` object.
-
-    Example:
-
-        >>> from ibex.sklearn import preprocessing as pd_preprocessing
-        >>> from ibex.sklearn import pipeline as pd_pipeline
-
-        >>> trn = pd_pipeline.make_union(
-        ...     pd_preprocessing.StandardScaler(),
-        ...     pd_preprocessing.MaxAbsScaler())
-
-    """
-
-    transformers = list(transformers)
-
-    if len(transformers) > 1:
-        return six.moves.reduce(operator.add, transformers[1:], transformers[0])
-
-    name = type(transformers[0]).__name__.lower()
-    return PdFeatureUnion([(name, transformers[0])])
-
-
-def _cluster_transform(self, base_ret):
-    """
-
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.cluster import KMeans as PdKMeans
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> clt = PdKMeans(n_clusters=3, random_state=1).fit(iris[features])
-        >>> clt.transform(iris[features])
-            0         1         2
-        0    3.419251  0.146942  5.059542
-        1    3.398574  0.438169  5.114943
-        2    3.569357  0.412301  5.279355
-        3    3.422410  0.518837  5.153590
-        4    3.467264  0.197970  5.104334
-        ...
-
-    """
-
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = list(range(len(base_ret.columns)))
-    return base_ret
-
-
-def _cluster_fit_transform(self, base_ret):
-    """
-
-    Example:
-
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.cluster import KMeans as PdKMeans
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> clt = PdKMeans(n_clusters=3, random_state=1).fit(iris[features])
-        >>> clt.transform(iris[features])
-            0         1         2
-        0    3.419251  0.146942  5.059542
-        1    3.398574  0.438169  5.114943
-        2    3.569357  0.412301  5.279355
-        3    3.422410  0.518837  5.153590
-        4    3.467264  0.197970  5.104334
-        ...
-
-    """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = list(range(len(base_ret.columns)))
-    return base_ret
-
-
 def _replace(orig, name):
+    if orig in ['cross_validation', 'model_selection']:
+        from . import _cross_val_predict
+        if name == 'cross_val_predict':
+            return _cross_val_predict.cross_val_predict
+
     if orig == 'pipeline':
         if name ==  'Pipeline':
             return PdPipeline
         if name == 'FeatureUnion':
             return PdFeatureUnion
 
+    if orig == 'preprocessing':
+        if name == 'FunctionTransformer':
+            from .._function_transformer import FunctionTransformer as PdFunctionTransformer
+            return PdFunctionTransformer
 
 def _add(orig):
     if orig == 'pipeline':
+        from . import _pipeline
         return {
-            'make_union': _pipeline_make_union,
-            'make_pipeline': _pipeline_make_pipeline,
+            'make_union': _pipeline.make_union,
+            'make_pipeline': _pipeline.make_pipeline,
         }
 
     return {}
@@ -518,15 +381,108 @@ def _feature_importances_(self, base_ret):
     return pd.Series(base_ret, index=self.x_columns)
 
 
-def _get_estimator_extras(orig, est):
-    orig_attrs = set(dir(est()))
+def _feature_selection_transform(self, base_ret):
+    """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+        >>> PdSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
+        petal length (cm)
+        0                  1.4
+        1                  1.4
+        2                  1.3
+        3                  1.5
+        4                  1.4
+        ...
+
+    """
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
+
+
+def _feature_selection_fit_transform(self, base_ret):
+    """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.feature_selection import SelectKBest as PdSelectKBest
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+        >>> PdSelectKBest(k=1).fit(iris[features], iris['class']).transform(iris[features])
+        petal length (cm)
+        0                  1.4
+        1                  1.4
+        2                  1.3
+        3                  1.5
+        4                  1.4
+        ...
+
+    """
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
+
+
+def _get_args_kwargs(orig, name):
+    args = []
+    kwargs = {}
+
+    if orig == 'feature_selection' and name == 'SelectKBest':
+        kwargs = {'k': 1}
+
+    if orig == 'cluster' and name == 'KMeans':
+        kwargs = {'n_clusters': 3, 'random_state': 1}
+
+    return args, kwargs
+
+
+def _get_estimator_extras(orig, name, est):
+    args, kwargs = _get_args_kwargs(orig, name)
+
+    orig_attrs = set(dir(est(*args, **kwargs)))
     try:
-        final_attrs = set(dir(est().fit(_X, _y)))
+        final_attrs = set(dir(est(*args, **kwargs).fit(_X, _y)))
     except TypeError:
         try:
-            final_attrs = set(dir(est().fit(_X)))
+            final_attrs = set(dir(est(*args, **kwargs).fit(_X)))
         except ValueError:
-            final_attrs = set(dir(est().fit(_y)))
+            final_attrs = set(dir(est(*args, **kwargs).fit(_y)))
     final_attrs = final_attrs.union(orig_attrs)
     final_attrs = [a for a in final_attrs if not a.startswith('_')]
     final_attrs = [a for a in final_attrs if not a.startswith('n_')]
@@ -535,10 +491,16 @@ def _get_estimator_extras(orig, est):
 
     is_classifier = issubclass(est, sklearn.base.ClassifierMixin)
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
+    is_transformer = issubclass(est, sklearn.base.TransformerMixin)
+
+    if orig == 'feature_selection' and hasattr(est, 'get_support'):
+        methods['transform'] = _feature_selection_transform
+        methods['fit_transform'] = _feature_selection_fit_transform
 
     if is_clusterer:
-        methods['transform'] = _cluster_transform
-        methods['fit_transform'] = _cluster_fit_transform
+        from . import _cluster
+        methods['transform'] = _cluster.transform
+        methods['fit_transform'] = _cluster.fit_transform
 
     if 'intercept_' in final_attrs:
         if is_classifier:
@@ -552,6 +514,7 @@ def _get_estimator_extras(orig, est):
             attrs['coef_'] = _regression_coef_
     if 'feature_importances_' in final_attrs:
         attrs['feature_importances_'] = _feature_importances_
+
     return {
         'attrs': attrs,
         'methods': methods,
@@ -596,14 +559,14 @@ for name in _orig_all:
         continue
 
     try:
-        extras = ibex.sklearn._get_estimator_extras('$mod_name', est)
+        extras = ibex.sklearn._get_estimator_extras('$mod_name', name, est)
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
+        _traceback.print_exc()
+        _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
-        # _traceback.print_exc()
-        _sys.stderr.write(str(est))
 
     try:
         globals()[name] = ibex.frame_ex(
@@ -611,7 +574,7 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        # _traceback.print_exc()
+        _traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')
@@ -640,18 +603,9 @@ class _NewModuleLoader(object):
 
         six.exec_(code, mod.__dict__)
 
-        if orig in ['cross_validation', 'model_selection']:
-            from ._cross_val_predict import update_module as _cross_val_predict_update_module
-            _cross_val_predict_update_module(mod)
         if orig == 'decomposition':
             from ._decomposition import update_module as _decomposition_update_module
             _decomposition_update_module(mod)
-        if orig == 'feature_selection':
-            from ._feature_selection import update_module as _feature_selection_update_module
-            _feature_selection_update_module(mod)
-        if orig == 'preprocessing':
-            from ._preprocessing import update_module as _preprocessing_update_module
-            _preprocessing_update_module(mod)
         from ._predict_star_proba import update_module as _predict_star_proba_update_module
         _predict_star_proba_update_module(mod)
 

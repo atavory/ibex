@@ -360,7 +360,10 @@ def frame_ex(
         f = frame(type(est))(**params)
         return f
 
-    _Adapter = _make_adapter(est, extra_methods, extra_attribs)
+    _Adapter = _make_adapter(
+        est,
+        extra_methods.copy(),
+        extra_attribs.copy())
 
     update_class_wrapper(_Adapter, est)
 

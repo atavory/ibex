@@ -132,8 +132,7 @@ So what does this add to the original version?
 	Find the coefficients of the boundaries between the different classes in a pipeline:
 
         >>> clf = PdPCA(n_components=2) + PdSelectKBest(k=1) | svc
-        >>> clf.fit(iris[features], iris['class'])
-        ...
+        >>> clf = clf.fit(iris[features], iris['class'])
         >>> svc.coef_
                         pca                 selectkbest
                     comp_0    comp_1 petal length (cm)
