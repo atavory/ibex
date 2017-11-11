@@ -144,13 +144,3 @@ def cross_val_predict(
         return pd.Series(y_hat, index=y.index)
     else:
         return pd.DataFrame(y_hat, index=y.index)
-
-
-def update_module(module):
-    attribs = {
-        'cross_val_predict': cross_val_predict,
-    }
-
-    for attrib in attribs:
-        if attrib in dir(module):
-            setattr(module, attrib, attribs[attrib])
