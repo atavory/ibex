@@ -124,6 +124,15 @@ def _get_estimator_extras(orig, name, est):
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
 
+    if orig == 'decomposition':
+        from . import _decomposition
+        methods['transform'] = (_decomposition.transform,
+            '')
+        methods['fit_transform'] = (_decomposition.fit_transform,
+            '')
+        attrs['components_'] = (_decomposition.components_,
+            '')
+
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
         from . import _feature_selection
         methods['transform'] = (_feature_selection.transform,
@@ -142,19 +151,24 @@ def _get_estimator_extras(orig, name, est):
         from . import _classification_coef_intercept
         from . import _regression_coef_intercept
         if is_classifier:
-            attrs['intercept_'] = _classification_coef_intercept.intercept_
+            attrs['intercept_'] = (_classification_coef_intercept.intercept_,
+                '')
         else:
-            attrs['intercept_'] = _regression_coef_intercept.intercept_
+            attrs['intercept_'] = (_regression_coef_intercept.intercept_,
+                '')
     if 'coef_' in final_attrs:
         from . import _classification_coef_intercept
         from . import _regression_coef_intercept
         if is_classifier:
-            attrs['coef_'] = _classification_coef_intercept.coef_
+            attrs['coef_'] = (_classification_coef_intercept.coef_,
+                '')
         else:
-            attrs['coef_'] = _regression_coef_intercept.coef_
+            attrs['coef_'] = (_regression_coef_intercept.coef_,
+                '')
     if 'feature_importances_' in final_attrs:
         from . import _feature_importances
-        attrs['feature_importances_'] = _feature_importances.feature_importances_
+        attrs['feature_importances_'] = (_feature_importances.feature_importances_,
+            '')
 
     return {
         'attrs': attrs,
@@ -243,10 +257,6 @@ class _NewModuleLoader(object):
         code = _code.substitute({'mod_name': orig})
 
         six.exec_(code, mod.__dict__)
-
-        if orig == 'decomposition':
-            from ._decomposition import update_module as _decomposition_update_module
-            _decomposition_update_module(mod)
 
         return mod
 

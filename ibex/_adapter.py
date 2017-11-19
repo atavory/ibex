@@ -313,7 +313,7 @@ def _make_adapter(
         def __getattribute__(self, name):
             base_ret = est.__getattribute__(self, name)
             if self not in _in_ops and name in extra_attribs:
-                return extra_attribs[name](self, base_ret)
+                return extra_attribs[name][0](self, base_ret)
             return base_ret
 
         def __reduce__(self):
@@ -331,12 +331,12 @@ def frame_ex(
 
     attrib_docs = ''
     for name in extra_attribs:
-        if not extra_attribs[name].__doc__:
+        if not extra_attribs[name][0].__doc__:
             continue
 
         attrib_docs +=  \
             '.. note::\n\n    The documentation following is of the class wrapped by this class. This class wraps the attribute ' + "``" + name + "``"
-        attrib_docs += extra_attribs[name].__doc__ + '\n\n'
+        attrib_docs += extra_attribs[name][0].__doc__ + '\n\n'
 
     try:
         new_doc = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)
