@@ -90,7 +90,7 @@ _X = pd.DataFrame({'a': [1, 0, 0], 'b': [0, 1, 0], 'c': [0, 0, 1]})
 _y = pd.Series([1, 0, 1])
 
 
-def _get_args_kwargs(orig, name):
+def _get_init_params(orig, name):
     args = []
     kwargs = {}
 
@@ -100,20 +100,20 @@ def _get_args_kwargs(orig, name):
     if orig == 'cluster' and name == 'KMeans':
         kwargs = {'n_clusters': 3, 'random_state': 1}
 
-    return args, kwargs
+    return kwargs
 
 
 def _get_estimator_extras(orig, name, est):
-    args, kwargs = _get_args_kwargs(orig, name)
+    kwargs = _get_init_params(orig, name)
 
-    orig_attrs = set(dir(est(*args, **kwargs)))
+    orig_attrs = set(dir(est(**kwargs)))
     try:
-        final_attrs = set(dir(est(*args, **kwargs).fit(_X, _y)))
+        final_attrs = set(dir(est(**kwargs).fit(_X, _y)))
     except TypeError:
         try:
-            final_attrs = set(dir(est(*args, **kwargs).fit(_X)))
+            final_attrs = set(dir(est(**kwargs).fit(_X)))
         except ValueError:
-            final_attrs = set(dir(est(*args, **kwargs).fit(_y)))
+            final_attrs = set(dir(est(**kwargs).fit(_y)))
     final_attrs = final_attrs.union(orig_attrs)
     final_attrs = [a for a in final_attrs if not a.startswith('_')]
     final_attrs = [a for a in final_attrs if not a.startswith('n_')]
@@ -126,13 +126,17 @@ def _get_estimator_extras(orig, name, est):
 
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
         from . import _feature_selection
-        methods['transform'] = _feature_selection.transform
-        methods['fit_transform'] = _feature_selection.fit_transform
+        methods['transform'] = (_feature_selection.transform,
+            '')
+        methods['fit_transform'] = (_feature_selection.fit_transform,
+            '')
 
     if is_clusterer:
         from . import _cluster
-        methods['transform'] = _cluster.transform
-        methods['fit_transform'] = _cluster.fit_transform
+        methods['transform'] = (_cluster.transform,
+            '')
+        methods['fit_transform'] = (_cluster.fit_transform,
+            '')
 
     if 'intercept_' in final_attrs:
         from . import _classification_coef_intercept
@@ -200,7 +204,7 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
-        # _traceback.print_exc()
+        _traceback.print_exc()
         _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
@@ -211,7 +215,7 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        # _traceback.print_exc()
+        _traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')

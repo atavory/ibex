@@ -280,7 +280,7 @@ def _make_adapter(
             ret = self.__adapter_process_wrapped_call_res(inv, X, res)
 
             if name in extra_methods:
-                ret = extra_methods[name](self, ret)
+                ret = extra_methods[name][0](self, ret)
 
             return ret
 

@@ -101,6 +101,10 @@ def update_module(module):
     for est in get_matching_estimators(module, base.BaseEstimator):
         est = frame_ex(
             getattr(orig, est.__name__),
-            extra_methods={'transform': transform, 'fit_transform': fit_transform},
+            extra_methods={
+                'transform': (transform,
+                    ''),
+                'fit_transform': (fit_transform,
+                    '')},
             extra_attribs={'components_': components_})
         setattr(module, est.__name__, est)
