@@ -7,6 +7,8 @@ from glob import glob
 import doctest
 import json
 import pickle
+import inspect
+import tempfile
 
 import six
 import pandas as pd
@@ -59,6 +61,9 @@ import tensorflow
 from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
 from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
 from ibex import *
+
+
+_tmp_dir = tempfile.mkdtemp()
 
 
 def _build_regressor_nn():
@@ -1037,10 +1042,8 @@ def load_tests(loader, tests, ignore):
             continue
         tests.addTests(doctest.DocTestSuite(mod, optionflags=doctest_flags))
 
-    # Tmp Ami - use os.walk or something instead of this mess.
-
-    for f_name in glob(os.path.join(_this_dir, '../ibex/sklearn/*.py')):
-        tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
+    f_name = os.path.join(_this_dir, '../ibex/sklearn/__init__.py')
+    tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
 
     f_name = os.path.join(_this_dir, '../ibex/xgboost/__init__.py')
     tests.addTests(doctest.DocFileSuite(f_name, module_relative=False, optionflags=doctest_flags))
@@ -1050,6 +1053,10 @@ def load_tests(loader, tests, ignore):
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/source/*.rst')))
     doc_f_names += [os.path.join(_this_dir, '../README.rst')]
+    tests.addTests(
+        doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
+
+    doc_f_names = list(glob(os.path.join(_this_dir, '../docs/build/html/*.html')))
     tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
