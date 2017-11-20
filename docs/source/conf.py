@@ -29,8 +29,6 @@ import os
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinxcontrib.spelling',
-    'sphinxcontrib.fulltoc',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
@@ -40,8 +38,15 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.plantuml',
 ]
+
+if not os.getenv('IBEX_NO_SPHINXCONTRIB'):
+    extensions.extend([
+        'sphinxcontrib.spelling',
+        'sphinxcontrib.fulltoc',
+        'sphinxcontrib.plantuml',
+    ])
+
 
 spelling_word_list_filename='spelling_wordlist.txt'
 

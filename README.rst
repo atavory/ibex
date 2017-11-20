@@ -14,7 +14,7 @@ Ami Tavory, Shahar Azulay, Tali Raveh-Sadka
     :target: https://codecov.io/gh/atavory/ibex/
 
 .. image:: http://readthedocs.org/projects/ibex/badge/?version=latest 
-    :target: https://atavory.github.io/ibex/
+    :target: http://ibex.readthedocs.io/en/latest/index.html
 
 .. image:: https://img.shields.io/badge/license-BSD--3--Clause-brightgreen.svg
     :target: https://raw.githubusercontent.com/atavory/ibex/master/LICENSE.txt
@@ -32,11 +32,11 @@ This library aims for two (somewhat independent) goals:
 (You might also want to check out the excellent `pandas-sklearn <https://pypi.python.org/pypi/sklearn-pandas>`_ which has the same aims, but takes a very different 
 approach.)
 
-The full documentation at |github_pages_ibex|_ defines these matters in detail, but the library has an extremely-small `interface <https://atavory.github.io/ibex/overview.html>`_.
+The full documentation at |rtd_ibex|_ defines these matters in detail, but the library has an extremely-small `interface <https://atavory.github.io/ibex/overview.html>`_.
 
 
-.. |github_pages_ibex| image:: http://ibex.readthedocs.io/en/latest/_static/github-pages.png
-.. _github_pages_ibex: https://atavory.github.io/ibex/
+.. |rtd_ibex| image:: http://ibex.readthedocs.io/en/latest/_static/read_the_docs.png
+.. _rtd_ibex: https://atavory.github.io/ibex/
 
 
 TL;DR

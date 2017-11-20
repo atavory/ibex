@@ -12,7 +12,12 @@ from ._utils import get_matching_estimators
 
 
 def transform(self, base_ret):
-    """
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
+    return base_ret
+
+def get_transform_doc():
+    return r"""
     Example:
 
         >>> import pandas as pd
@@ -45,14 +50,16 @@ def transform(self, base_ret):
         ...
 
     """
-
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
-    return base_ret
 
 
 def fit_transform(self, base_ret):
-    """
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
+    return base_ret
+
+
+def get_fit_transform_doc():
+    return r"""
     Example:
 
         >>> import pandas as pd
@@ -85,9 +92,6 @@ def fit_transform(self, base_ret):
         ...
 
     """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
-    return base_ret
 
 
 def components_(self, base_ret):
@@ -97,17 +101,10 @@ def components_(self, base_ret):
         columns=self.x_columns)
 
 
-# Tmp Ami - get rid of this
-def update_module(module):
-    for est in get_matching_estimators(module, base.BaseEstimator):
-        est = frame_ex(
-            getattr(orig, est.__name__),
-            extra_methods={
-                'transform': (transform,
-                    ''),
-                'fit_transform': (fit_transform,
-                    '')},
-            extra_attribs={
-                'components_': (components_,
-                    '')})
-        setattr(module, est.__name__, est)
+def get_components_doc():
+    return r"""
+    Example:
+
+        >>> import pandas as pd
+        fff
+    """

@@ -127,11 +127,11 @@ def _get_estimator_extras(orig, name, est):
     if orig == 'decomposition':
         from . import _decomposition
         methods['transform'] = (_decomposition.transform,
-            '')
+            _decomposition.get_transform_doc())
         methods['fit_transform'] = (_decomposition.fit_transform,
-            '')
+            _decomposition.get_fit_transform_doc())
         attrs['components_'] = (_decomposition.components_,
-            '')
+            _decomposition.get_components_doc())
 
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
         from . import _feature_selection
@@ -168,7 +168,7 @@ def _get_estimator_extras(orig, name, est):
     if 'feature_importances_' in final_attrs:
         from . import _feature_importances
         attrs['feature_importances_'] = (_feature_importances.feature_importances_,
-            '')
+            _feature_importances.get_feature_importances_docs())
 
     return {
         'attrs': attrs,
@@ -218,7 +218,7 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
-        _traceback.print_exc()
+        #_traceback.print_exc()
         _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
@@ -229,7 +229,7 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        _traceback.print_exc()
+        #_traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')

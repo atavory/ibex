@@ -74,11 +74,13 @@ class _DocumentCommand(Command):
         f_name = 'docs/source/api.rst'
         open(f_name, 'w').write(content)
 
-        run_str = "make html"
+        run_str = 'make text'
+        subprocess.call(run_str.split(' '), cwd='docs')
+
+        run_str = 'make html'
         if not self.reduced_checks:
             run_str += ' spelling lint linkcheck'
         subprocess.check_call(run_str.split(' '), cwd='docs')
-        copy_tree('docs/build/html', '../atavory.github.io/ibex/')
 
 
 setup(

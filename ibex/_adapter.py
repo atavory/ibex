@@ -331,12 +331,12 @@ def frame_ex(
 
     attrib_docs = ''
     for name in extra_attribs:
-        if not extra_attribs[name][0].__doc__:
+        if not extra_attribs[name][1]:
             continue
 
         attrib_docs +=  \
-            '.. note::\n\n    The documentation following is of the class wrapped by this class. This class wraps the attribute ' + "``" + name + "``"
-        attrib_docs += extra_attribs[name][0].__doc__ + '\n\n'
+            '.. note::\n\n    The documentation following is of the original class wrapped by this class. This class wraps the attribute ' + "``" + name + "``.\n\n"
+        attrib_docs += extra_attribs[name][1] + '\n\n'
 
     try:
         new_doc = attrib_docs + '\n--------------\n' + textwrap.dedent(est.__doc__)

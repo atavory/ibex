@@ -5,7 +5,11 @@ import pandas as pd
 
 
 def feature_importances_(self, base_ret):
-    """
+    return pd.Series(base_ret, index=self.x_columns)
+
+
+def get_feature_importances_docs():
+    return r"""
     Example:
 
         >>> import pandas as pd
@@ -38,6 +42,5 @@ def feature_importances_(self, base_ret):
         dtype: float64
 
     """
-    return pd.Series(base_ret, index=self.x_columns)
 
 
