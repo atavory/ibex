@@ -42,6 +42,7 @@ from __future__ import absolute_import
 import sys
 import imp
 import string
+import re
 import traceback
 
 import six
@@ -55,7 +56,9 @@ from .._base import FeatureUnion as PdFeatureUnion
 __all__ = sklearn.__all__
 
 
-_sklearn_ver = int(sklearn.__version__.split('.')[1])
+_int_re = re.compile(r'(\d)+')
+_sklearn_ver = int(
+    _int_re.search(sklearn.__version__.split('.')[1]).groups()[0])
 
 
 def _replace(orig, name):

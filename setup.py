@@ -48,7 +48,7 @@ class _DocumentCommand(Command):
         for mod_name in sklearn.__all__:
             try:
                 orig = __import__('sklearn.%s' % mod_name, fromlist=[''])
-            except ModuleNotFoundError:
+            except:
                 continue
 
             sklearn_modules[mod_name] = []
