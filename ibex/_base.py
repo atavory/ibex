@@ -128,7 +128,8 @@ class FrameMixin(object):
         Steps can be added:
 
         >>> (Id() + Id()).fit(X_1).transform(X_1)
-        a  b  a  b
+      	   id_0	 id_1
+           a  b  a  b
         0  1  3  1  3
         1  2  4  2  4
         2  3  5  3  5
@@ -268,7 +269,7 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
         >>> trn = pd_pipeline.FeatureUnion([
         ...     ('std', pd_preprocessing.StandardScaler()),
         ...     ('asb', pd_preprocessing.MaxAbsScaler())])
-        >>> trn.fit_transform(X, *args, **kwargs)
+        >>> trn.fit_transform(r)
                 a         b         a    b
         0 -1.224745  1.192166  0.333333  1.0
         1  0.000000 -1.254912  0.666667 -0.3
@@ -277,7 +278,8 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
         >>> from ibex import trans
         >>>
         >>> trn = pd_preprocessing.StandardScaler() + pd_preprocessing.MaxAbsScaler()
-        >>> trn.fit_transform(X, *args, **kwargs)
+        >>> trn.fit_transform(X)
+              standardscaler           maxabsscaler
                 a         b         a    b
         0 -1.224745  1.192166  0.333333  1.0
         1  0.000000 -1.254912  0.666667 -0.3
@@ -285,7 +287,8 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
 
         >>> trn = trans(pd_preprocessing.StandardScaler(), out_cols=['std_scale_a', 'std_scale_b'])
         >>> trn += trans(pd_preprocessing.MaxAbsScaler(), out_cols=['max_scale_a', 'max_scale_b'])
-        >>> trn.fit_transform(X, *args, **kwargs)
+        >>> trn.fit_transform(X)
+        functiontransformer_0             functiontransformer_1
         std_scale_a  std_scale_b  max_scale_a  max_scale_b
         0    -1.224745     1.192166     0.333333          1.0
         1     0.000000    -1.254912     0.666667         -0.3
