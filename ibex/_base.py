@@ -268,8 +268,9 @@ class FeatureUnion(pipeline.FeatureUnion, base.TransformerMixin, FrameMixin):
 
         >>> trn = pd_pipeline.FeatureUnion([
         ...     ('std', pd_preprocessing.StandardScaler()),
-        ...     ('asb', pd_preprocessing.MaxAbsScaler())])
-        >>> trn.fit_transform(r)
+        ...     ('abs', pd_preprocessing.MaxAbsScaler())])
+        >>> trn.fit_transform(X)
+              std                 abs
                 a         b         a    b
         0 -1.224745  1.192166  0.333333  1.0
         1  0.000000 -1.254912  0.666667 -0.3

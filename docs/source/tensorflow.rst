@@ -93,7 +93,7 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
         Then 
 
         >>> prd.fit(iris[features].values, iris['class'].values)
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        <tensorflow...History object at ...>
 
         This differs from the usual convention in :mod:`sklearn`:
 
@@ -113,7 +113,7 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
         >>> prd.fit(iris[features], iris['class'])
         Adapter[KerasRegressor](...build_fn=<function build_regressor_nn at ...)
         >>> prd.history_
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        <tensorflow...History object at ...>
         >>> prd.fit(iris[features], iris['class']).predict(iris[features])
         0      ...
         1      ...

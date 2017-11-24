@@ -1057,7 +1057,6 @@ def load_tests(loader, tests, ignore):
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
     doc_f_names = list(glob(os.path.join(_this_dir, '../docs/build/text/*.txt')))
-    print(doc_f_names)
     tests.addTests(
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 

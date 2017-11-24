@@ -96,7 +96,7 @@ class KerasClassifier(KerasEstimator, base.ClassifierMixin):
         >>> clf.fit(iris[features], iris['class'])
         Adapter[KerasClassifier](...classes=[ 0.  1.  2.]...)
         >>> clf.history_
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        <tensorflow...History object at ...>
         >>> clf.fit(iris[features], iris['class']).predict(iris[features])
         0      ...
         1      ...
@@ -207,7 +207,7 @@ class KerasRegressor(KerasEstimator, base.RegressorMixin):
         >>> prd.fit(iris[features], iris['class'])
         Adapter[KerasRegressor](...build_fn=<function build_regressor_nn at ...)
         >>> prd.history_
-        <tensorflow.contrib.keras.python.keras.callbacks.History object at ...>
+        <tensorflow...History object at ...>
         >>> prd.fit(iris[features], iris['class']).predict(iris[features])
         0      ...
         1      ...

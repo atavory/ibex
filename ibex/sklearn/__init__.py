@@ -56,7 +56,7 @@ from .._base import FeatureUnion as PdFeatureUnion
 __all__ = sklearn.__all__
 
 
-_int_re = re.compile(r'(\d)+')
+_int_re = re.compile(r'(\d+)')
 _sklearn_ver = int(
     _int_re.search(sklearn.__version__.split('.')[1]).groups()[0])
 
