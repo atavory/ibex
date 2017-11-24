@@ -250,6 +250,9 @@ class _NewModuleLoader(object):
     def load_module(self, full_name):
         orig = full_name.split('.')[-1]
 
+        if orig not in sklearn.__all__:
+            raise ImportError('%s not in sklearn' % orig)
+
         mod = sys.modules.setdefault(full_name, imp.new_module(full_name))
         mod.__file__ = ''
         mod.__name__ = full_name
