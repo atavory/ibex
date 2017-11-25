@@ -5,6 +5,7 @@ import inspect
 import types
 import re
 import sys
+import string
 import textwrap
 
 import six
@@ -279,7 +280,7 @@ def _make_adapter(
 
             ret = self.__adapter_process_wrapped_call_res(inv, X, res)
 
-            if name in extra_methods:
+            if name in extra_methods and extra_methods[name][0]:
                 ret = extra_methods[name][0](self, ret)
 
             return ret

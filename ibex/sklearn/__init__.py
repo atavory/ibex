@@ -51,6 +51,7 @@ import pandas as pd
 
 from .._base import Pipeline as PdPipeline
 from .._base import FeatureUnion as PdFeatureUnion
+from .._base import _get_fit_doc
 
 
 __all__ = sklearn.__all__
@@ -134,6 +135,10 @@ def _get_estimator_extras(orig, name, est):
     is_classifier = issubclass(est, sklearn.base.ClassifierMixin)
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
+
+    methods['fit'] = (None,
+        _get_fit_doc(
+            orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     if orig == 'decomposition':
         from . import _decomposition

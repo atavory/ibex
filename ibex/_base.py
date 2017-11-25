@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 
+import string
 import collections
 import functools
 import itertools
@@ -84,6 +85,66 @@ def _get_iris_example_doc_preamble_(
         ...
 
     """
+
+    # Tmp Ami
+    return ''
+
+
+def _get_fit_doc(
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        has_dataframe_y):
+
+    doc = _get_iris_example_doc_preamble_(
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        indent=0) + \
+    string.Template(
+    r"""
+    Example:
+
+        >>> from ibex.sklearn import $orig as pd_$orig
+        >>>
+        >>> prd =  pd_$orig.$name.().fit(iris[features], iris['class'])
+
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
+
+
+    if has_dataframe_y:
+        doc += string.Template(
+    r"""
+
+
+    Example:
+
+        >>> from ibex.sklearn.
+        >>> prd =  PdLogisticRegression().fit(iris[features], iris['class'])
+
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
 
 
 # Tmp Ami - uts, docs

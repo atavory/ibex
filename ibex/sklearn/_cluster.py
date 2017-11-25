@@ -9,7 +9,6 @@ from sklearn import base
 from sklearn import feature_selection as orig
 
 from .._adapter import frame_ex
-from ._utils import get_matching_estimators
 
 
 def transform(self, base_ret):
