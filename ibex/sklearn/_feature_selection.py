@@ -9,6 +9,13 @@ from sklearn import base
 
 
 def transform(self, base_ret):
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
+
+
+def get_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
     """
     Example:
 
@@ -42,12 +49,17 @@ def transform(self, base_ret):
         ...
 
     """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = self.x_columns[self.get_support(indices=True)]
-    return base_ret
 
 
 def fit_transform(self, base_ret):
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = self.x_columns[self.get_support(indices=True)]
+    return base_ret
+
+
+
+def get_fit_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
     """
     Example:
 
@@ -81,8 +93,4 @@ def fit_transform(self, base_ret):
         ...
 
     """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = self.x_columns[self.get_support(indices=True)]
-    return base_ret
-
 

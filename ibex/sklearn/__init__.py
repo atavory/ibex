@@ -78,6 +78,7 @@ def _replace(orig, name):
             from .._function_transformer import FunctionTransformer as PdFunctionTransformer
             return PdFunctionTransformer
 
+
 def _add(orig):
     if orig == 'pipeline':
         from . import _pipeline
@@ -130,48 +131,60 @@ def _get_estimator_extras(orig, name, est):
     if orig == 'decomposition':
         from . import _decomposition
         methods['transform'] = (_decomposition.transform,
-            _decomposition.get_transform_doc())
+            _decomposition.get_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         methods['fit_transform'] = (_decomposition.fit_transform,
-            _decomposition.get_fit_transform_doc())
+            _decomposition.get_fit_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         attrs['components_'] = (_decomposition.components_,
-            _decomposition.get_components_doc())
+            _decomposition.get_components_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
 
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
         from . import _feature_selection
         methods['transform'] = (_feature_selection.transform,
-            '')
+            _feature_selection.get_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         methods['fit_transform'] = (_feature_selection.fit_transform,
-            '')
+            _feature_selection.get_fit_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
 
     if is_clusterer:
         from . import _cluster
         methods['transform'] = (_cluster.transform,
-            '')
+            _cluster.get_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         methods['fit_transform'] = (_cluster.fit_transform,
-            '')
+            _cluster.get_fit_transform_doc(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
 
     if 'intercept_' in final_attrs:
-        from . import _classification_coef_intercept
-        from . import _regression_coef_intercept
         if is_classifier:
+            from . import _classification_coef_intercept
             attrs['intercept_'] = (_classification_coef_intercept.intercept_,
-                '')
+                _classification_coef_intercept.get_intercept_doc(
+                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         else:
+            from . import _regression_coef_intercept
             attrs['intercept_'] = (_regression_coef_intercept.intercept_,
-                '')
+                _regression_coef_intercept.get_intercept_doc(
+                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
     if 'coef_' in final_attrs:
-        from . import _classification_coef_intercept
-        from . import _regression_coef_intercept
         if is_classifier:
+            from . import _classification_coef_intercept
             attrs['coef_'] = (_classification_coef_intercept.coef_,
-                '')
+                _classification_coef_intercept.get_coef_doc(
+                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
         else:
+            from . import _regression_coef_intercept
             attrs['coef_'] = (_regression_coef_intercept.coef_,
-                '')
+                _regression_coef_intercept.get_coef_doc(
+                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
     if 'feature_importances_' in final_attrs:
         from . import _feature_importances
         attrs['feature_importances_'] = (_feature_importances.feature_importances_,
-            _feature_importances.get_feature_importances_docs())
+            _feature_importances.get_feature_importances_docs(
+                orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
 
     return {
         'attrs': attrs,
@@ -221,7 +234,7 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
-        #_traceback.print_exc()
+        # _traceback.print_exc()
         _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
@@ -232,7 +245,7 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        #_traceback.print_exc()
+        # _traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')

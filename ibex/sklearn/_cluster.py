@@ -13,7 +13,16 @@ from ._utils import get_matching_estimators
 
 
 def transform(self, base_ret):
-    """
+
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = list(range(len(base_ret.columns)))
+    return base_ret
+
+
+def get_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+
+    return r"""
     Example:
 
         >>> import pandas as pd
@@ -47,13 +56,17 @@ def transform(self, base_ret):
         ...
 
     """
-
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = list(range(len(base_ret.columns)))
-    return base_ret
 
 
 def fit_transform(self, base_ret):
+    if isinstance(base_ret, pd.DataFrame):
+        base_ret.columns = list(range(len(base_ret.columns)))
+    return base_ret
+
+
+def get_fit_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+
     """
     Example:
 
@@ -88,6 +101,3 @@ def fit_transform(self, base_ret):
         ...
 
     """
-    if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = list(range(len(base_ret.columns)))
-    return base_ret

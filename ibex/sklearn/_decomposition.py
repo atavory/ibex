@@ -16,7 +16,10 @@ def transform(self, base_ret):
         base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
     return base_ret
 
-def get_transform_doc():
+
+def get_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+
     return r"""
     Example:
 
@@ -58,7 +61,8 @@ def fit_transform(self, base_ret):
     return base_ret
 
 
-def get_fit_transform_doc():
+def get_fit_transform_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
     return r"""
     Example:
 
@@ -101,7 +105,8 @@ def components_(self, base_ret):
         columns=self.x_columns)
 
 
-def get_components_doc():
+def get_components_doc(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
     return r"""
     Example:
 

@@ -8,7 +8,8 @@ def feature_importances_(self, base_ret):
     return pd.Series(base_ret, index=self.x_columns)
 
 
-def get_feature_importances_docs():
+def get_feature_importances_docs(
+        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
     return r"""
     Example:
 
