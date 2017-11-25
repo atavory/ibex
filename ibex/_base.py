@@ -22,6 +22,69 @@ from ._utils import verify_x_type, verify_y_type
 __all__ = []
 
 
+def _get_iris_example_doc_preamble_(
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        indent):
+
+    if is_classifier:
+        return  """
+    Example:
+
+        >>> import numpy as np
+        >>> from sklearn import datasets
+        >>> import pandas as pd
+        >>>
+        >>> iris = datasets.load_iris()
+        >>> features, targets, iris = iris['feature_names'], iris['target_names'], pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=iris['feature_names']+['class'])
+        >>> iris['class'] = iris['class'].map(pd.Series(targets))
+        >>>
+        >>> iris.head()
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        <BLANKLINE>
+        class
+        0  setosa
+        1  setosa
+        2  setosa
+        3  setosa
+        4  setosa
+        """
+
+    if is_regressor:
+        return """
+    Example:
+
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> from ibex.sklearn import datasets
+        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
+
+        >>> iris = datasets.load_iris()
+        >>> features = iris['feature_names']
+        >>> iris = pd.DataFrame(
+        ...     np.c_[iris['data'], iris['target']],
+        ...     columns=features+['class'])
+
+        >>> iris[features]
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        ...
+
+    """
+
+
 # Tmp Ami - uts, docs
 def _make_pipeline_steps(objs):
     names = [type(o).__name__.lower() for o in objs]

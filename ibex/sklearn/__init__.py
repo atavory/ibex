@@ -124,6 +124,7 @@ def _get_estimator_extras(orig, name, est):
     attrs = {}
     methods = {}
 
+    is_regressor = issubclass(est, sklearn.base.RegressorMixin)
     is_classifier = issubclass(est, sklearn.base.ClassifierMixin)
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
@@ -163,23 +164,23 @@ def _get_estimator_extras(orig, name, est):
             from . import _classification_coef_intercept
             attrs['intercept_'] = (_classification_coef_intercept.intercept_,
                 _classification_coef_intercept.get_intercept_doc(
-                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
+                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer))
         else:
             from . import _regression_coef_intercept
             attrs['intercept_'] = (_regression_coef_intercept.intercept_,
                 _regression_coef_intercept.get_intercept_doc(
-                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
+                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer))
     if 'coef_' in final_attrs:
         if is_classifier:
             from . import _classification_coef_intercept
             attrs['coef_'] = (_classification_coef_intercept.coef_,
                 _classification_coef_intercept.get_coef_doc(
-                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
+                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer))
         else:
             from . import _regression_coef_intercept
             attrs['coef_'] = (_regression_coef_intercept.coef_,
                 _regression_coef_intercept.get_coef_doc(
-                    orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer))
+                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer))
     if 'feature_importances_' in final_attrs:
         from . import _feature_importances
         attrs['feature_importances_'] = (_feature_importances.feature_importances_,
@@ -203,6 +204,7 @@ from __future__ import absolute_import as _absolute_import
 import traceback as _traceback
 import inspect as _inspect
 import sys as _sys
+import os as _os
 
 import sklearn as _sklearn
 from sklearn import $mod_name as _orig
@@ -234,7 +236,8 @@ for name in _orig_all:
         extra_attribs = extras['attrs']
         extra_methods = extras['methods']
     except:
-        # _traceback.print_exc()
+        if _os.getenv('IBEX_TEST_LEVEL'):
+            _traceback.print_exc()
         _sys.stderr.write(str(est))
         extra_attribs = {}
         extra_methods = {}
@@ -245,7 +248,8 @@ for name in _orig_all:
             extra_attribs=extra_attribs,
             extra_methods=extra_methods)
     except TypeError as e:
-        # _traceback.print_exc()
+        if _os.getenv('IBEX_TEST_LEVEL'):
+            _traceback.print_exc()
         globals()[name] = est
 
 _add = ibex.sklearn._add('$mod_name')

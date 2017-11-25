@@ -1,7 +1,11 @@
 from __future__ import absolute_import
 
 
+import string
+
 import pandas as pd
+
+from .._base import _get_iris_example_doc_preamble_ as _get_iris_example_doc_preamble_
 
 
 def coef_(self, base_ret):
@@ -16,29 +20,24 @@ def coef_(self, base_ret):
 
 
 def get_coef_doc(
-        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
-    return r"""
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer):
+    return _get_iris_example_doc_preamble_(
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        indent=0) + \
+    string.Template(
+    r"""
     Example:
 
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
         >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
 
         >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
         >>>
@@ -48,9 +47,6 @@ def get_coef_doc(
         petal length (cm)    0.227001
         petal width (cm)     0.609894
         dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
 
     Example:
 
@@ -68,7 +64,15 @@ def get_coef_doc(
         2   -1.214715
         dtype: float64
 
-    """
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
 
 
 def intercept_(self, base_ret):
@@ -83,7 +87,14 @@ def intercept_(self, base_ret):
 
 
 def get_intercept_doc(
-        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer):
     """
     Example:
 
