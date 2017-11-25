@@ -37,14 +37,15 @@ Module Doc
 ``calibration``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.calibration
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.calibration._SigmoidCalibration`
@@ -67,14 +68,15 @@ Members
 ``cross_validation``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.cross_validation
 
+
 Members
 ******************************************
-
 
 
 
@@ -83,14 +85,15 @@ Members
 ``discriminant_analysis``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.discriminant_analysis
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.discriminant_analysis.BaseEstimator`
@@ -107,14 +110,15 @@ Members
 ``dummy``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.dummy
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.dummy.BaseEstimator`
@@ -129,14 +133,15 @@ Members
 ``exceptions``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.exceptions
 
+
 Members
 ******************************************
-
 
 
 
@@ -145,14 +150,15 @@ Members
 ``externals``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.externals
 
+
 Members
 ******************************************
-
 
 
 
@@ -161,14 +167,15 @@ Members
 ``grid_search``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.grid_search
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.grid_search.BaseEstimator`
@@ -185,14 +192,15 @@ Members
 ``isotonic``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.isotonic
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.isotonic.BaseEstimator`
@@ -205,14 +213,15 @@ Members
 ``kernel_approximation``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.kernel_approximation
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.kernel_approximation.AdditiveChi2Sampler`
@@ -231,14 +240,15 @@ Members
 ``kernel_ridge``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.kernel_ridge
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.kernel_ridge.BaseEstimator`
@@ -251,14 +261,15 @@ Members
 ``learning_curve``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.learning_curve
 
+
 Members
 ******************************************
-
 
 
 
@@ -267,14 +278,15 @@ Members
 ``multiclass``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.multiclass
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.multiclass._ConstantPredictor`
@@ -295,14 +307,15 @@ Members
 ``multioutput``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.multioutput
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.multioutput.BaseEstimator`
@@ -321,14 +334,15 @@ Members
 ``naive_bayes``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.naive_bayes
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.naive_bayes.BaseDiscreteNB`
@@ -351,14 +365,15 @@ Members
 ``pipeline``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.pipeline
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.pipeline._BaseComposition`
@@ -373,14 +388,15 @@ Members
 ``random_projection``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.random_projection
 
+
 Members
 ******************************************
-
 
 
 * :class:`ibex.sklearn.random_projection.BaseEstimator`
@@ -393,99 +409,6 @@ Members
 
 
 
-
-
-`cluster``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.cluster
-
-
-`decomposition``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.decomposition
-
-
-otable Members
-*****************************************
-
- :class:`ibex.sklearn.decomposition.NMF`
-
-
-`feature_selection``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.feature_selection
-
-
-`linear_model``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.linear_model
-
-
-`model_selection``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.model_selection
-
-
-otable Members
-*****************************************
-
- :func:`ibex.sklearn.model_selection.cross_val_predict`
-
-
-`pipeline``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.pipeline
-
-
-otable Members
-*****************************************
-
- :func:`ibex.sklearn.pipeline.make_union`
-
- :class:`ibex.sklearn.pipeline.FeatureUnion`
-
-
-`preprocessing``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.preprocessing
-
-otable Members
-*****************************************
-
- :class:`ibex.sklearn.preprocessing.FunctionTransformer`
 
 
 

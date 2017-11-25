@@ -5,6 +5,8 @@ import subprocess
 
 
 _python = 'python' + '.'.join((str(n) for n in sys.version_info[: 2]))
+for _ in range(30):
+    print(_python)
 
 
 class _TestCommand(Command):
@@ -46,9 +48,15 @@ class _DocumentCommand(Command):
 
         sklearn_modules =  {}
         for mod_name in sklearn.__all__:
+            if mod_name.startswith('_'):
+                continue
+
             try:
                 orig = __import__('sklearn.%s' % mod_name, fromlist=[''])
             except:
+                for _ in range(20):
+                    print('failed to import %s' % orig)
+                # Tmp Ami
                 continue
 
             sklearn_modules[mod_name] = []

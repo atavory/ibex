@@ -18,7 +18,15 @@ def transform(self, base_ret):
 
 
 def get_transform_doc(
-        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        has_dataframe_y):
 
     return r"""
     Example:
@@ -62,7 +70,15 @@ def fit_transform(self, base_ret):
 
 
 def get_fit_transform_doc(
-        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        has_dataframe_y):
     return r"""
     Example:
 
@@ -106,7 +122,15 @@ def components_(self, base_ret):
 
 
 def get_components_doc(
-        orig, name, est, kwargs, is_classifier, is_transformer, is_clusterer):
+        orig,
+        name,
+        est,
+        kwargs,
+        is_regressor,
+        is_classifier,
+        is_transformer,
+        is_clusterer,
+        has_dataframe_y):
     return r"""
     Example:
 

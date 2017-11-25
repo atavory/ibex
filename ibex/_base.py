@@ -23,6 +23,7 @@ __all__ = []
 
 
 def _get_iris_example_doc_preamble_(
+        is_regressor,
         is_classifier,
         is_transformer,
         is_clusterer,

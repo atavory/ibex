@@ -37,113 +37,21 @@ Module Doc
 ``{{ module }}``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 Module Doc
 ******************************************
 
 .. automodule:: ibex.sklearn.{{ module }}
 
+
 Members
 ******************************************
-
 
 {% for class in classes|sort %}
 * :class:`{{ class }}`
 {% endfor %}
 
 {% endfor %}
-
-
-`cluster``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.cluster
-
-
-`decomposition``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.decomposition
-
-
-otable Members
-*****************************************
-
- :class:`ibex.sklearn.decomposition.NMF`
-
-
-`feature_selection``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.feature_selection
-
-
-`linear_model``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.linear_model
-
-
-`model_selection``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.model_selection
-
-
-otable Members
-*****************************************
-
- :func:`ibex.sklearn.model_selection.cross_val_predict`
-
-
-`pipeline``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.pipeline
-
-
-otable Members
-*****************************************
-
- :func:`ibex.sklearn.pipeline.make_union`
-
- :class:`ibex.sklearn.pipeline.FeatureUnion`
-
-
-`preprocessing``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-odule Doc
-*****************************************
-
-. automodule:: ibex.sklearn.preprocessing
-
-otable Members
-*****************************************
-
- :class:`ibex.sklearn.preprocessing.FunctionTransformer`
 
 
 
