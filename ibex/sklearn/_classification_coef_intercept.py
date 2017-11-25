@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 
 
+import string
+
 import pandas as pd
 
 from .._base import _get_iris_example_doc_preamble_ as _get_iris_example_doc_preamble_
@@ -27,64 +29,63 @@ def get_coef_doc(
         is_transformer,
         is_clusterer,
         has_dataframe_y):
-    return _get_iris_example_doc_preamble_(
+
+    doc = _get_iris_example_doc_preamble_(
         is_regressor,
         is_classifier,
         is_transformer,
         is_clusterer,
         indent=0) + \
+    string.Template(
     r"""
     Example:
 
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> from ibex.sklearn import datasets
-        >>> from ibex.sklearn.linear_model import LinearRegression as PdLinearRegression
-
-        >>> iris = datasets.load_iris()
-        >>> features = iris['feature_names']
-        >>> iris = pd.DataFrame(
-        ...     np.c_[iris['data'], iris['target']],
-        ...     columns=features+['class'])
-
-        >>> iris[features]
-        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0                5.1               3.5                1.4               0.2
-        1                4.9               3.0                1.4               0.2
-        2                4.7               3.2                1.3               0.2
-        3                4.6               3.1                1.5               0.2
-        4                5.0               3.6                1.4               0.2
-        ...
-
-        >>> prd =  PdLinearRegression().fit(iris[features], iris['class'])
+        >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
+        >>> clf =  pd_$orig.$name.().fit(iris[features], iris['class'])
+        >>>
+        >>> clf.coef_
+        sepal length (cm)   ...
+        sepal width (cm)    ...
+        petal length (cm)   ...
+        petal width (cm)    ...
         dtype: float64
-        >>>
-        >>> prd.intercept_
-        0.19208...
+
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
+
+
+    if has_dataframe_y:
+        doc += string.Template(
+    r"""
+
 
     Example:
 
-        >>> from ibex.sklearn.linear_model import LogisticRegression as PdLogisticRegression
-
+        >>> from ibex.sklearn.
         >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
         >>> clf.coef_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
         0...           0.414988          1.461297          -2.262141         -1.029095
         1...           0.416640         -1.600833           0.577658         -1.385538
         2...          -1.707525         -1.534268           2.470972          2.555382
-        >>> clf.intercept_
-        0    0.265606
-        1    1.085424
-        2   -1.214715
-        dtype: float64
 
-    """
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
 
 
 def intercept_(self, base_ret):
@@ -109,36 +110,61 @@ def get_intercept_doc(
         is_transformer,
         is_clusterer,
         has_dataframe_y):
-    return _get_iris_example_doc_preamble_(
+
+    doc = _get_iris_example_doc_preamble_(
         is_regressor,
         is_classifier,
         is_transformer,
         is_clusterer,
         indent=0) + \
+    string.Template(
     r"""
     Example:
 
-        >>> from ibex.sklearn import $mod_name as pd_$mod_name
+        >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> clf =  pd_$mod_name.$name().fit(iris[features], iris['class'])
+        >>> clf =  pd_$orig.$name.().fit(iris[features], iris['class'])
         >>>
-        >>> prd.coef_
-        sepal length (cm)   -0.109741
-        sepal width (cm)    -0.044240
-        petal length (cm)    0.227001
-        petal width (cm)     0.609894
+        >>> clf.intercept_
+        sepal length (cm)   ...
+        sepal width (cm)    ...
+        petal length (cm)   ...
+        petal width (cm)    ...
         dtype: float64
+
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
+
+
+    if has_dataframe_y:
+        doc += string.Template(
+    r"""
+
 
     Example:
 
-        >>> from ibex.sklearn import $mod_name as pd_$mod_name
-        >>>
-        >>> clf =  pd_$mod_name.$name().fit(iris[features], iris['class'])
-        >>> clf.coef_
+        >>> from ibex.sklearn.
+        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>> clf.intercept_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
         0...           0.414988          1.461297          -2.262141         -1.029095
         1...           0.416640         -1.600833           0.577658         -1.385538
         2...          -1.707525         -1.534268           2.470972          2.555382
 
-    """
+    """).substitute({
+        'orig': orig,
+        'name': name,
+        'est': est,
+        'kwargs': kwargs,
+        'is_regressor': is_regressor,
+        'is_classifier': is_classifier,
+        'is_transformer': is_transformer,
+        'is_clusterer': is_clusterer})
 
