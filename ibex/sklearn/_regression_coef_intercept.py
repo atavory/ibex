@@ -36,7 +36,7 @@ def get_coef_doc(
         is_transformer,
         is_clusterer,
         indent=0) + \
-    return string.Template(
+    string.Template(
     r"""
     Example:
 
@@ -66,7 +66,6 @@ def get_coef_doc(
         doc += string.Template(
     r"""
 
-
     Example:
 
         >>> from ibex.sklearn.
@@ -86,6 +85,8 @@ def get_coef_doc(
         'is_classifier': is_classifier,
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
+
+    return doc
 
 
 def intercept_(self, base_ret):
