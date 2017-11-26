@@ -124,8 +124,8 @@ def get_intercept_doc(
         >>> prd = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
         >>>
         >>> #scalar intercept
-        >>> prd.intercept_
-        ...
+        >>> type(prd.intercept_)
+        <class 'numpy.float64'>
 
     """).substitute({
         'orig': orig,
