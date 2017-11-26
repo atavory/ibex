@@ -36,7 +36,7 @@ def get_coef_doc(
         is_transformer,
         is_clusterer,
         indent=0) + \
-    string.Template(
+    return string.Template(
     r"""
     Example:
 
@@ -167,3 +167,4 @@ def get_intercept_doc(
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
 
+    return doc

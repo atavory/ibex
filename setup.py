@@ -5,8 +5,6 @@ import subprocess
 
 
 _python = 'python' + '.'.join((str(n) for n in sys.version_info[: 2]))
-for _ in range(30):
-    print(_python)
 
 
 class _TestCommand(Command):

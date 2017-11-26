@@ -61,7 +61,6 @@ def get_coef_doc(
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
 
-
     if has_dataframe_y:
         doc += string.Template(
     r"""
@@ -86,6 +85,8 @@ def get_coef_doc(
         'is_classifier': is_classifier,
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
+
+    return doc
 
 
 def intercept_(self, base_ret):
@@ -147,7 +148,6 @@ def get_intercept_doc(
         doc += string.Template(
     r"""
 
-
     Example:
 
         >>> from ibex.sklearn.
@@ -168,3 +168,4 @@ def get_intercept_doc(
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
 
+    return doc
