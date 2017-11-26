@@ -46,20 +46,20 @@ def _get_iris_example_doc_preamble_(
         >>>
         >>> iris.head()
 
-		sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
-		0                5.1               3.5                1.4               0.2
-		1                4.9               3.0                1.4               0.2
-		2                4.7               3.2                1.3               0.2
-		3                4.6               3.1                1.5               0.2
-		4                5.0               3.6                1.4               0.2
-		<BLANKLINE>
-			class
-		0  setosa
-		1  setosa
-		2  setosa
-		3  setosa
-		4  setosa
-		"""
+        sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
+        0                5.1               3.5                1.4               0.2
+        1                4.9               3.0                1.4               0.2
+        2                4.7               3.2                1.3               0.2
+        3                4.6               3.1                1.5               0.2
+        4                5.0               3.6                1.4               0.2
+        <BLANKLINE>
+            class
+        0  setosa
+        1  setosa
+        2  setosa
+        3  setosa
+        4  setosa
+        """
 
     if is_regressor:
         return """
@@ -113,7 +113,7 @@ def _get_fit_doc(
         >>>
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> prd =  pd_$orig.$name.().fit(iris[features], iris['class'])
+        >>> prd =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
 
     """).substitute({
         'orig': orig,
@@ -133,8 +133,9 @@ def _get_fit_doc(
 
     Example:
 
-        >>> from ibex.sklearn.
-        >>> prd =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>> from ibex.sklearn import $orig as pd_$orig
+        >>>
+        >>> prd =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
 
     """).substitute({
         'orig': orig,
@@ -145,6 +146,8 @@ def _get_fit_doc(
         'is_classifier': is_classifier,
         'is_transformer': is_transformer,
         'is_clusterer': is_clusterer})
+
+    return doc
 
 
 # Tmp Ami - uts, docs
@@ -253,7 +256,7 @@ class FrameMixin(object):
         Steps can be added:
 
         >>> (Id() + Id()).fit(X_1).transform(X_1)
-      	   id_0	 id_1
+             id_0     id_1
            a  b  a  b
         0  1  3  1  3
         1  2  4  2  4
