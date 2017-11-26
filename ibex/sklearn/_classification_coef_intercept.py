@@ -38,11 +38,10 @@ def get_coef_doc(
         indent=0) + \
     string.Template(
     r"""
-    Example:
-
+        >>>
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> clf =  pd_$orig.$name.().fit(iris[features], iris['class'])
+        >>> clf =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
         >>>
         >>> clf.coef_
         sepal length (cm)   ...
@@ -68,13 +67,15 @@ def get_coef_doc(
 
     Example:
 
-        >>> from ibex.sklearn.
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>> from ibex.sklearn import $orig as pd_$orig
+        >>>
+        >>> clf =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
+        >>>
         >>> clf.coef_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
+        0...
+        1...
+        2...
 
     """).substitute({
         'orig': orig,
@@ -120,11 +121,9 @@ def get_intercept_doc(
         indent=0) + \
     string.Template(
     r"""
-    Example:
-
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> clf =  pd_$orig.$name.().fit(iris[features], iris['class'])
+        >>> clf =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
         >>>
         >>> clf.intercept_
         sepal length (cm)   ...
@@ -147,16 +146,19 @@ def get_intercept_doc(
     if has_dataframe_y:
         doc += string.Template(
     r"""
-
     Example:
 
-        >>> from ibex.sklearn.
-        >>> clf =  PdLogisticRegression().fit(iris[features], iris['class'])
+        >>>
+        >>> from ibex.sklearn import $orig as pd_$orig
+        >>>
+        >>> clf = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
+        >>> clf = fit(iris[features], iris['class'])
+        >>>
         >>> clf.intercept_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
-        0...           0.414988          1.461297          -2.262141         -1.029095
-        1...           0.416640         -1.600833           0.577658         -1.385538
-        2...          -1.707525         -1.534268           2.470972          2.555382
+        0...
+        1...
+        2...
 
     """).substitute({
         'orig': orig,

@@ -109,8 +109,7 @@ def _get_fit_doc(
         indent=0) + \
     string.Template(
     r"""
-    Example:
-
+        >>>
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
         >>> prd =  pd_$orig.$name.().fit(iris[features], iris['class'])

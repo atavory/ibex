@@ -136,67 +136,69 @@ def _get_estimator_extras(orig, name, est):
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
 
+    kw_args_str = ', '.join(kwargs)
+
     methods['fit'] = (None,
         _get_fit_doc(
-            orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+            orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     if orig == 'decomposition':
         from . import _decomposition
         methods['transform'] = (_decomposition.transform,
             _decomposition.get_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         methods['fit_transform'] = (_decomposition.fit_transform,
             _decomposition.get_fit_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         attrs['components_'] = (_decomposition.components_,
             _decomposition.get_components_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     if orig == 'feature_selection' and hasattr(est, 'get_support'):
         from . import _feature_selection
         methods['transform'] = (_feature_selection.transform,
             _feature_selection.get_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         methods['fit_transform'] = (_feature_selection.fit_transform,
             _feature_selection.get_fit_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     if is_clusterer:
         from . import _cluster
         methods['transform'] = (_cluster.transform,
             _cluster.get_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         methods['fit_transform'] = (_cluster.fit_transform,
             _cluster.get_fit_transform_doc(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     if 'intercept_' in final_attrs:
         if is_classifier:
             from . import _classification_coef_intercept
             attrs['intercept_'] = (_classification_coef_intercept.intercept_,
                 _classification_coef_intercept.get_intercept_doc(
-                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                    orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         else:
             from . import _regression_coef_intercept
             attrs['intercept_'] = (_regression_coef_intercept.intercept_,
                 _regression_coef_intercept.get_intercept_doc(
-                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                    orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
     if 'coef_' in final_attrs:
         if is_classifier:
             from . import _classification_coef_intercept
             attrs['coef_'] = (_classification_coef_intercept.coef_,
                 _classification_coef_intercept.get_coef_doc(
-                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                    orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
         else:
             from . import _regression_coef_intercept
             attrs['coef_'] = (_regression_coef_intercept.coef_,
                 _regression_coef_intercept.get_coef_doc(
-                    orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                    orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
     if 'feature_importances_' in final_attrs:
         from . import _feature_importances
         attrs['feature_importances_'] = (_feature_importances.feature_importances_,
             _feature_importances.get_feature_importances_docs(
-                orig, name, est, kwargs, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
+                orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
     return {
         'attrs': attrs,
