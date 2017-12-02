@@ -67,7 +67,7 @@ def get_coef_doc(
     Example:
 
         >>> from ibex.sklearn import $orig as pd_$orig
-        >>> prd =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
+        >>> prd =  pd_$orig.$name($kwargs).fit(iris[features], iris[['class', 'class']])
         >>>
         >>> prd.coef_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)
@@ -145,7 +145,7 @@ def get_intercept_doc(
     r"""
 
         >>> from ibex.sklearn import $orig as pd_$orig
-        >>> prd = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
+        >>> prd = pd_$orig.$name($kwargs).fit(iris[features], iris[['class', 'class']])
         >>>
         >>> prd.intercept_
         sepal length (cm)   ...

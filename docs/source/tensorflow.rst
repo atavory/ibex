@@ -124,11 +124,11 @@ Differences From :mod:`tensorflow.contrib.keras.wrappers.scikit_learn`
 3. In :mod:`ibex.tensorflow.contrib.keras.wrappers.scikit_learn`, :class:`KerasClassifier` takes a one-hot encoding of the dependent variable. For example, using the above dataset, if we have
 
         >>> iris['class'].head()
-		0    0.0
-		1    0.0
-		2    0.0
-		3    0.0
-		4    0.0
+		0    0...
+		1    0...
+		2    0...
+		3    0...
+		4    0...
 		Name: class, dtype: float64
 
         then `fit` needs to be used on something like
