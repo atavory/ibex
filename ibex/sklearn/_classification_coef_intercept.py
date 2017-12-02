@@ -71,7 +71,7 @@ def get_coef_doc(
         >>> clf =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
         >>>
         >>> clf.coef_
-                    sepal length (cm)  sepal width (cm)  petal length (cm)  \
+                    sepal length (cm)  sepal width (cm)  petal length (cm)
         setosa              ...
         versicolor          ...
         virginica           ...
@@ -126,7 +126,7 @@ def get_intercept_doc(
     r"""
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
-        >>> clf =  pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
+        >>> clf = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
         >>>
         >>> clf.intercept_
         sepal length (cm)   ...
@@ -155,7 +155,6 @@ def get_intercept_doc(
         >>> from ibex.sklearn import $orig as pd_$orig
         >>>
         >>> clf = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])
-        >>> clf = fit(iris[features], iris['class'])
         >>>
         >>> clf.intercept_
         sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)

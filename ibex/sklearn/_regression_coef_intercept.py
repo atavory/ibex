@@ -115,8 +115,10 @@ def get_intercept_doc(
         is_classifier,
         is_transformer,
         is_clusterer,
-        indent=0) + \
-    string.Template(
+        indent=0)
+
+    if not has_dataframe_y:
+        doc += string.Template(
     r"""
         >>>
         >>> from ibex.sklearn import $orig as pd_$orig
@@ -141,9 +143,6 @@ def get_intercept_doc(
     if has_dataframe_y:
         doc += string.Template(
     r"""
-
-
-    Example:
 
         >>> from ibex.sklearn import $orig as pd_$orig
         >>> prd = pd_$orig.$name($kwargs).fit(iris[features], iris['class'])

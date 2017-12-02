@@ -96,7 +96,6 @@ _y = pd.Series([1, 0, 1])
 
 
 def _get_init_params(orig, name):
-    args = []
     kwargs = {}
 
     if orig == 'feature_selection' and name == 'SelectKBest':
@@ -104,6 +103,9 @@ def _get_init_params(orig, name):
 
     if orig == 'cluster' and name == 'KMeans':
         kwargs = {'n_clusters': 3, 'random_state': 1}
+
+    if orig == 'svm' and name in ['NuSVC', 'NuSVR', 'SVC', 'SVR']:
+        kwargs = {'kernel': 'linear'}
 
     return kwargs
 
@@ -136,7 +138,9 @@ def _get_estimator_extras(orig, name, est):
     is_clusterer = issubclass(est, sklearn.base.ClusterMixin)
     is_transformer = issubclass(est, sklearn.base.TransformerMixin)
 
-    kw_args_str = ', '.join(kwargs)
+    # Tmp Ami - basestr
+    value_form = lambda v: ("'%s'" % str(v)) if isinstance(v, str) else v
+    kw_args_str = ', '.join('%s=%s' % (k, value_form(v)) for k, v in kwargs.items())
 
     methods['fit'] = (None,
         _get_fit_doc(
