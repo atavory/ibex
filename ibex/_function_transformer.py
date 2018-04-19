@@ -41,7 +41,7 @@ class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin)
 
         pass_y: Boolean indicating whether to pass the ``y`` argument to
 
-        kw_args:
+        kw_args: Keyword arguments.
 
     Returns:
 
@@ -123,7 +123,10 @@ class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin)
             else:
                 res = self.func.fit_transform(Xt)
         else:
-            res = pd.DataFrame(self.func(Xt), index=Xt.index)
+            if self.kw_args is not None:
+                res = pd.DataFrame(self.func(Xt, **self.kw_args), index=Xt.index)
+            else:
+                res = pd.DataFrame(self.func(Xt), index=Xt.index)
 
         return self.__process_res(Xt, res)
 
@@ -151,7 +154,10 @@ class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin)
             else:
                 res = self.func.transform(Xt)
         else:
-            res = pd.DataFrame(self.func(Xt), index=Xt.index)
+            if self.kw_args is not None:
+                res = pd.DataFrame(self.func(Xt, **self.kw_args), index=Xt.index)
+            else:
+                res = pd.DataFrame(self.func(Xt), index=Xt.index)
 
         return self.__process_res(Xt, res)
 
@@ -168,6 +174,3 @@ class FunctionTransformer(base.BaseEstimator, base.TransformerMixin, FrameMixin)
         res = res.copy()
         res.columns = res_cols
         return res
-
-
-

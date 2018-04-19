@@ -4,7 +4,7 @@ from setuptools import setup, Command
 import subprocess
 
 
-_python = 'python' + '.'.join((str(n) for n in sys.version_info[: 2]))
+_python = 'python%d' % sys.version_info.major
 
 
 class _TestCommand(Command):
@@ -108,7 +108,8 @@ setup(
     license='bsd',
     description='Pandas Adapters For Scikit-Learn',
     long_description=open('README.rst').read(),
-    install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
+    # Tmp Ami
+    #  install_requires=['six', 'numpy', 'scipy', 'sklearn', 'pandas'],
     zip_safe=False,
     package_data={
         'ibex': ['_metadata/*txt']

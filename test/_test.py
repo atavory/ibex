@@ -10,6 +10,10 @@ import pickle
 import inspect
 import tempfile
 
+_level = os.getenv('IBEX_TEST_LEVEL')
+_level = 1 if _level is None else int(_level)
+
+
 import six
 import pandas as pd
 import numpy as np
@@ -57,9 +61,10 @@ except (ImportError, NameError):
     from ibex.sklearn.cross_validation import cross_val_predict as pd_cross_val_predict
 from sklearn import datasets
 # Tmp Ami - xgboost?
-import tensorflow
-from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
-from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
+if _level > 0:
+    import tensorflow
+    from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasClassifier as PdKerasClassifier
+    from ibex.tensorflow.contrib.keras.wrappers.scikit_learn import KerasRegressor as PdKerasRegressor
 from ibex import *
 
 
@@ -85,19 +90,16 @@ def _build_classifier_nn():
     return model
 
 
-class KerasClassifier(tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier, base.ClassifierMixin):
-    pass
+if _level > 0:
+    class KerasClassifier(tensorflow.contrib.keras.wrappers.scikit_learn.KerasClassifier, base.ClassifierMixin):
+        pass
 
 
-class KerasRegressor(tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor, base.RegressorMixin):
-    pass
+    class KerasRegressor(tensorflow.contrib.keras.wrappers.scikit_learn.KerasRegressor, base.RegressorMixin):
+        pass
 
 
 _this_dir = os.path.dirname(__file__)
-
-
-_level = os.getenv('IBEX_TEST_LEVEL')
-_level = 1 if _level is None else int(_level)
 
 
 def _load_iris():
@@ -124,6 +126,8 @@ _iris, _features = _load_iris()
 _dataset_names.append('iris')
 _Xs.append(_iris[_features])
 _ys.append(_iris['class'])
+_Xs.append(_iris[_features])
+_ys.append(_iris['class'] == _iris['class'].values[0])
 _iris = _iris.copy()
 _iris.index = ['i%d' % i for i in range(len(_iris))]
 _dataset_names.append('iris_str_index')
@@ -1061,6 +1065,20 @@ def load_tests(loader, tests, ignore):
         doctest.DocFileSuite(*doc_f_names, module_relative=False, optionflags=doctest_flags))
 
     return tests
+
+
+class _FunctionTransformerTest(unittest.TestCase):
+    def test_kwargs(self):
+        def f(a, b):
+            return a + b
+
+        def g(a, b=2):
+            return a + b
+
+        dat = pd.DataFrame({'x': [1, 2, 3, 4, 5]})
+
+        pd_preprocessing.FunctionTransformer(f, kw_args={'b': 2}).fit_transform(dat)
+        pd_preprocessing.FunctionTransformer(g).fit_transform(dat)
 
 
 if __name__ == '__main__':
