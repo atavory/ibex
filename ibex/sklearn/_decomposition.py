@@ -8,11 +8,14 @@ from sklearn import base
 from sklearn import decomposition as orig
 
 from .._adapter import frame_ex
+from .._utils import set_lowest_level_column_names
 
 
 def transform(self, base_ret):
     if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
+        set_lowest_level_column_names(
+            base_ret,
+            ['comp_%i' % i for i in range(len(base_ret.columns))])
     return base_ret
 
 
@@ -64,7 +67,9 @@ def get_transform_doc(
 
 def fit_transform(self, base_ret):
     if isinstance(base_ret, pd.DataFrame):
-        base_ret.columns = ['comp_%i' % i for i in range(len(base_ret.columns))]
+        set_lowest_level_column_names(
+            base_ret,
+            ['comp_%i' % i for i in range(len(base_ret.columns))])
     return base_ret
 
 

@@ -103,3 +103,9 @@ wrapped_fn_names = [
 ]
 
 
+def get_lowest_level_column_names(df):
+    return df.columns
+
+
+def set_lowest_level_column_names(df, columns):
+    df.columns = columns

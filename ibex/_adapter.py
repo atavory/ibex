@@ -5,7 +5,6 @@ import inspect
 import types
 import re
 import sys
-import string
 import textwrap
 
 import six
@@ -49,6 +48,10 @@ def _from_pickle(
     cls = frame_ex(est, extra_methods, extra_attribs)
     est = cls(**params)
     return est
+
+
+def _get_lowest_level_col_names(idx):
+    return idx.columns
 
 
 def _make_adapter(

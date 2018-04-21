@@ -167,6 +167,14 @@ def _get_estimator_extras(orig, name, est):
             _feature_selection.get_fit_transform_doc(
                 orig, name, est, kw_args_str, is_regressor, is_classifier, is_transformer, is_clusterer, has_dataframe_y))
 
+    if orig == 'preprocessing':
+        if name == 'PolynomialFeatures':
+            from . import _preprocessing
+            methods['transform'] = (_preprocessing.polynomial_feautures_transform_imp,
+                _preprocessing.polynomial_feautures_transform_imp_doc)
+            methods['fit_transform'] = (_preprocessing.polynomial_feautures_transform_imp,
+                _preprocessing.polynomial_feautures_transform_imp_doc)
+
     if is_clusterer:
         from . import _cluster
         methods['transform'] = (_cluster.transform,
@@ -317,4 +325,3 @@ class _ModuleFinder(object):
 
 loader = _ModuleFinder()
 loader.install()
-

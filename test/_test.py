@@ -1081,5 +1081,12 @@ class _FunctionTransformerTest(unittest.TestCase):
         pd_preprocessing.FunctionTransformer(g).fit_transform(dat)
 
 
+class _PreprocessingTest(unittest.TestCase):
+    def test_polynomial_features(self):
+        x = pd.DataFrame({'a': [2], 'b': [3], 'c': [4], 'd': [5]})
+
+        print(pd_preprocessing.PolynomialFeatures(degree=3).fit_transform(x))
+
+
 if __name__ == '__main__':
     unittest.main()
